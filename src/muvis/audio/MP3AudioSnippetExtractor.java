@@ -24,7 +24,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import muvis.exceptions.CantRetrieveMP3TagException;
+import muvis.exceptions.CannotRetrieveMP3TagException;
 import java.io.ByteArrayOutputStream;
 import muvis.Workspace;
 
@@ -107,7 +107,7 @@ public class MP3AudioSnippetExtractor {
 
         } catch (IOException ex) {
             ex.printStackTrace();
-        } catch (CantRetrieveMP3TagException ex) {
+        } catch (CannotRetrieveMP3TagException ex) {
             ex.printStackTrace();
         }
         //must be careful with this non value here

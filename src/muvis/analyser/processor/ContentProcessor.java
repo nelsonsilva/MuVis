@@ -43,7 +43,7 @@ import muvis.audio.AudioMetadataExtractor;
 import muvis.audio.MP3AudioMetadataExtractor;
 import muvis.audio.MP3AudioSnippetExtractor;
 import muvis.database.MusicLibraryDatabaseManager;
-import muvis.exceptions.CantRetrieveMP3TagException;
+import muvis.exceptions.CannotRetrieveMP3TagException;
 import muvis.util.MP3AudioFile;
 import muvis.util.Observable;
 import muvis.util.Observer;
@@ -139,7 +139,7 @@ public class ContentProcessor implements Observer, Observable {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     continue;
-                } catch (CantRetrieveMP3TagException ex) {
+                } catch (CannotRetrieveMP3TagException ex) {
                     ex.printStackTrace();
                     continue;
                 }

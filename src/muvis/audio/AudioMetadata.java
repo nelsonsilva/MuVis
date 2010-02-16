@@ -27,6 +27,10 @@ package muvis.audio;
  */
 public class AudioMetadata {
 
+    /*
+     * Metadata Fields
+     */
+
     private long duration;
     private String title;
     private String author;
@@ -162,5 +166,32 @@ public class AudioMetadata {
      */
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    /*
+     * Methods that returns the fields of the metadata in a array format.
+     * Fields available:
+     * 1. Duration
+     * 2. Title
+     * 3. Author
+     * 4. Album
+     * 5. Track Number
+     * 6. Year
+     * 7. Bitrate
+     * 8. Genre
+     */
+    public Object[] toArray(){
+
+        Object [] metadataFields = new Object[8];
+        metadataFields[0] = duration;
+        metadataFields[1] = title;
+        metadataFields[2] = author;
+        metadataFields[3] = album;
+        metadataFields[4] = trackNumber;
+        metadataFields[5] = year;
+        metadataFields[6] = bitrate;
+        metadataFields[7] = genre;
+
+        return metadataFields;
     }
 }

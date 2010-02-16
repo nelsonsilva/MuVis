@@ -36,7 +36,7 @@ import muvis.Workspace;
 import muvis.audio.AudioMetadataExtractor;
 import muvis.audio.MP3AudioMetadataExtractor;
 import muvis.audio.playlist.PlaylistItem;
-import muvis.exceptions.CantRetrieveMP3TagException;
+import muvis.exceptions.CannotRetrieveMP3TagException;
 
 /**
  * Filesystem explorer implementation - Allows users to access to their files
@@ -77,7 +77,7 @@ public class DirectoryListTreeView extends DirectoryListViewTreeUI implements Do
                     AudioMetadataExtractor extractor = new MP3AudioMetadataExtractor();
                     PlaylistItem item = new PlaylistItem("", pathFile, extractor.getAudioMetadata(pathFile));
                     Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(item);
-                } catch (CantRetrieveMP3TagException ex) {
+                } catch (CannotRetrieveMP3TagException ex) {
                     ex.printStackTrace();
                 }
             }

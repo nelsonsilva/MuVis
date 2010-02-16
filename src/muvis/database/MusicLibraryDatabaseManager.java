@@ -65,7 +65,6 @@ public class MusicLibraryDatabaseManager implements Observable {
     public void connect() {
         try {
             conn = DriverManager.getConnection("jdbc:hsqldb:file:muvisdb", "sa", "");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -20,13 +20,13 @@
  */
 package muvis.audio;
 
-import muvis.exceptions.CantRetrieveMP3TagException;
-import muvis.database.MusicLibraryDatabaseManager;
+import muvis.exceptions.CannotRetrieveMP3TagException;
 import java.io.File;
-import muvis.Workspace;
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.mp3.MP3AudioHeader;
-import org.jaudiotagger.audio.mp3.MP3File;
+import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 
 /**
  * Implementation of the AudioMetadataExtractor for extracting Mp3 tags from files.
@@ -42,42 +42,48 @@ public class MP3AudioMetadataExtractor implements AudioMetadataExtractor {
         "Classical", "Soundtrack", "World",
         "Reggae", "Soul", "African", "Other"
     };
-    private MusicLibraryDatabaseManager dbManager;
-
-    public MP3AudioMetadataExtractor() {
-
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
-    }
-
+    
     /**
      * This method retrieves the metadata of the desired track.
      * @param file the filename of the track we want to retrieve
      * @return
      */
     @Override
-    public AudioMetadata getAudioMetadata(String filename) throws CantRetrieveMP3TagException {
+    public AudioMetadata getAudioMetadata(String filename) throws CannotRetrieveMP3TagException {
 
         AudioMetadata metadata = new AudioMetadata();
         File sourceFile = new File(filename);
 
-        MP3File mp3file;
+        AudioFile mp3file;
+        String artist, album, title, bitrate, year, genre;
+        int duration, trackNumber;
         try {
-            mp3file = (MP3File) AudioFileIO.read(sourceFile);
-            MP3AudioHeader audioHeader = (MP3AudioHeader) mp3file.getAudioHeader();
-            String artist = validatedArtist(mp3file.getID3v1Tag().getFirstArtist());
+            mp3file = AudioFileIO.read(sourceFile);
+            Tag tag = mp3file.getTag();
+            AudioHeader audioHeader = mp3file.getAudioHeader();
+
+            artist = validatedArtist(tag.getFirst(FieldKey.ARTIST));
+            album = validatedAlbum(tag.getFirst(FieldKey.ALBUM));
+            title = validateTitle(tag.getFirst(FieldKey.TITLE));
+            duration = audioHeader.getTrackLength();
+            bitrate = audioHeader.getBitRate();
+            year = validatedYear(tag.getFirst(FieldKey.YEAR));
+            genre = validatedGenre(tag.getFirst(FieldKey.GENRE));
+            trackNumber = 0;
 
             metadata.setAuthor(artist);
-            metadata.setAlbum(validatedAlbum(artist, mp3file.getID3v1Tag().getFirstAlbum()));
-            metadata.setTitle(validateTitle(mp3file.getID3v1Tag().getFirstTitle()));
-            metadata.setDuration(audioHeader.getTrackLength());
-            metadata.setBitrate(audioHeader.getBitRate());
-            metadata.setYear(validatedYear(mp3file.getID3v1Tag().getFirstYear()));
-            metadata.setGenre(validatedGenre(mp3file.getID3v1Tag().getFirstGenre()));
-
-            metadata.setTrackNumber(0);     //for debugging purposes
+            metadata.setAlbum(album);
+            metadata.setTitle(title);
+            metadata.setDuration(duration);
+            metadata.setBitrate(bitrate);
+            metadata.setYear(year);
+            metadata.setGenre(genre);
+            metadata.setTrackNumber(trackNumber);
+            metadata.setTrackNumber(trackNumber);
 
         } catch (Exception ex) {
-            throw new CantRetrieveMP3TagException("Can't retrieve tag from MP3 file.\nPossible reason: " + ex);
+            //Could not retrieve MP3 Tags
+            throw new CannotRetrieveMP3TagException("Can't retrieve tag from MP3 file.\nPossible reason: " + ex, filename);
         }
 
         return metadata;
@@ -91,7 +97,7 @@ public class MP3AudioMetadataExtractor implements AudioMetadataExtractor {
         else return firstTitle;
     }
 
-    private String validatedAlbum(String artist, String album) {
+    private String validatedAlbum(String album) {
 
         String albumTest = album.toLowerCase();
         if (albumTest.contains("unknown") || albumTest.contains("desconhecido") || albumTest.contains("sconosciuto") || albumTest.contains("desconocido") || albumTest.equals("")) {

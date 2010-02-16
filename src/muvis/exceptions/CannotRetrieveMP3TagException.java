@@ -22,13 +22,20 @@
 package muvis.exceptions;
 
 /**
- *
+ * Generic exception for MuVis audio retrieving
  * @author Ricardo
  */
-public class CantRetrieveMP3TagException extends Exception {
+public class CannotRetrieveMP3TagException extends Exception {
 
-    public CantRetrieveMP3TagException(String message) {
-        super(message);
+    String mp3File;
+
+    public CannotRetrieveMP3TagException(String message, String file) {
+        super(message + "\nFile:" + file);
+        mp3File = file;
+    }
+
+    public String getFile(){
+        return mp3File;
     }
 
 }

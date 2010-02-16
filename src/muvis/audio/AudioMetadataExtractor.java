@@ -21,7 +21,7 @@
 
 package muvis.audio;
 
-import muvis.exceptions.CantRetrieveMP3TagException;
+import muvis.exceptions.CannotRetrieveMP3TagException;
 
 /**
  * This interface specifies the method that a class must implement to become an
@@ -31,5 +31,5 @@ import muvis.exceptions.CantRetrieveMP3TagException;
  */
 public interface AudioMetadataExtractor {
 
-    public AudioMetadata getAudioMetadata(String filename) throws CantRetrieveMP3TagException;
+    public AudioMetadata getAudioMetadata(String filename) throws CannotRetrieveMP3TagException;
 }
