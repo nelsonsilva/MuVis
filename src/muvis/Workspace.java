@@ -24,6 +24,7 @@ import com.vlsolutions.swing.docking.DockingDesktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -35,6 +36,7 @@ import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.Playlist;
 import muvis.database.MusicLibraryDatabaseManager;
+import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.filters.TableFilterManager;
 import muvis.view.ViewManager;
 import muvis.view.main.filters.TreemapFilterManager;
@@ -66,10 +68,18 @@ public class Workspace {
     private static DockingDesktop desk;
     private static TableFilterManager tableFilterManager;
     private static TreemapFilterManager treemapFilterManager;
+    private static String dataPropertiesFolder;
     /**
      * The only instance of Workspace
      */
     private static Workspace workspace = new Workspace();
+
+    /**
+     * @return the string that represents the data folder path
+     */
+    public String getDataFolderPath(){
+        return dataPropertiesFolder;
+    }
 
     /**
      * @return the treemapFilterManager
@@ -172,6 +182,9 @@ public class Workspace {
     }
 
     private Workspace() {
+
+        initializeDataFolders();
+        
         //initialize all the elements in the workspace
         audioPlayer = new MuVisAudioPlayer();
         snippetManager = new AudioSnippetPlayerManager(audioPlayer);
@@ -184,15 +197,33 @@ public class Workspace {
 
         nbtreesManager = new NBTreeManager();
         try {
-            nbtreesManager.addNBTree("tracksNBTree", new NBTree("tracksNBTree"));
-            nbtreesManager.addNBTree("albumsNBTree", new NBTree("albumsNBTree"));
-            nbtreesManager.addNBTree("artistsNBTree", new NBTree("artistsNBTree"));
+            nbtreesManager.addNBTree("tracksNBTree", new NBTree("tracksNBTree", dataPropertiesFolder + "nbtree/"));
+            nbtreesManager.addNBTree("albumsNBTree", new NBTree("albumsNBTree", dataPropertiesFolder + "nbtree/"));
+            nbtreesManager.addNBTree("artistsNBTree", new NBTree("artistsNBTree", dataPropertiesFolder + "nbtree/"));
         } catch (NBTreeException ex) {
             ex.printStackTrace();
             System.out.println("An error occured when trying to initialize the nbtreemanager!");
         }
 
         initConfigFile();
+    }
+
+    //initializes the data folder, or creates it if necessary
+    private void initializeDataFolders() {
+
+        File file = new File("data");
+        if (file.isDirectory()) {
+            dataPropertiesFolder = "data/";
+        } else {
+            boolean success = (new File("data")).mkdir();
+            if (success) {
+                dataPropertiesFolder = "data/";
+                new File("data/nbtree").mkdir();
+                new File("data/db").mkdir();
+            } else {
+                dataPropertiesFolder = "";
+            }
+        }
     }
 
     public void saveWorkspace() throws FileNotFoundException {
@@ -244,7 +275,7 @@ public class Workspace {
      * @return a boolean that indicates if the file exists
      */
     public boolean configFileExists() {
-        File file = new File(".properties");
+        File file = new File(dataPropertiesFolder + ".properties");
         if (file.exists() && file.length() != 0) {
             return true;
         } else {
@@ -253,17 +284,17 @@ public class Workspace {
     }
 
     //reads the configuration file
-    private void readConfigFile() {
+    public void readConfigFile() {
         try {
-            getConfigFile().load(new FileInputStream(new File(".properties")));
+            getConfigFile().load(new FileInputStream(new File(dataPropertiesFolder + ".properties")));
         } catch (IOException ex) {
             System.out.println("Can't load the config file.");
         }
     }
 
     //creates the configuration file.
-    private void createConfigFile() {
-        File file = new File(".properties");
+    public void createConfigFile() {
+        File file = new File(dataPropertiesFolder + ".properties");
         try {
             if (file.createNewFile()) {
                 getConfigFile().load(new FileInputStream(file));
@@ -271,6 +302,18 @@ public class Workspace {
             }
         } catch (IOException ex1) {
             System.out.println("Cannot create .properties file!");
+        }
+    }
+
+    //saves the config file under workspace control
+    public void saveConfigFile() throws CantSavePropertiesFileException{
+        try {
+            FileOutputStream stream = new FileOutputStream(new File(dataPropertiesFolder + ".properties"));
+            configFile.store(stream, "");
+        } catch (FileNotFoundException ex) {
+            throw new CantSavePropertiesFileException("Can't save the configuration file!");
+        } catch (IOException ex) {
+            throw new CantSavePropertiesFileException("Can't save the configuration file!");
         }
     }
 

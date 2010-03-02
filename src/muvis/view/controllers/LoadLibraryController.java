@@ -63,14 +63,15 @@ public class LoadLibraryController implements ControllerInterface {
             configFile.setProperty("library_folder" + i, folder.toString());
             i++;
         }
-        try {
+        /*try {
             FileOutputStream stream = new FileOutputStream(new File(".properties"));
             configFile.store(stream, "");
         } catch (FileNotFoundException ex) {
             throw new CantSavePropertiesFileException("Can't save the configuration file!");
         } catch (IOException ex) {
             throw new CantSavePropertiesFileException("Can't save the configuration file!");
-        }
+        }*/
+        Workspace.getWorkspaceInstance().saveConfigFile();
     }
 
     /**

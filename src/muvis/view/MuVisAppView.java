@@ -36,7 +36,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
 import com.vlsolutions.swing.docking.*;
 import java.awt.AWTException;
 import java.awt.Image;
@@ -379,7 +378,7 @@ public class MuVisAppView extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String message = "MuVis - Because Music Visualization matters\nv1.0 @2009\n Created by Ricardo Dias";
+                String message = "MuVis - Because Music Visualization matters\nv0.1 @2009\n Created by Ricardo Dias";
                 JOptionPane.showMessageDialog(frame, message,
                         "About MuVis", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -406,7 +405,7 @@ public class MuVisAppView extends JFrame {
      * @throws java.io.IOException
      */
     public void saveDocking() throws IOException {
-        saveDocking("desk.xml");
+        saveDocking(Workspace.getWorkspaceInstance().getDataFolderPath() + "desk.xml");
     }
 
     /**
@@ -434,7 +433,7 @@ public class MuVisAppView extends JFrame {
      * @throws java.io.IOException
      */
     public void loadDocking() throws FileNotFoundException, IOException {
-        loadDocking("desk.xml");
+        loadDocking(Workspace.getWorkspaceInstance().getDataFolderPath() + "desk.xml");
     }
 
     /**

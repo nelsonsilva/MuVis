@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import muvis.Workspace;
 import muvis.audio.AudioMetadata;
 import muvis.util.Observable;
 import muvis.util.Observer;
@@ -54,7 +55,6 @@ public class MusicLibraryDatabaseManager implements Observable {
             // Load the HSQL Database Engine JDBC driver
             // hsqldb.jar should be in the class path or made part of the current jar
             Class.forName("org.hsqldb.jdbcDriver");
-
             observers = new ArrayList<Observer>();
         } catch (ClassNotFoundException e1) {
             //Cannot connect to the database
@@ -64,7 +64,8 @@ public class MusicLibraryDatabaseManager implements Observable {
 
     public void connect() {
         try {
-            conn = DriverManager.getConnection("jdbc:hsqldb:file:muvisdb", "sa", "");
+            String dataFolderPath = Workspace.getWorkspaceInstance().getDataFolderPath();
+            conn = DriverManager.getConnection("jdbc:hsqldb:file:" + dataFolderPath + "db/muvisdb", "sa", "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
