@@ -27,18 +27,50 @@ package muvis.audio;
  */
 public class AudioMetadata {
 
-    /*
-     * Metadata Fields
+    /**
+     * The audio duration
      */
-
     private long duration;
+
+    /**
+     * The audio piece title
+     */
     private String title;
+
+    /**
+     * Audio artist
+     */
     private String author;
+
+    /**
+     * Adio piece album
+     */
     private String album;
+
+    /**
+     * Audio piece track number
+     */
     private int trackNumber;
+
+    /**
+     * Audio piece year
+     */
     private String year;
+
+    /**
+     * Audio piece bitrate
+     */
     private String bitrate;
+
+    /**
+     * Audio piece genre
+     */
     private String genre;
+
+    /**
+     * Audio piece filename
+     */
+    private String filename;
 
     /**
      * Method that returns the length of the track.
@@ -104,14 +136,6 @@ public class AudioMetadata {
         return genre;
     }
 
-    @Override
-    public String toString(){
-        return "{" + "duration: " + duration + ", title: " + title + ", author: " + author + 
-                ", album: " + album + ", track number: " + trackNumber +
-                ", year: " + year + ", bitrate: " + bitrate + ", genre: " + genre
-                + "}";
-    }
-
     /**
      * @param duration the duration to set
      */
@@ -168,6 +192,26 @@ public class AudioMetadata {
         this.genre = genre;
     }
 
+    /**
+     * @param filename this audio piece filename
+     */
+    public void setFilename(String filename){
+        this.filename = filename;
+    }
+
+    /**
+     * Gets a string representation for this audio metadata
+     * Format: {duration, title, author, album, track number, year, bitrate, genre, filename}
+     * @return the string that represents the format
+     */
+    @Override
+    public String toString(){
+        return "{" + "duration: " + duration + ", title: " + title + ", author: " + author +
+                ", album: " + album + ", track number: " + trackNumber +
+                ", year: " + year + ", bitrate: " + bitrate + ", genre: " + genre + ", filename:" + filename
+                + "}";
+    }
+
     /*
      * Methods that returns the fields of the metadata in a array format.
      * Fields available:
@@ -179,10 +223,11 @@ public class AudioMetadata {
      * 6. Year
      * 7. Bitrate
      * 8. Genre
+     * 9. Filename
      */
     public Object[] toArray(){
 
-        Object [] metadataFields = new Object[8];
+        Object [] metadataFields = new Object[9];
         metadataFields[0] = duration;
         metadataFields[1] = title;
         metadataFields[2] = author;
@@ -191,6 +236,7 @@ public class AudioMetadata {
         metadataFields[5] = year;
         metadataFields[6] = bitrate;
         metadataFields[7] = genre;
+        metadataFields[8] = filename;
 
         return metadataFields;
     }

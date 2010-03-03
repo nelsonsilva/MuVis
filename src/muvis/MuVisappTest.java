@@ -23,6 +23,10 @@ package muvis;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+//import javax.swing.UIManager;
+//import org.jvnet.substance.skin.SubstanceModerateLookAndFeel;
+//import org.jvnet.substance.skin.SubstanceRavenGraphiteLookAndFeel;
+//import org.jvnet.substance.skin.SubstanceSaharaLookAndFeel;
 
 /**
  * Entry point of the MuVis project.
@@ -37,6 +41,17 @@ public class MuVisappTest {
                 @Override
                 public void run() {
                     JFrame.setDefaultLookAndFeelDecorated(true);
+
+                    /*try {
+                        // Set System L&F
+                        UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager.getLookAndFeel());
+                        UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
+                        UIManager.setLookAndFeel(new net.sourceforge.napkinlaf.NapkinLookAndFeel());
+                        UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }*/
+
 
                     MuVisApp app = new MuVisApp();
                     app.run();
