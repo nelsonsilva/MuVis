@@ -69,7 +69,7 @@ public class MuVisComputeTrackSize
                     value += Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
                 }
                 num /= 2;
-                return (value/num);
+                return ((num != 0)? (value/num) : 0);
             }
             return Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
 
