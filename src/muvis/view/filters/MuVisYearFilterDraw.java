@@ -23,7 +23,7 @@ package muvis.view.filters;
 
 import java.awt.Color;
 import java.awt.Paint;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.util.Util;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -68,7 +68,7 @@ public class MuVisYearFilterDraw extends MuVisFilterDraw {
             int startYear = fNode.getYear();
             int range = fNode.getYearRange();
 
-            int value = Workspace.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
+            int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
             tooltip = "<html>" + name + "<p>Tracks available: " + value;
             //}
 
@@ -93,7 +93,7 @@ public class MuVisYearFilterDraw extends MuVisFilterDraw {
                 int startYear = fNode.getYear();
                 int range = fNode.getYearRange();
 
-            int value = Workspace.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
+            int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
                 return Util.getColor(value);
             }
         } else {

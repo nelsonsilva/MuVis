@@ -34,7 +34,7 @@ import muvis.view.loader.LoadLibraryView;
 public class MuVisApp extends JFrame implements Runnable {
 
     private void processLibrary() {
-        Workspace workspace = Workspace.getWorkspaceInstance();
+        Environment workspace = Environment.getWorkspaceInstance();
 
         if (!workspace.configFileExists()) {
             workspace.initConfigFile();

@@ -26,7 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import muvis.exceptions.CannotRetrieveMP3TagException;
 import java.io.ByteArrayOutputStream;
-import muvis.Workspace;
+import muvis.Environment;
 
 /**
  * Class that generates a snippet of an mp3 file.
@@ -58,7 +58,7 @@ public class MP3AudioSnippetExtractor {
     public static byte[] extractAudioSnippet(String filename) {
 
         try {
-            AudioMetadata metadata = Workspace.getWorkspaceInstance().getDatabaseManager().getTrackMetadata(filename);
+            AudioMetadata metadata = Environment.getWorkspaceInstance().getDatabaseManager().getTrackMetadata(filename);
             if (metadata == null) {
                 metadata = extractor.getAudioMetadata(filename);
             }

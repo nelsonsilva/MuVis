@@ -27,6 +27,11 @@
 
 package muvis.view;
 
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import muvis.util.JImagePanel;
+
 /**
  *
  * @author Ricardo
@@ -40,6 +45,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         playingModeGroup.add(filteredTracksRadioButton);
         playingModeGroup.add(playlistRadioButton);
         playingModeGroup.add(allTracksRadioButton);
+        
     }
 
     /** This method is called from within the constructor to
@@ -76,6 +82,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         volumeSlider = new javax.swing.JSlider();
+        albumCoverPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridLayout(1, 0));
 
@@ -126,13 +133,13 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
 
         musicControllerSepator.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        previousTrackButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        previousTrackButton.setFont(new java.awt.Font("Arial", 0, 11));
         previousTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/StepBack16.gif"))); // NOI18N
         previousTrackButton.setToolTipText("Play previous track");
         previousTrackButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(previousTrackButton);
 
-        stopPlayerButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        stopPlayerButton.setFont(new java.awt.Font("Arial", 0, 11));
         stopPlayerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Stop16.gif"))); // NOI18N
         stopPlayerButton.setToolTipText("Play the currently selected track");
         stopPlayerButton.setMaximumSize(new java.awt.Dimension(73, 23));
@@ -140,7 +147,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         stopPlayerButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(stopPlayerButton);
 
-        playTrackButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        playTrackButton.setFont(new java.awt.Font("Arial", 0, 11));
         playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Play16.gif"))); // NOI18N
         playTrackButton.setToolTipText("Play the currently selected track");
         playTrackButton.setMaximumSize(new java.awt.Dimension(73, 23));
@@ -148,7 +155,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         playTrackButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(playTrackButton);
 
-        nextTrackButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        nextTrackButton.setFont(new java.awt.Font("Arial", 0, 11));
         nextTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/StepForward16.gif"))); // NOI18N
         nextTrackButton.setToolTipText("Play the next track");
         nextTrackButton.setMaximumSize(new java.awt.Dimension(73, 23));
@@ -156,7 +163,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         nextTrackButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(nextTrackButton);
 
-        jPanel3.setLayout(new java.awt.GridLayout());
+        jPanel3.setLayout(new java.awt.GridLayout(1, 0));
 
         musicTimelineSlider.setMaximum(1);
         musicTimelineSlider.setValue(0);
@@ -183,7 +190,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
-        trackInfoLabel.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        trackInfoLabel.setFont(new java.awt.Font("Arial", 1, 11));
         trackInfoLabel.setText("Track information:");
 
         org.jdesktop.layout.GroupLayout trackInfoPanelLayout = new org.jdesktop.layout.GroupLayout(trackInfoPanel);
@@ -203,13 +210,13 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        artistAlbumInfoLabel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        artistAlbumInfoLabel.setFont(new java.awt.Font("Arial", 0, 11));
         artistAlbumInfoLabel.setText("Artist & album - not available");
 
-        trackNameLabel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        trackNameLabel.setFont(new java.awt.Font("Arial", 0, 11));
         trackNameLabel.setText("Track name - not available");
 
-        trackyearLabel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        trackyearLabel.setFont(new java.awt.Font("Arial", 0, 11));
         trackyearLabel.setText("Year - not available");
 
         org.jdesktop.layout.GroupLayout trackInformationPanelLayout = new org.jdesktop.layout.GroupLayout(trackInformationPanel);
@@ -242,6 +249,32 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         volumeSlider.setOrientation(javax.swing.JSlider.VERTICAL);
         volumeSlider.setToolTipText("Set the volume of the track being played");
 
+        albumCoverPanel.setMaximumSize(new java.awt.Dimension(80, 80));
+        albumCoverPanel.setMinimumSize(new java.awt.Dimension(80, 80));
+        albumCoverPanel.setPreferredSize(new java.awt.Dimension(80, 80));
+        albumCoverPanel.setSize(new java.awt.Dimension(80, 80));
+        try {
+            albumCoverPanel = new JImagePanel(
+                getClass().getResource("/images/not_available.jpg"),
+                0,
+                0,
+                80,
+                80);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        org.jdesktop.layout.GroupLayout albumCoverPanelLayout = new org.jdesktop.layout.GroupLayout(albumCoverPanel);
+        albumCoverPanel.setLayout(albumCoverPanelLayout);
+        albumCoverPanelLayout.setHorizontalGroup(
+            albumCoverPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 89, Short.MAX_VALUE)
+        );
+        albumCoverPanelLayout.setVerticalGroup(
+            albumCoverPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 80, Short.MAX_VALUE)
+        );
+
         org.jdesktop.layout.GroupLayout musicControllerPanelLayout = new org.jdesktop.layout.GroupLayout(musicControllerPanel);
         musicControllerPanel.setLayout(musicControllerPanelLayout);
         musicControllerPanelLayout.setHorizontalGroup(
@@ -259,13 +292,15 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                 .add(4, 4, 4)
                 .add(musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(musicControllerPanelLayout.createSequentialGroup()
-                        .add(41, 41, 41)
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(musicControllerPanelLayout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(trackInfoPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(trackInformationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                        .add(trackInformationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(10, 10, 10)
+                        .add(albumCoverPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 89, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(musicControllerPanelLayout.createSequentialGroup()
+                        .add(41, 41, 41)
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         musicControllerPanelLayout.setVerticalGroup(
             musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -282,12 +317,13 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                                         .add(jLabel1)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(volumeSlider, 0, 0, Short.MAX_VALUE)))
-                                .add(18, 114, Short.MAX_VALUE))
+                                .add(18, 115, Short.MAX_VALUE))
                             .add(musicControllerPanelLayout.createSequentialGroup()
-                                .add(musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                                     .add(trackInformationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                     .add(trackInfoPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(musicControllerSepator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                    .add(musicControllerSepator, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                    .add(albumCoverPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .add(109, 109, 109)))
                         .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -297,6 +333,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JPanel albumCoverPanel;
     protected javax.swing.JRadioButton allTracksRadioButton;
     protected javax.swing.JLabel artistAlbumInfoLabel;
     protected javax.swing.JRadioButton filteredTracksRadioButton;

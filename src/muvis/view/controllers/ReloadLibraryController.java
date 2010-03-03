@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.analyser.DataAnalyser;
 import muvis.analyser.processor.ContentProcessor;
 import muvis.analyser.processor.ContentUnprocessor;
@@ -54,7 +54,7 @@ public class ReloadLibraryController implements ControllerInterface {
      */
     public void saveLibraryFolders(Object[] folders) throws CantSavePropertiesFileException {
 
-        Properties configFile = Workspace.getWorkspaceInstance().getConfigFile();
+        Properties configFile = Environment.getWorkspaceInstance().getConfigFile();
         if (!configFile.containsKey("folders_number")) {
         }
         configFile.setProperty("folders_number", String.valueOf(folders.length));
@@ -78,7 +78,7 @@ public class ReloadLibraryController implements ControllerInterface {
     public ArrayList<String> getLibraryFolders() {
 
         ArrayList<String> folders = new ArrayList<String>();
-        Properties configFile = Workspace.getWorkspaceInstance().getConfigFile();
+        Properties configFile = Environment.getWorkspaceInstance().getConfigFile();
 
         int countFolders = 0;
         if (configFile.containsKey("folders_number")) {

@@ -32,7 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreeSelectionModel;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadataExtractor;
 import muvis.audio.MP3AudioMetadataExtractor;
 import muvis.audio.playlist.PlaylistItem;
@@ -76,7 +76,7 @@ public class DirectoryListTreeView extends DirectoryListViewTreeUI implements Do
                     String pathFile = treeDirectoryList.getSelectionPath().getLastPathComponent().toString();
                     AudioMetadataExtractor extractor = new MP3AudioMetadataExtractor();
                     PlaylistItem item = new PlaylistItem("", pathFile, extractor.getAudioMetadata(pathFile));
-                    Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(item);
+                    Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(item);
                 } catch (CannotRetrieveMP3TagException ex) {
                     ex.printStackTrace();
                 }

@@ -55,7 +55,7 @@ import nbtree.exceptions.NBTreeException;
  * -NBTreeManager
  * @author Ricardo
  */
-public class Workspace {
+public class Environment {
 
     //Fields necessary for the MuVisApp
     private static MuVisAudioPlayer audioPlayer;
@@ -72,7 +72,7 @@ public class Workspace {
     /**
      * The only instance of Workspace
      */
-    private static Workspace workspace = new Workspace();
+    private static Environment workspace = new Environment();
 
     /**
      * @return the string that represents the data folder path
@@ -181,7 +181,7 @@ public class Workspace {
         configFile = aConfigFile;
     }
 
-    private Workspace() {
+    private Environment() {
 
         initializeDataFolders();
         
@@ -238,7 +238,7 @@ public class Workspace {
      * This method returns the only instance of Workspace
      * @return workspace The only instance of Workspace
      */
-    public static Workspace getWorkspaceInstance() {
+    public static Environment getWorkspaceInstance() {
         return workspace;
     }
 

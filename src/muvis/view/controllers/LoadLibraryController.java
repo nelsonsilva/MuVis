@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.Executors;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.analyser.DataAnalyser;
 import muvis.analyser.processor.ContentProcessor;
 import muvis.exceptions.CantSavePropertiesFileException;
@@ -52,7 +52,7 @@ public class LoadLibraryController implements ControllerInterface {
      */
     public void saveLibraryFolders(Object[] folders) throws CantSavePropertiesFileException {
 
-        Properties configFile = Workspace.getWorkspaceInstance().getConfigFile();
+        Properties configFile = Environment.getWorkspaceInstance().getConfigFile();
         if (!configFile.containsKey("folders_number")) {
         }
         configFile.setProperty("folders_number", String.valueOf(folders.length));
@@ -71,7 +71,7 @@ public class LoadLibraryController implements ControllerInterface {
         } catch (IOException ex) {
             throw new CantSavePropertiesFileException("Can't save the configuration file!");
         }*/
-        Workspace.getWorkspaceInstance().saveConfigFile();
+        Environment.getWorkspaceInstance().saveConfigFile();
     }
 
     /**

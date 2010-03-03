@@ -28,7 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.util.Observable;
 import muvis.util.Observer;
@@ -64,7 +64,7 @@ public class MusicLibraryDatabaseManager implements Observable {
 
     public void connect() {
         try {
-            String dataFolderPath = Workspace.getWorkspaceInstance().getDataFolderPath();
+            String dataFolderPath = Environment.getWorkspaceInstance().getDataFolderPath();
             conn = DriverManager.getConnection("jdbc:hsqldb:file:" + dataFolderPath + "db/muvisdb", "sa", "");
         } catch (SQLException e) {
             e.printStackTrace();

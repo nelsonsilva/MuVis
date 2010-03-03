@@ -30,7 +30,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.view.MuVisAppView;
 import muvis.view.controllers.LoadLibraryController;
@@ -168,7 +168,7 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
             try {
                 //library already loaded
-                Workspace.getWorkspaceInstance().loadWorkspace();
+                Environment.getWorkspaceInstance().loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");

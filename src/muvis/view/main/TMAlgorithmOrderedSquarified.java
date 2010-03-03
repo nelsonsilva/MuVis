@@ -24,7 +24,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Enumeration;
 import java.util.Vector;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import nbtree.NBTree;
 import net.bouthier.treemapSwing.TMAlgorithm;
@@ -55,8 +55,8 @@ public class TMAlgorithmOrderedSquarified
         float pSize = node.getSize();
         Rectangle pArea = node.getArea();
 
-        MusicLibraryDatabaseManager dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
-        NBTree nbtree = Workspace.getWorkspaceInstance().getNbtreesManager().getNBTree("artistsNBTree");
+        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        NBTree nbtree = Environment.getWorkspaceInstance().getNbtreesManager().getNBTree("artistsNBTree");
 
         int x = pArea.x;
         int y = pArea.y;
@@ -305,8 +305,8 @@ public class TMAlgorithmOrderedSquarified
 
         Vector newSortedVector = new Vector();
         TMNodeModel child;
-        MusicLibraryDatabaseManager dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
-        NBTree nbtree = Workspace.getWorkspaceInstance().getNbtreesManager().getNBTree("artistsNBTree");
+        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        NBTree nbtree = Environment.getWorkspaceInstance().getNbtreesManager().getNBTree("artistsNBTree");
 
         for (Object obj : sortedVector) {
             child = (TMNodeModel) obj;

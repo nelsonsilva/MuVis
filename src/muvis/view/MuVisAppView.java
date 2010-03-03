@@ -59,7 +59,7 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import muvis.Elements;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.PlaylistItem;
@@ -115,7 +115,7 @@ public class MuVisAppView extends JFrame {
         mainView.setView("ListView");
         mainView.initializeFilters();
 
-        ViewManager viewManager = Workspace.getWorkspaceInstance().getViewManager();
+        ViewManager viewManager = Environment.getWorkspaceInstance().getViewManager();
         viewManager.addView(Elements.MUSIC_PLAYER_VIEW, musicPlayerView);
         viewManager.addView(Elements.FILE_SYSTEM_VIEW, filesystemView);
         viewManager.addView(Elements.PLAYLIST_VIEW, playlistView);
@@ -126,7 +126,7 @@ public class MuVisAppView extends JFrame {
         viewManager.addView(Elements.ARTIST_INSPECTOR_VIEW, artistInspectorView);
         mainView.addView(Elements.ARTIST_INSPECTOR_VIEW, artistInspectorView);
 
-        final DockingDesktop desk = Workspace.getWorkspaceInstance().getDesk();
+        final DockingDesktop desk = Environment.getWorkspaceInstance().getDesk();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().add(desk); // desk becomes the only one component
@@ -178,7 +178,7 @@ public class MuVisAppView extends JFrame {
                         System.out.println("Couldn't save the desk disposition!");
                     }
                     //saving the state of the application
-                    Workspace.getWorkspaceInstance().saveWorkspace();
+                    Environment.getWorkspaceInstance().saveWorkspace();
                     //Exiting the application
                     System.exit(0);
                 } catch (FileNotFoundException ex) {
@@ -275,8 +275,8 @@ public class MuVisAppView extends JFrame {
 
                             @Override
                             public void run() {
-                                TreemapFilterManager filterManager = Workspace.getWorkspaceInstance().getTreemapFilterManager();
-                                MusicLibraryDatabaseManager dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+                                TreemapFilterManager filterManager = Environment.getWorkspaceInstance().getTreemapFilterManager();
+                                MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
 
                                 List availableTracks = filterManager.getFilteredTracks();
                                 List tracks = new ArrayList();
@@ -296,7 +296,7 @@ public class MuVisAppView extends JFrame {
                                     String track = dbManager.getFilename(trackId);
                                     AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
                                     PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-                                    Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+                                    Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
                                 }
                             }
                         });
@@ -390,7 +390,7 @@ public class MuVisAppView extends JFrame {
     protected void closeApplication() {
         try {
             //saving the state of the application
-            Workspace.getWorkspaceInstance().saveWorkspace();
+            Environment.getWorkspaceInstance().saveWorkspace();
             saveDocking();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -405,7 +405,7 @@ public class MuVisAppView extends JFrame {
      * @throws java.io.IOException
      */
     public void saveDocking() throws IOException {
-        saveDocking(Workspace.getWorkspaceInstance().getDataFolderPath() + "desk.xml");
+        saveDocking(Environment.getWorkspaceInstance().getDataFolderPath() + "desk.xml");
     }
 
     /**
@@ -416,7 +416,7 @@ public class MuVisAppView extends JFrame {
     public void saveDocking(String filename) throws IOException {
         try {
             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
-            DockingDesktop desk = Workspace.getWorkspaceInstance().getDesk();
+            DockingDesktop desk = Environment.getWorkspaceInstance().getDesk();
             desk.writeXML(out);
             out.close(); // stream isn't closed in case you'd like to save something else after
             System.out.println("File saved!");
@@ -433,7 +433,7 @@ public class MuVisAppView extends JFrame {
      * @throws java.io.IOException
      */
     public void loadDocking() throws FileNotFoundException, IOException {
-        loadDocking(Workspace.getWorkspaceInstance().getDataFolderPath() + "desk.xml");
+        loadDocking(Environment.getWorkspaceInstance().getDataFolderPath() + "desk.xml");
     }
 
     /**
@@ -445,7 +445,7 @@ public class MuVisAppView extends JFrame {
     public void loadDocking(String filename) throws FileNotFoundException, IOException {
         try {
             // first : declare the dockables to the desktop (they will be in the "closed" dockable state).
-            DockingDesktop desk = Workspace.getWorkspaceInstance().getDesk();
+            DockingDesktop desk = Environment.getWorkspaceInstance().getDesk();
             desk.registerDockable(mainView);
             desk.registerDockable(musicPlayerView);
             desk.registerDockable(filesystemView);
@@ -503,14 +503,14 @@ public class MuVisAppView extends JFrame {
 
                 PlayPauseListener(MenuItem item){
                     
-                    Workspace.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
+                    Environment.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
                     this.item = item;
                 }
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (controller == null){
-                        controller = (MusicControllerView) Workspace.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                        controller = (MusicControllerView) Environment.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
                     }
                     controller.playTrack();
                 }
@@ -534,7 +534,7 @@ public class MuVisAppView extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     MusicControllerView controller =
-                            (MusicControllerView) Workspace.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                            (MusicControllerView) Environment.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
 
                     controller.stopPlayer();
                 }
@@ -545,7 +545,7 @@ public class MuVisAppView extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     MusicControllerView controller =
-                            (MusicControllerView) Workspace.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                            (MusicControllerView) Environment.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
 
                     controller.playPreviousTrack();
                 }
@@ -556,7 +556,7 @@ public class MuVisAppView extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     MusicControllerView controller =
-                            (MusicControllerView) Workspace.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                            (MusicControllerView) Environment.getWorkspaceInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
 
                     controller.playNextTrack();
                 }

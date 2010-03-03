@@ -42,7 +42,7 @@ import jdbm.btree.BTree;
 import jdbm.helper.Tuple;
 import jdbm.helper.TupleBrowser;
 import muvis.NBTreeManager;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
 import muvis.util.Util;
@@ -69,7 +69,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
     private TracksTableModel model;
 
     public ListViewTableView(final JFrame parent) {
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
         controller = new ListViewTableViewController();
         threadPool = Executors.newFixedThreadPool(1);
 
@@ -208,7 +208,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
 
                             final ArrayList<Integer> tracks = new ArrayList();
                             final int[] trackIds = tracksTableView.getSelectedRows();
-                            final NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+                            final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
 
                             if (item.getText().contains("Track")){
 
@@ -243,8 +243,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                                 }
 
                                                 TreemapTrackSimilarityFilter filter = new TreemapTrackSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 Logger.getLogger(ListViewTableView.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,8 +294,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                                 }
 
                                                 TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -347,8 +347,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                                 }
 
                                                 TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 Logger.getLogger(ListViewTableView.class.getName()).log(Level.SEVERE, null, ex);
@@ -364,8 +364,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                             }
 
                             SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().filter();
+                            Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
+                            Environment.getWorkspaceInstance().getTableFilterManager().filter();
                         }
                     }
                 });
@@ -380,7 +380,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
 
                             final ArrayList<Integer> tracks = new ArrayList();
                             final int[] trackIds = tracksTableView.getSelectedRows();
-                            final NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+                            final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
                             if (item.getText().contains("Track")) { //searching for similar tracks
 
                                 final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "tracks");
@@ -412,8 +412,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                                 }
 
                                                 TreemapTrackSimilarityFilter filter = new TreemapTrackSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 Logger.getLogger(ListViewTableView.class.getName()).log(Level.SEVERE, null, ex);
@@ -462,8 +462,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                                 }
 
                                                 TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -513,8 +513,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                                 }
 
                                                 TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 Logger.getLogger(ListViewTableView.class.getName()).log(Level.SEVERE, null, ex);
@@ -532,8 +532,8 @@ public class ListViewTableView extends ListViewTableUI implements View {
                             }
 
                             SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().filter();
+                            Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
+                            Environment.getWorkspaceInstance().getTableFilterManager().filter();
                         }
                     }
                 });
@@ -607,7 +607,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                 if (tracksTableView.getSelectedRowCount() <= 1) {
                                     int row = tracksTableView.getRowSorter().convertRowIndexToModel(lastSelectedRow);
                                     int trackId = (Integer)model.getValueAt(row, 0);
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewTrack(trackId);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewTrack(trackId);
                                 } else {
                                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableView.getSelectedRowCount());
                                     for (int row : tracksTableView.getSelectedRows()) {
@@ -615,7 +615,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                         int id = (Integer)model.getValueAt(rowModel, 0);
                                         trackIds.add(id);
                                     }
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewTracks(trackIds);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewTracks(trackIds);
                                 }
 
                             } else if (item.getText().contains("Album")) {
@@ -623,7 +623,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                 if (tracksTableView.getSelectedRowCount() <= 1) {
                                     int row = tracksTableView.getRowSorter().convertRowIndexToModel(lastSelectedRow);
                                     int trackId = (Integer)model.getValueAt(row, 0);
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewAlbum(trackId);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewAlbum(trackId);
                                 } else {
                                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableView.getSelectedRowCount());
                                     for (int row : tracksTableView.getSelectedRows()) {
@@ -631,7 +631,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                         int id = (Integer)model.getValueAt(rowModel, 0);
                                         trackIds.add(id);
                                     }
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewAlbums(trackIds);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewAlbums(trackIds);
                                 }
 
                             } else if (item.getText().contains("Artist")) {
@@ -639,7 +639,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                 if (tracksTableView.getSelectedRowCount() <= 1) {
                                     int row = tracksTableView.getRowSorter().convertRowIndexToModel(lastSelectedRow);
                                     int trackId = (Integer)model.getValueAt(row, 0);
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewArtist(trackId);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewArtist(trackId);
                                 } else {
                                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableView.getSelectedRowCount());
                                     for (int row : tracksTableView.getSelectedRows()) {
@@ -647,7 +647,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
                                         int id = (Integer)model.getValueAt(rowModel, 0);
                                         trackIds.add(id);
                                     }
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewArtists(trackIds);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewArtists(trackIds);
                                 }
 
                             }

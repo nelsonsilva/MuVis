@@ -23,7 +23,7 @@ package muvis.view.main;
 
 import java.util.Enumeration;
 import muvis.Elements;
-import muvis.Workspace;
+import muvis.Environment;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -66,13 +66,13 @@ public class MuVisComputeAlbumSize
                 int num = 0;
                 for(Enumeration children = fNode.children(); children.hasMoreElements(); num++){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    value += Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
+                    value += Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
                 }
                 num /= 2;
                 return (value/num);
             }
 
-            return Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
+            return Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

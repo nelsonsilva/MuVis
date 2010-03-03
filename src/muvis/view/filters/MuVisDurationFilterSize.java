@@ -21,7 +21,7 @@
 
 package muvis.view.filters;
 
-import muvis.Workspace;
+import muvis.Environment;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -77,7 +77,7 @@ public class MuVisDurationFilterSize
             int max = fNode.getMaxValue();
             int min = fNode.getMinValue();
 
-            return Workspace.getWorkspaceInstance().getDatabaseManager().getTracksBetweenTimeRange(min, max);
+            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksBetweenTimeRange(min, max);
 
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);

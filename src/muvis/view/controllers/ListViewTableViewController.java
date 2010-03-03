@@ -22,7 +22,7 @@ package muvis.view.controllers;
 
 import java.util.ArrayList;
 import javax.swing.JFrame;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.database.MusicLibraryDatabaseManager;
@@ -36,14 +36,14 @@ public class ListViewTableViewController implements ControllerInterface {
     private MusicLibraryDatabaseManager dbManager;
 
     public ListViewTableViewController() {
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
     }
 
     public void addTrackToPlaylist(int trackId, JFrame parent) {
 
         AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
         PlaylistItem pliItem = new PlaylistItem(dbManager.getFilename(trackId), "", metadata);
-        Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+        Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
     }
 
     public void addAlbumToPlaylist(int trackId, JFrame parent) {
@@ -53,7 +53,7 @@ public class ListViewTableViewController implements ControllerInterface {
         for (String track : albumTracks) {
             AudioMetadata metadata = dbManager.getTrackMetadata(track);
             PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-            Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+            Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
         }
     }
 
@@ -63,7 +63,7 @@ public class ListViewTableViewController implements ControllerInterface {
         for (String track : albumTracks) {
             AudioMetadata metadata = dbManager.getTrackMetadata(track);
             PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-            Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+            Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
          }
     }
 
@@ -74,7 +74,7 @@ public class ListViewTableViewController implements ControllerInterface {
         for (String track : artistTracks) {
             AudioMetadata metadata = dbManager.getTrackMetadata(track);
             PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-            Workspace.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+            Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
         }
     }
 }

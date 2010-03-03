@@ -21,7 +21,7 @@
 package muvis.view.controllers;
 
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.Playlist;
@@ -43,14 +43,14 @@ public class MusicPlayerPlaylistController implements MusicPlayerControllerInter
     public MusicPlayerPlaylistController() {
         isPlaying = false;
         enabled = false;
-        Workspace.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
-        playlist = Workspace.getWorkspaceInstance().getAudioPlaylist();
-        player = Workspace.getWorkspaceInstance().getAudioPlayer();
+        Environment.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
+        playlist = Environment.getWorkspaceInstance().getAudioPlaylist();
+        player = Environment.getWorkspaceInstance().getAudioPlayer();
     }
 
     @Override
     public AudioMetadata getTrackPlayingMetadata() {
-        return Workspace.getWorkspaceInstance().getAudioPlaylist().getCursor().getAudioMetaData();
+        return Environment.getWorkspaceInstance().getAudioPlaylist().getCursor().getAudioMetaData();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MusicPlayerPlaylistController implements MusicPlayerControllerInter
 
     @Override
     public void setPlayerVolume(int value) throws BasicPlayerException {
-        Workspace.getWorkspaceInstance().getAudioPlayer().setVolume(value);
+        Environment.getWorkspaceInstance().getAudioPlayer().setVolume(value);
     }
 
     @Override

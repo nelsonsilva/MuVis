@@ -21,7 +21,7 @@
 
 package muvis.view.filters;
 
-import muvis.Workspace;
+import muvis.Environment;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -76,7 +76,7 @@ public class MuVisMoodFilterSize
 
             String mood = fNode.getMood();
 
-            return Workspace.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(mood);
+            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(mood);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

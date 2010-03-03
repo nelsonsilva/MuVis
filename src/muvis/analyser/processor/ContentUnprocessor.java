@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import muvis.NBTreeManager;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.analyser.loader.Loader;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.MP3AudioFile;
@@ -49,8 +49,8 @@ public class ContentUnprocessor implements Observer, Observable {
     public ContentUnprocessor() {
         observers = new ArrayList<Observer>();
         threadPool = Executors.newFixedThreadPool(1);
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
-        NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
         albumsTree = nbtreeManager.getNBTree("albumsNBTree");
         artistsTree = nbtreeManager.getNBTree("artistsNBTree");
     }

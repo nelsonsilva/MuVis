@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import muvis.NBTreeManager;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.analyser.loader.Loader;
 import muvis.audio.AudioMetadata;
 import muvis.audio.AudioMetadataExtractor;
@@ -66,8 +66,8 @@ public class ContentProcessor implements Observer, Observable {
     public ContentProcessor() {
         observers = new ArrayList<Observer>();
         threadPool = Executors.newFixedThreadPool(5);
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
-        NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
         tracksNBTree = nbtreeManager.getNBTree("tracksNBTree");
         albumsTree = nbtreeManager.getNBTree("albumsNBTree");
         artistsTree = nbtreeManager.getNBTree("artistsNBTree");

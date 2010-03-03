@@ -21,7 +21,7 @@
 package muvis.view;
 
 import javax.swing.JFrame;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.view.main.MuVisComputeTrackSize;
 import muvis.view.main.MuVisNodeDraw;
 import muvis.view.main.MuVisTreemapNode;
@@ -56,7 +56,7 @@ public class TreemapView extends TreemapViewUI implements View {
 
         root = new MuVisTreemapNode();
         TreemapFilterManager filterManager = new TreemapFilterManager(root);
-        Workspace.getWorkspaceInstance().setTreemapFilterManager(filterManager);
+        Environment.getWorkspaceInstance().setTreemapFilterManager(filterManager);
 
         //treemap filters
         TreemapDurationFilter treemapDurationFilter =

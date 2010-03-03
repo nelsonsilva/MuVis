@@ -34,7 +34,7 @@ import javax.swing.event.RowSorterListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.Playlist;
 import muvis.audio.playlist.PlaylistItem;
@@ -159,7 +159,7 @@ class ManagePlaylistTableModel extends DefaultTableModel implements RowSorterLis
     private Playlist managePlaylist,  originalPlaylist;
 
     public ManagePlaylistTableModel() {
-        originalPlaylist = Workspace.getWorkspaceInstance().getAudioPlaylist();
+        originalPlaylist = Environment.getWorkspaceInstance().getAudioPlaylist();
         managePlaylist = new BasePlaylist();
 
         for (PlaylistItem item : originalPlaylist.getAllItems()) {

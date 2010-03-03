@@ -42,7 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import muvis.Elements;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.BeatTableFilter;
 import muvis.filters.DurationTableFilter;
@@ -292,7 +292,7 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         if (currentPanel instanceof ListViewTableView) {
 
             tableFilterManager = new TableFilterManager(((ListViewTableView) currentPanel).getSorter());
-            Workspace.getWorkspaceInstance().setTableFilterManager(tableFilterManager);
+            Environment.getWorkspaceInstance().setTableFilterManager(tableFilterManager);
 
             tableFilterManager.addTableFilter(durationFilter);
             tableFilterManager.addTableFilter(textTableFilter);
@@ -307,7 +307,7 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
             moodAction.registerObserver(tableFilterManager);
         }
 
-        treemapFilterManager = Workspace.getWorkspaceInstance().getTreemapFilterManager();
+        treemapFilterManager = Environment.getWorkspaceInstance().getTreemapFilterManager();
 
         durationAction.registerObserver(treemapFilterManager);
         yearAction.registerObserver(treemapFilterManager);
@@ -373,7 +373,7 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         }
 
         UpdateInfoDisplay updateTable = new UpdateInfoDisplay();
-        Workspace.getWorkspaceInstance().getDatabaseManager().registerObserver(updateTable);
+        Environment.getWorkspaceInstance().getDatabaseManager().registerObserver(updateTable);
 
         scheduler.scheduleAtFixedRate(updateTable, 10, 45, TimeUnit.SECONDS);
 

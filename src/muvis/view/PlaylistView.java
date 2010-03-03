@@ -41,7 +41,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import muvis.Elements;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.playlist.Playlist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.util.Observable;
@@ -83,7 +83,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         savePlaylistButton.addActionListener(this);
         remTrackButton.addActionListener(this);
         managePlaylistButton.addActionListener(this);
-        Workspace.getWorkspaceInstance().getAudioPlaylist().registerObserver(this);
+        Environment.getWorkspaceInstance().getAudioPlaylist().registerObserver(this);
 
         initPlaylistList();
         initDockKey();
@@ -133,7 +133,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Workspace workspace = Workspace.getWorkspaceInstance();
+                    Environment workspace = Environment.getWorkspaceInstance();
 
                     MusicControllerView musicPlayerControllerView = (MusicControllerView) workspace.getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
                     musicPlayerControllerView.setPlayingType(MusicControllerView.PlayingType.PLAYLIST_MODE);
@@ -237,7 +237,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     }
 
     private void updateListTracksDisplay() {
-        Workspace workspace = Workspace.getWorkspaceInstance();
+        Environment workspace = Environment.getWorkspaceInstance();
         Playlist playlist = workspace.getAudioPlaylist();
         PlaylistItem prevSelectedItem = (PlaylistItem)listTracks.getSelectedValue();
         
@@ -272,7 +272,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     }
 
     private void updateListTracksDisplayNewCursor() {
-        Workspace workspace = Workspace.getWorkspaceInstance();
+        Environment workspace = Environment.getWorkspaceInstance();
         Playlist playlist = workspace.getAudioPlaylist();
 
         PlaylistItem newCursor = playlist.getCursor();

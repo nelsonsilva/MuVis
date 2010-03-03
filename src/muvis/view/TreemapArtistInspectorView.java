@@ -48,7 +48,7 @@ import jdbm.helper.Tuple;
 import jdbm.helper.TupleBrowser;
 import muvis.Elements;
 import muvis.NBTreeManager;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
 import muvis.util.Observable;
@@ -83,7 +83,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
     private ArrayList<String> selectedAlbumsToFilter;
 
     public TreemapArtistInspectorView(final JFrame parent) {
-        filterManager = Workspace.getWorkspaceInstance().getTreemapFilterManager();
+        filterManager = Environment.getWorkspaceInstance().getTreemapFilterManager();
         filterManager.registerObserver(this);
         artistAlbums = new ArrayList<String>();
         pagedAlbuns = new Hashtable<Integer, ArrayList<String>>();
@@ -91,7 +91,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
         selectedAlbumsToFilter = new ArrayList<String>();
 
         threadPool = Executors.newFixedThreadPool(1);
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
 
         controller = new ListViewTableViewController();
 
@@ -224,7 +224,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                             final ArrayList<Integer> tracks = new ArrayList();
                             final int[] trackIds = tracksTableArtistInspector.getSelectedRows();
-                            final NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+                            final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
 
                             if (item.getText().contains("Track")){
 
@@ -259,8 +259,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
 
                                                 TreemapTrackSimilarityFilter filter = new TreemapTrackSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -310,8 +310,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
 
                                                 TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -363,8 +363,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
 
                                                 TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -380,8 +380,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                             }
 
                             SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().filter();
+                            Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
+                            Environment.getWorkspaceInstance().getTableFilterManager().filter();
 
                             closeView();
                         }
@@ -398,7 +398,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                             final ArrayList<Integer> tracks = new ArrayList();
                             final int[] trackIds = tracksTableArtistInspector.getSelectedRows();
-                            final NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+                            final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
                             if (item.getText().contains("Track")) { //searching for similar tracks
 
                                 final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "tracks");
@@ -430,8 +430,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
 
                                                 TreemapTrackSimilarityFilter filter = new TreemapTrackSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -480,8 +480,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
 
                                                 TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -531,8 +531,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
 
                                                 TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                             } catch (IOException ex) {
                                                 ex.printStackTrace();
@@ -548,8 +548,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                             }
 
                             SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                            Workspace.getWorkspaceInstance().getTableFilterManager().filter();
+                            Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
+                            Environment.getWorkspaceInstance().getTableFilterManager().filter();
 
                             closeView();
                         }
@@ -625,7 +625,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                 if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
                                     int row = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(lastSelectedRow);
                                     int trackId = (Integer) model.getValueAt(row, 0);
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewTrack(trackId);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewTrack(trackId);
                                 } else {
                                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableArtistInspector.getSelectedRowCount());
                                     for (int row : tracksTableArtistInspector.getSelectedRows()) {
@@ -633,7 +633,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         int id = (Integer) model.getValueAt(rowModel, 0);
                                         trackIds.add(id);
                                     }
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewTracks(trackIds);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewTracks(trackIds);
                                 }
 
                             } else if (item.getText().contains("Album")) {
@@ -641,7 +641,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                 if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
                                     int row = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(lastSelectedRow);
                                     int trackId = (Integer) model.getValueAt(row, 0);
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewAlbum(trackId);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewAlbum(trackId);
                                 } else {
                                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableArtistInspector.getSelectedRowCount());
                                     for (int row : tracksTableArtistInspector.getSelectedRows()) {
@@ -649,7 +649,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         int id = (Integer) model.getValueAt(rowModel, 0);
                                         trackIds.add(id);
                                     }
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewAlbums(trackIds);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewAlbums(trackIds);
                                 }
 
                             } else if (item.getText().contains("Artist")) {
@@ -657,7 +657,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                 if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
                                     int row = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(lastSelectedRow);
                                     int trackId = (Integer) model.getValueAt(row, 0);
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewArtist(trackId);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewArtist(trackId);
                                 } else {
                                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableArtistInspector.getSelectedRowCount());
                                     for (int row : tracksTableArtistInspector.getSelectedRows()) {
@@ -665,7 +665,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         int id = (Integer) model.getValueAt(rowModel, 0);
                                         trackIds.add(id);
                                     }
-                                    Workspace.getWorkspaceInstance().getSnippetManager().previewArtists(trackIds);
+                                    Environment.getWorkspaceInstance().getSnippetManager().previewArtists(trackIds);
                                 }
 
                             }
@@ -821,17 +821,17 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                             ArrayList<Integer> ids = new ArrayList<Integer>(selectedAlbumsToFilter.size());
                             for (String albumN : selectedAlbumsToFilter) {
                                 String []albumProperties = albumN.split("\n");
-                                int id = Workspace.getWorkspaceInstance().getDatabaseManager().getAlbumId(artistNameLabel.getText(), /*albumN*/ albumProperties[0]);
-                                List trackIds = Workspace.getWorkspaceInstance().getDatabaseManager().getAlbumTracksIds(id);
+                                int id = Environment.getWorkspaceInstance().getDatabaseManager().getAlbumId(artistNameLabel.getText(), /*albumN*/ albumProperties[0]);
+                                List trackIds = Environment.getWorkspaceInstance().getDatabaseManager().getAlbumTracksIds(id);
                                 ids.addAll(trackIds);
                             }
-                            Workspace.getWorkspaceInstance().getSnippetManager().previewAlbums(ids);
+                            Environment.getWorkspaceInstance().getSnippetManager().previewAlbums(ids);
                         } else {
                             String []albumProperties = album.split("\n");
-                            int id = Workspace.getWorkspaceInstance().getDatabaseManager().getAlbumId(artistNameLabel.getText(), /*album*/ albumProperties[0]);
-                            List trackIds = Workspace.getWorkspaceInstance().getDatabaseManager().getAlbumTracksIds(id);
+                            int id = Environment.getWorkspaceInstance().getDatabaseManager().getAlbumId(artistNameLabel.getText(), /*album*/ albumProperties[0]);
+                            List trackIds = Environment.getWorkspaceInstance().getDatabaseManager().getAlbumTracksIds(id);
                             ArrayList<Integer> ids = new ArrayList<Integer>(trackIds);
-                            Workspace.getWorkspaceInstance().getSnippetManager().previewAlbums(ids);
+                            Environment.getWorkspaceInstance().getSnippetManager().previewAlbums(ids);
                         }
                     }
                 });
@@ -849,7 +849,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                                 int numSimilarElements = similarityDialog.getNumberSimilarElements();
                                 similarityDialog.dispose();
-                                NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+                                NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
                                 NBTree albumsNBTree = nbtreeManager.getNBTree("albumsNBTree");
 
 
@@ -874,8 +874,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                             }
 
                                             TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                            Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                            Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                            Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                            Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
@@ -901,8 +901,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         }
 
                                         TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                        Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                        Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                        Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                        Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -917,8 +917,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
 
                         SimilarityTableFilter filterS = new SimilarityTableFilter(tracks);
-                        Workspace.getWorkspaceInstance().getTableFilterManager().addTableFilter(filterS);
-                        Workspace.getWorkspaceInstance().getTableFilterManager().filter();
+                        Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filterS);
+                        Environment.getWorkspaceInstance().getTableFilterManager().filter();
 
                         closeView();
                     }
@@ -938,7 +938,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                                 int numSimilarElements = similarityDialog.getNumberSimilarElements();
                                 similarityDialog.dispose();
-                                NBTreeManager nbtreeManager = Workspace.getWorkspaceInstance().getNbtreesManager();
+                                NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
                                 NBTree albumsNBTree = nbtreeManager.getNBTree("albumsNBTree");
 
 
@@ -964,8 +964,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                             }
 
                                             TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                            Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                            Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                            Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                            Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
@@ -992,8 +992,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         }
 
                                         TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                        Workspace.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                        Workspace.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                        Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                        Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
 
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -1007,8 +1007,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                         similarityDialog.setVisible(true);
 
                         SimilarityTableFilter filterS = new SimilarityTableFilter(tracks);
-                        Workspace.getWorkspaceInstance().getTableFilterManager().addTableFilter(filterS);
-                        Workspace.getWorkspaceInstance().getTableFilterManager().filter();
+                        Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filterS);
+                        Environment.getWorkspaceInstance().getTableFilterManager().filter();
 
                         closeView();
                     }
@@ -1250,7 +1250,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
             }
             filterAlbumsDisplayed();
 
-            TreemapFilterManager fManager = Workspace.getWorkspaceInstance().getTreemapFilterManager();
+            TreemapFilterManager fManager = Environment.getWorkspaceInstance().getTreemapFilterManager();
             String label = "Viewing ";
             if (albumsPage > 0){
                 label += albumsPage * 4 + 1;
@@ -1305,7 +1305,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
         selectedAlbumsToFilter.clear();
         albumsPage = 0;
 
-        MainViewHolder mainViewHolder = (MainViewHolder) Workspace.getWorkspaceInstance().getViewManager().getView("mainView");
+        MainViewHolder mainViewHolder = (MainViewHolder) Environment.getWorkspaceInstance().getViewManager().getView("mainView");
         mainViewHolder.setView("TreeMapView");
     }
 }

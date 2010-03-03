@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.table.AbstractTableModel;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.database.TableRecord;
 import muvis.util.Observable;
@@ -43,7 +43,7 @@ public class ArtistInspectorTracksTableModel extends AbstractTableModel implemen
     private Hashtable<Integer, TableRecord> records;
 
     public ArtistInspectorTracksTableModel(ArrayList<Integer> trackIds) {
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
         records = new Hashtable<Integer, TableRecord>(trackIds.size());
         //loading all the tracks to this table
         for (Integer id : trackIds) {

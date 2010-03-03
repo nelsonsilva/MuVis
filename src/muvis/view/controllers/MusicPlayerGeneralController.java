@@ -24,7 +24,7 @@ package muvis.view.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.PlaylistItem;
@@ -44,7 +44,7 @@ public class MusicPlayerGeneralController implements MusicPlayerControllerInterf
     private int position;
     private MusicLibraryDatabaseManager dbManager;
     private ArrayList<Integer> tracksToPlay;
-    private Workspace workspace;
+    private Environment workspace;
     private boolean isPlaying,  updateTracksToPlay;
     private MuVisAudioPlayer audioPlayer;
     private TreemapFilterManager filterManager;
@@ -54,7 +54,7 @@ public class MusicPlayerGeneralController implements MusicPlayerControllerInterf
     public MusicPlayerGeneralController() {
         trackPlaying = null;
         position = 0;
-        workspace = Workspace.getWorkspaceInstance();
+        workspace = Environment.getWorkspaceInstance();
         dbManager = workspace.getDatabaseManager();
         workspace.getAudioPlayer().registerObserver(this);
         isPlaying = false;

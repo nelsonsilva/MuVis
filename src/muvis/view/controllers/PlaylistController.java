@@ -22,7 +22,7 @@
 package muvis.view.controllers;
 
 import java.util.ArrayList;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.playlist.Playlist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.util.Util;
@@ -43,7 +43,7 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public void loadPlaylist(String playlistname, String currentDirectory){
-        Workspace workspace = Workspace.getWorkspaceInstance();
+        Environment workspace = Environment.getWorkspaceInstance();
         workspace.getAudioPlaylist().removeAllItems();
         workspace.getAudioPlaylist().load(playlistname, currentDirectory + Util.getOSEscapeSequence());
     }
@@ -55,7 +55,7 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public boolean savePlaylist(String playlistName, String currentDirectory){
-        Workspace workspace = Workspace.getWorkspaceInstance();
+        Environment workspace = Environment.getWorkspaceInstance();
         return workspace.getAudioPlaylist().save(playlistName, currentDirectory + Util.getOSEscapeSequence());
     }
 
@@ -65,13 +65,13 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public void removeTrackFromPlaylist(PlaylistItem item){
-        Workspace workspace = Workspace.getWorkspaceInstance();
+        Environment workspace = Environment.getWorkspaceInstance();
         workspace.getAudioPlaylist().removeItem(item);
     }
 
     @Override
     public void removeTracksFromPlaylist(ArrayList<PlaylistItem> items) {
-        Playlist playlist = Workspace.getWorkspaceInstance().getAudioPlaylist();
+        Playlist playlist = Environment.getWorkspaceInstance().getAudioPlaylist();
         playlist.removeItems(items);
     }
 }

@@ -24,10 +24,12 @@ import com.vlsolutions.swing.docking.DockKey;
 import com.vlsolutions.swing.docking.Dockable;
 import com.vlsolutions.swing.docking.DockingConstants;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,10 +39,11 @@ import javax.swing.event.ChangeListener;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import muvis.util.Observable;
 import muvis.view.controllers.MusicPlayerPlaylistController;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.Playlist;
+import muvis.util.JImagePanel;
 import muvis.util.Observer;
 import muvis.util.Util;
 import muvis.view.controllers.MusicPlayerControllerInterface;
@@ -159,9 +162,46 @@ public class MusicControllerView extends MusicControllerViewUI
             }
         });
 
+        albumCoverPanel.addMouseListener( new MouseListener() {
+
+            JFrame albumCoverPreview;
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 2){
+                    BufferedImage image = ((JImagePanel)e.getSource()).getImage();
+
+                    if (albumCoverPreview == null || !albumCoverPreview.isVisible()){
+                        albumCoverPreview = new JFrame("Album Cover");
+                        JImagePanel albumPreviewPanel = new JImagePanel(image, 0, 0,image.getWidth(), image.getHeight());
+                        albumCoverPreview.add(albumPreviewPanel);
+                        albumCoverPreview.setSize( new Dimension(image.getWidth(), image.getHeight()));
+                        albumCoverPreview.setVisible(true);
+                    }
+                }
+            }
+
+            private void displayAlbumCoverPreview(BufferedImage image){
+                
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+
         //register objects and listeners
-        Workspace.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
-        Workspace.getWorkspaceInstance().getAudioPlaylist().registerObserver(this);
+        Environment.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
+        Environment.getWorkspaceInstance().getAudioPlaylist().registerObserver(this);
         playTrackButton.addActionListener(this);
         previousTrackButton.addActionListener(this);
         nextTrackButton.addActionListener(this);
@@ -187,7 +227,7 @@ public class MusicControllerView extends MusicControllerViewUI
             public void mouseReleased(MouseEvent e) {
                 try {
                     timelineSliderValue = musicTimelineSlider.getValue();
-                    Workspace.getWorkspaceInstance().getAudioPlayer().seek(timelineSliderValue);
+                    Environment.getWorkspaceInstance().getAudioPlayer().seek(timelineSliderValue);
                     musicTimelineTimer.restart();
                 } catch (BasicPlayerException ex) {
                     ex.printStackTrace();
@@ -204,7 +244,7 @@ public class MusicControllerView extends MusicControllerViewUI
         });
 
         //setting the volume
-        volumeSlider.setValue((int) Workspace.getWorkspaceInstance().getAudioPlayer().getVolume());
+        volumeSlider.setValue((int) Environment.getWorkspaceInstance().getAudioPlayer().getVolume());
 
         //Setting the properties for the timelineslider timer
         int delay = 1000; //milliseconds
@@ -324,7 +364,7 @@ public class MusicControllerView extends MusicControllerViewUI
      */
     @Override
     public void update(Observable obs, Object arg) {
-        MuVisAudioPlayer player = Workspace.getWorkspaceInstance().getAudioPlayer();
+        MuVisAudioPlayer player = Environment.getWorkspaceInstance().getAudioPlayer();
         if (obs instanceof MuVisAudioPlayer) {
             if (MuVisAudioPlayer.Event.RESUMED.equals(arg) && player.isPlaying()) {
                 //start the timer

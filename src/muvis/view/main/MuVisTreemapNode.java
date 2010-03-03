@@ -32,7 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import muvis.Elements;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import net.bouthier.treemapSwing.TMNode;
 import net.bouthier.treemapSwing.TMUpdater;
@@ -123,7 +123,7 @@ public class MuVisTreemapNode implements TMNode {
     protected void buildTree(ProgressStatus status) {
         if (!isLeaf()) {
 
-            MusicLibraryDatabaseManager dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+            MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
 
             ArrayList<String> artistNames = dbManager.getAllArtistNamesAscOrder();
             MuVisTreemapNode others = new MuVisTreemapNode(Elements.OTHERS_NODE, parent, status, true);

@@ -21,7 +21,7 @@
 
 package muvis.view.filters;
 
-import muvis.Workspace;
+import muvis.Environment;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -76,7 +76,7 @@ public class MuVisGenreFilterSize
 
             String genre = fNode.getGenre();
 
-            return Workspace.getWorkspaceInstance().getDatabaseManager().getTracksWithGenre(genre);
+            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithGenre(genre);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

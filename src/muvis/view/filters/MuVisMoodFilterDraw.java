@@ -23,7 +23,7 @@ package muvis.view.filters;
 
 import java.awt.Color;
 import java.awt.Paint;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.util.Util;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -65,7 +65,7 @@ public class MuVisMoodFilterDraw extends MuVisFilterDraw {
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             } else {*/
 
-                int value = Workspace.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(fNode.getMood());
+                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(fNode.getMood());
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             //}
 
@@ -87,7 +87,7 @@ public class MuVisMoodFilterDraw extends MuVisFilterDraw {
             if (fNode.isSelected())
                 return new Color(250, 192, 144);
             else {
-                int value = Workspace.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(fNode.getMood());
+                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(fNode.getMood());
                 return Util.getColor(value);
             }
         } else {

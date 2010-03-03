@@ -22,7 +22,7 @@
 package muvis.view.main.filters;
 
 import java.util.List;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.util.Observable;
 
 /**
@@ -33,22 +33,22 @@ public class EmptyFilter extends TreemapFilter {
 
     @Override
     public int getCountFilteredTracks(String artistName) {
-        return Workspace.getWorkspaceInstance().getDatabaseManager().getArtistTracks(artistName).size();
+        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistTracks(artistName).size();
     }
 
     @Override
     public int getCountFilteredAlbuns(String artistName) {
-        return Workspace.getWorkspaceInstance().getDatabaseManager().getArtistAlbums(artistName).size();
+        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistAlbums(artistName).size();
     }
 
     @Override
     public List getFilteredTracks(String artistName) {
-        return Workspace.getWorkspaceInstance().getDatabaseManager().getArtistTracks(artistName);
+        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistTracks(artistName);
     }
 
     @Override
     public List getFilteredAlbuns(String artistName) {
-        return Workspace.getWorkspaceInstance().getDatabaseManager().getArtistAlbums(artistName);
+        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistAlbums(artistName);
     }
 
     @Override

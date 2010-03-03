@@ -21,7 +21,7 @@
 
 package muvis.view.filters;
 
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
@@ -57,7 +57,7 @@ public class MuVisBeatFilterNode extends MuVisFilterNode implements Observer {
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Workspace.getWorkspaceInstance().getDatabaseManager().registerObserver(this);
+        Environment.getWorkspaceInstance().getDatabaseManager().registerObserver(this);
     }
 
     @Override

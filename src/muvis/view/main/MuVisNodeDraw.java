@@ -30,7 +30,7 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.util.Enumeration;
 import muvis.Elements;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.util.Util;
 import net.bouthier.treemapSwing.TMComputeDraw;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
@@ -80,7 +80,7 @@ public class MuVisNodeDraw
                 return new Color(122, 122, 122);
             }
 
-            return Util.getGenreColor(Workspace.getWorkspaceInstance().getDatabaseManager().getArtistGenre(fNode.getName()));
+            return Util.getGenreColor(Environment.getWorkspaceInstance().getDatabaseManager().getArtistGenre(fNode.getName()));
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }
@@ -114,20 +114,20 @@ public class MuVisNodeDraw
 
                 for(Enumeration children = fNode.children(); children.hasMoreElements();){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    numTracks += Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
+                    numTracks += Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
                 }
 
                 for(Enumeration children = fNode.children(); children.hasMoreElements(); ){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    numAlbums += Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
+                    numAlbums += Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
                 }
 
             }
             else {
 
-                numAlbums = Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
+                numAlbums = Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
 
-                numTracks = Workspace.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
+                numTracks = Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
             }
 
             tooltip += "<p>" + numAlbums + " albums with " + numTracks + " tracks";

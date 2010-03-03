@@ -21,7 +21,7 @@
 
 package muvis.view.filters;
 
-import muvis.Workspace;
+import muvis.Environment;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
@@ -78,7 +78,7 @@ public class MuVisYearFilterSize
             int startYear = fNode.getYear();
             int range = fNode.getYearRange();
 
-            return Workspace.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
+            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

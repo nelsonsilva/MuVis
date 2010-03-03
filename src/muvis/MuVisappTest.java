@@ -23,6 +23,7 @@ package muvis;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 //import javax.swing.UIManager;
 //import org.jvnet.substance.skin.SubstanceModerateLookAndFeel;
 //import org.jvnet.substance.skin.SubstanceRavenGraphiteLookAndFeel;

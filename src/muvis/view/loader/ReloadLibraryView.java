@@ -32,7 +32,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.view.controllers.ReloadLibraryController;
 
@@ -174,7 +174,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
             newFrame.dispose();
 
             try {
-                Workspace.getWorkspaceInstance().loadWorkspace();
+                Environment.getWorkspaceInstance().loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");

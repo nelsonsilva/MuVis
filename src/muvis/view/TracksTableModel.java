@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import javax.swing.table.AbstractTableModel;
-import muvis.Workspace;
+import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.database.TableRecord;
 import muvis.util.Observable;
@@ -47,7 +47,7 @@ public class TracksTableModel extends AbstractTableModel implements Observer {
     private boolean fasterMode = true;
 
     public TracksTableModel() {
-        dbManager = Workspace.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
         int numTracks = dbManager.getCountTracks();
         if (numTracks < 0) {
             numTracks = 0;
