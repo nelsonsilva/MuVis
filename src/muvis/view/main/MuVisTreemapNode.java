@@ -123,7 +123,7 @@ public class MuVisTreemapNode implements TMNode {
     protected void buildTree(ProgressStatus status) {
         if (!isLeaf()) {
 
-            MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+            MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
             ArrayList<String> artistNames = dbManager.getAllArtistNamesAscOrder();
             MuVisTreemapNode others = new MuVisTreemapNode(Elements.OTHERS_NODE, parent, status, true);

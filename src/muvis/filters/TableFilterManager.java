@@ -26,7 +26,7 @@ import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import muvis.util.Observable;
 import muvis.util.Observer;
-import muvis.view.TracksTableModel;
+import muvis.view.table.TracksTableModel;
 
 /**
  *

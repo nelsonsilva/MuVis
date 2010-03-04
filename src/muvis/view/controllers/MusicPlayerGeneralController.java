@@ -54,7 +54,7 @@ public class MusicPlayerGeneralController implements MusicPlayerControllerInterf
     public MusicPlayerGeneralController() {
         trackPlaying = null;
         position = 0;
-        workspace = Environment.getWorkspaceInstance();
+        workspace = Environment.getEnvironmentInstance();
         dbManager = workspace.getDatabaseManager();
         workspace.getAudioPlayer().registerObserver(this);
         isPlaying = false;

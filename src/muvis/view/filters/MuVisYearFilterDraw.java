@@ -68,7 +68,7 @@ public class MuVisYearFilterDraw extends MuVisFilterDraw {
             int startYear = fNode.getYear();
             int range = fNode.getYearRange();
 
-            int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
+            int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
             tooltip = "<html>" + name + "<p>Tracks available: " + value;
             //}
 
@@ -93,7 +93,7 @@ public class MuVisYearFilterDraw extends MuVisFilterDraw {
                 int startYear = fNode.getYear();
                 int range = fNode.getYearRange();
 
-            int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
+            int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
                 return Util.getColor(value);
             }
         } else {

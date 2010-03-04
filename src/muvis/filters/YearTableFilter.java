@@ -23,7 +23,7 @@ package muvis.filters;
 import java.util.Hashtable;
 import javax.swing.RowFilter;
 import muvis.util.Observable;
-import muvis.view.TracksTableModel;
+import muvis.view.table.TracksTableModel;
 import muvis.view.filters.MuVisFilterAction;
 import muvis.view.filters.MuVisFilterNode;
 import muvis.view.filters.MuVisYearFilterNode;

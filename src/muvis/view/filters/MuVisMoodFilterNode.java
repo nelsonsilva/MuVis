@@ -57,7 +57,7 @@ public class MuVisMoodFilterNode extends MuVisFilterNode implements Observer {
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Environment.getWorkspaceInstance().getDatabaseManager().registerObserver(this);
+        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
     }
 
     @Override

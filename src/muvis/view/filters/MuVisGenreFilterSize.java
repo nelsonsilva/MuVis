@@ -76,7 +76,7 @@ public class MuVisGenreFilterSize
 
             String genre = fNode.getGenre();
 
-            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithGenre(genre);
+            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithGenre(genre);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

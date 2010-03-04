@@ -55,8 +55,8 @@ public class TMAlgorithmOrderedSquarified
         float pSize = node.getSize();
         Rectangle pArea = node.getArea();
 
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
-        NBTree nbtree = Environment.getWorkspaceInstance().getNbtreesManager().getNBTree("artistsNBTree");
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+        NBTree nbtree = Environment.getEnvironmentInstance().getNbtreesManager().getNBTree("artistsNBTree");
 
         int x = pArea.x;
         int y = pArea.y;
@@ -305,8 +305,8 @@ public class TMAlgorithmOrderedSquarified
 
         Vector newSortedVector = new Vector();
         TMNodeModel child;
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
-        NBTree nbtree = Environment.getWorkspaceInstance().getNbtreesManager().getNBTree("artistsNBTree");
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+        NBTree nbtree = Environment.getEnvironmentInstance().getNbtreesManager().getNBTree("artistsNBTree");
 
         for (Object obj : sortedVector) {
             child = (TMNodeModel) obj;

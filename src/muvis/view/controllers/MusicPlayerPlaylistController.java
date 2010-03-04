@@ -43,14 +43,14 @@ public class MusicPlayerPlaylistController implements MusicPlayerControllerInter
     public MusicPlayerPlaylistController() {
         isPlaying = false;
         enabled = false;
-        Environment.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
-        playlist = Environment.getWorkspaceInstance().getAudioPlaylist();
-        player = Environment.getWorkspaceInstance().getAudioPlayer();
+        Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
+        playlist = Environment.getEnvironmentInstance().getAudioPlaylist();
+        player = Environment.getEnvironmentInstance().getAudioPlayer();
     }
 
     @Override
     public AudioMetadata getTrackPlayingMetadata() {
-        return Environment.getWorkspaceInstance().getAudioPlaylist().getCursor().getAudioMetaData();
+        return Environment.getEnvironmentInstance().getAudioPlaylist().getCursor().getAudioMetaData();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MusicPlayerPlaylistController implements MusicPlayerControllerInter
 
     @Override
     public void setPlayerVolume(int value) throws BasicPlayerException {
-        Environment.getWorkspaceInstance().getAudioPlayer().setVolume(value);
+        Environment.getEnvironmentInstance().getAudioPlayer().setVolume(value);
     }
 
     @Override

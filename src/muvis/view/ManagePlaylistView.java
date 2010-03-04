@@ -20,6 +20,7 @@
  */
 package muvis.view;
 
+import muvis.view.table.ColorCellRenderer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -159,7 +160,7 @@ class ManagePlaylistTableModel extends DefaultTableModel implements RowSorterLis
     private Playlist managePlaylist,  originalPlaylist;
 
     public ManagePlaylistTableModel() {
-        originalPlaylist = Environment.getWorkspaceInstance().getAudioPlaylist();
+        originalPlaylist = Environment.getEnvironmentInstance().getAudioPlaylist();
         managePlaylist = new BasePlaylist();
 
         for (PlaylistItem item : originalPlaylist.getAllItems()) {

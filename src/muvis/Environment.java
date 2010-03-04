@@ -31,6 +31,7 @@ import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.swing.JFrame;
 import muvis.audio.AudioSnippetPlayerManager;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.BasePlaylist;
@@ -69,6 +70,7 @@ public class Environment {
     private static TableFilterManager tableFilterManager;
     private static TreemapFilterManager treemapFilterManager;
     private static String dataPropertiesFolder;
+    private static JFrame rootFrame;
     /**
      * The only instance of Workspace
      */
@@ -181,6 +183,21 @@ public class Environment {
         configFile = aConfigFile;
     }
 
+    /**
+     * @return the root frame of the MuVis application
+     */
+    public JFrame getRootFrame(){
+        return rootFrame;
+    }
+
+    /**
+     * Must be careful with this method
+     * @param frame the new root Frame
+     */
+    public void setRootFrame(JFrame frame){
+        rootFrame = frame;
+    }
+
     private Environment() {
 
         initializeDataFolders();
@@ -238,7 +255,7 @@ public class Environment {
      * This method returns the only instance of Workspace
      * @return workspace The only instance of Workspace
      */
-    public static Environment getWorkspaceInstance() {
+    public static Environment getEnvironmentInstance() {
         return workspace;
     }
 

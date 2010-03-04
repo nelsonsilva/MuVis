@@ -36,14 +36,14 @@ public class ListViewTableViewController implements ControllerInterface {
     private MusicLibraryDatabaseManager dbManager;
 
     public ListViewTableViewController() {
-        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
     }
 
     public void addTrackToPlaylist(int trackId, JFrame parent) {
 
         AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
         PlaylistItem pliItem = new PlaylistItem(dbManager.getFilename(trackId), "", metadata);
-        Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+        Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
     }
 
     public void addAlbumToPlaylist(int trackId, JFrame parent) {
@@ -53,7 +53,7 @@ public class ListViewTableViewController implements ControllerInterface {
         for (String track : albumTracks) {
             AudioMetadata metadata = dbManager.getTrackMetadata(track);
             PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-            Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+            Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
         }
     }
 
@@ -63,7 +63,7 @@ public class ListViewTableViewController implements ControllerInterface {
         for (String track : albumTracks) {
             AudioMetadata metadata = dbManager.getTrackMetadata(track);
             PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-            Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+            Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
          }
     }
 
@@ -74,7 +74,7 @@ public class ListViewTableViewController implements ControllerInterface {
         for (String track : artistTracks) {
             AudioMetadata metadata = dbManager.getTrackMetadata(track);
             PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-            Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+            Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
         }
     }
 }

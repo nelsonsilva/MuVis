@@ -90,7 +90,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
             MuVisTreemapNode fNode = (MuVisTreemapNode) node;
             if (e.getClickCount() == 2) {
                 if (artistInspector == null) {
-                    mainViewHolder = (MainViewHolder) Environment.getWorkspaceInstance().getViewManager().getView(Elements.MAIN_VIEW);
+                    mainViewHolder = (MainViewHolder) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MAIN_VIEW);
                     artistInspector = (TreemapArtistInspectorView) mainViewHolder.getView(Elements.ARTIST_INSPECTOR_VIEW);
                 }
 
@@ -187,7 +187,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                     JMenuItem item = (JMenuItem) e.getSource();
 
                     final ArrayList<Integer> tracks = new ArrayList();
-                    final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
+                    final NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
 
                     if (item.getText().contains("Artist")) {
 
@@ -202,7 +202,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                                 int numSimilarElements = similarityDialog.getNumberSimilarElements();
                                 similarityDialog.dispose();
                                 NBTree artistsNBTree = nbtreeManager.getNBTree("artistsNBTree");
-                                MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+                                MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
                                 ArrayList<String> artistNames = new ArrayList<String>();
                                 if (!selectedNodes.contains(nodeUnder)) {
                                     selectedNodes.add(nodeUnder);
@@ -230,8 +230,8 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                                     }
 
                                     TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                    Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                    Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                    Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
+                                    Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 
                                 } catch (IOException ex) {
                                     ex.printStackTrace();
@@ -249,8 +249,8 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                     }
 
                     SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                    Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                    Environment.getWorkspaceInstance().getTableFilterManager().filter();
+                    Environment.getEnvironmentInstance().getTableFilterManager().addTableFilter(filter);
+                    Environment.getEnvironmentInstance().getTableFilterManager().filter();
                 }
             }
         });
@@ -268,8 +268,8 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                             @Override
                             public void run() {
                                 //add artist to playlist
-                                MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
-                                TreemapFilterManager filterManager = Environment.getWorkspaceInstance().getTreemapFilterManager();
+                                MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+                                TreemapFilterManager filterManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
 
                                 List artistTracks = new ArrayList();
                                 if (!selectedNodes.contains(nodeUnder)) {
@@ -285,7 +285,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                                     String track = dbManager.getFilename(trackId);
                                     AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
                                     PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-                                    Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(pliItem);
+                                    Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
                                 }
                                 selectedNodes.remove(nodeUnder);
                             }
@@ -308,7 +308,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                 for (MuVisTreemapNode sNode : selectedNodes) {
                     artistsToPreview.add(sNode.getName());
                 }
-                Environment.getWorkspaceInstance().getSnippetManager().previewArtists(artistsToPreview, true);
+                Environment.getEnvironmentInstance().getSnippetManager().previewArtists(artistsToPreview, true);
                 selectedNodes.remove(nodeUnder);
             }
         });
@@ -322,8 +322,8 @@ public class MuVisTreemapVisualizationAction extends TMAction {
 
                     final SimilarElementsView similarityDialog = new SimilarElementsView(parentFrame, "artists");
 
-                    final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
-                    final MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+                    final NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
+                    final MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
                     final ArrayList<Integer> tracks = new ArrayList<Integer>();
 
                     ActionListener filter = new ActionListener() {
@@ -364,12 +364,12 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                                 }
 
                                 TreemapArtistSimilarityFilter filterTreemap = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filterTreemap);
-                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
+                                Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filterTreemap);
+                                Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 
                                 SimilarityTableFilter filterTable = new SimilarityTableFilter(tracks);
-                                Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filterTable);
-                                Environment.getWorkspaceInstance().getTableFilterManager().filter();
+                                Environment.getEnvironmentInstance().getTableFilterManager().addTableFilter(filterTable);
+                                Environment.getEnvironmentInstance().getTableFilterManager().filter();
 
                             } catch (IOException ex) {
                             } catch (NBTreeException ex) {

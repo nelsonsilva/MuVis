@@ -76,7 +76,7 @@ public class DirectoryListTreeView extends DirectoryListViewTreeUI implements Do
                     String pathFile = treeDirectoryList.getSelectionPath().getLastPathComponent().toString();
                     AudioMetadataExtractor extractor = new MP3AudioMetadataExtractor();
                     PlaylistItem item = new PlaylistItem("", pathFile, extractor.getAudioMetadata(pathFile));
-                    Environment.getWorkspaceInstance().getAudioPlaylist().appendItem(item);
+                    Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(item);
                 } catch (CannotRetrieveMP3TagException ex) {
                     ex.printStackTrace();
                 }

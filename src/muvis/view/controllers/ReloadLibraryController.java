@@ -54,7 +54,7 @@ public class ReloadLibraryController implements ControllerInterface {
      */
     public void saveLibraryFolders(Object[] folders) throws CantSavePropertiesFileException {
 
-        Properties configFile = Environment.getWorkspaceInstance().getConfigFile();
+        Properties configFile = Environment.getEnvironmentInstance().getConfigFile();
         if (!configFile.containsKey("folders_number")) {
         }
         configFile.setProperty("folders_number", String.valueOf(folders.length));
@@ -78,7 +78,7 @@ public class ReloadLibraryController implements ControllerInterface {
     public ArrayList<String> getLibraryFolders() {
 
         ArrayList<String> folders = new ArrayList<String>();
-        Properties configFile = Environment.getWorkspaceInstance().getConfigFile();
+        Properties configFile = Environment.getEnvironmentInstance().getConfigFile();
 
         int countFolders = 0;
         if (configFile.containsKey("folders_number")) {

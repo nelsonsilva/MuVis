@@ -52,7 +52,7 @@ public class LoadLibraryController implements ControllerInterface {
      */
     public void saveLibraryFolders(Object[] folders) throws CantSavePropertiesFileException {
 
-        Properties configFile = Environment.getWorkspaceInstance().getConfigFile();
+        Properties configFile = Environment.getEnvironmentInstance().getConfigFile();
         if (!configFile.containsKey("folders_number")) {
         }
         configFile.setProperty("folders_number", String.valueOf(folders.length));
@@ -71,7 +71,7 @@ public class LoadLibraryController implements ControllerInterface {
         } catch (IOException ex) {
             throw new CantSavePropertiesFileException("Can't save the configuration file!");
         }*/
-        Environment.getWorkspaceInstance().saveConfigFile();
+        Environment.getEnvironmentInstance().saveConfigFile();
     }
 
     /**

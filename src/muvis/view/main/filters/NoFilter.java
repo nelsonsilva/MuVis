@@ -33,22 +33,22 @@ public class NoFilter extends TreemapFilter {
 
     @Override
     public int getCountFilteredTracks(String artistName) {
-        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistTracks(artistName).size();
+        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistTracks(artistName).size();
     }
 
     @Override
     public int getCountFilteredAlbuns(String artistName) {
-        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistAlbums(artistName).size();
+        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistAlbums(artistName).size();
     }
 
     @Override
     public List getFilteredTracks(String artistName) {
-        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistTracks(artistName);
+        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistTracks(artistName);
     }
 
     @Override
     public List getFilteredAlbuns(String artistName) {
-        return Environment.getWorkspaceInstance().getDatabaseManager().getArtistAlbums(artistName);
+        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistAlbums(artistName);
     }
 
     @Override

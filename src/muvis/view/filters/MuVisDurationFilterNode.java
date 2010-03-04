@@ -73,8 +73,8 @@ public class MuVisDurationFilterNode extends MuVisFilterNode implements Observer
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Environment.getWorkspaceInstance().getDatabaseManager().registerObserver(this);
-        Environment.getWorkspaceInstance().getTreemapFilterManager().registerObserver(this);
+        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
+        Environment.getEnvironmentInstance().getTreemapFilterManager().registerObserver(this);
         super.isLeaf = true;
 
     }

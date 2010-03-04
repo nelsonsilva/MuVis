@@ -25,7 +25,7 @@
  * Created on 11/Mai/2009, 1:21:28
  */
 
-package muvis.view;
+package muvis.view.table;
 
 /**
  *

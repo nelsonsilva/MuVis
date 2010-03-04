@@ -20,6 +20,7 @@
  */
 package muvis.view;
 
+import muvis.view.table.ListViewTableView;
 import com.vlsolutions.swing.docking.DockKey;
 import com.vlsolutions.swing.docking.Dockable;
 import java.awt.Component;
@@ -292,7 +293,7 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         if (currentPanel instanceof ListViewTableView) {
 
             tableFilterManager = new TableFilterManager(((ListViewTableView) currentPanel).getSorter());
-            Environment.getWorkspaceInstance().setTableFilterManager(tableFilterManager);
+            Environment.getEnvironmentInstance().setTableFilterManager(tableFilterManager);
 
             tableFilterManager.addTableFilter(durationFilter);
             tableFilterManager.addTableFilter(textTableFilter);
@@ -307,7 +308,7 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
             moodAction.registerObserver(tableFilterManager);
         }
 
-        treemapFilterManager = Environment.getWorkspaceInstance().getTreemapFilterManager();
+        treemapFilterManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
 
         durationAction.registerObserver(treemapFilterManager);
         yearAction.registerObserver(treemapFilterManager);
@@ -373,7 +374,7 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         }
 
         UpdateInfoDisplay updateTable = new UpdateInfoDisplay();
-        Environment.getWorkspaceInstance().getDatabaseManager().registerObserver(updateTable);
+        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(updateTable);
 
         scheduler.scheduleAtFixedRate(updateTable, 10, 45, TimeUnit.SECONDS);
 

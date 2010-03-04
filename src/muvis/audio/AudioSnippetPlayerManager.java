@@ -50,7 +50,7 @@ public class AudioSnippetPlayerManager {
     public void previewArtists(ArrayList<String> artistsToPreview, boolean b) {
 
         int maxTracks = 5;
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks * artistsToPreview.size());
         ArrayList<String> allTracks = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class AudioSnippetPlayerManager {
 
     public void previewTrack(int trackId) {
 
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         String filename = dbManager.getFilename(trackId);
 
         ArrayList<String> tracks = new ArrayList<String>();
@@ -87,7 +87,7 @@ public class AudioSnippetPlayerManager {
 
     public void previewTracks(ArrayList<Integer> trackIds) {
 
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>();
         for (int trackId : trackIds) {
@@ -100,7 +100,7 @@ public class AudioSnippetPlayerManager {
     public void previewArtist(String artistName) {
 
         int maxTracks = 5;
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks);
         ArrayList<String> allTracks = dbManager.getArtistTracks(artistName);
@@ -119,7 +119,7 @@ public class AudioSnippetPlayerManager {
 
     public void previewArtist(int trackId) {
 
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         String artistName = dbManager.getArtistName(trackId);
         previewArtist(artistName);
     }
@@ -127,7 +127,7 @@ public class AudioSnippetPlayerManager {
     public void previewArtists(ArrayList<Integer> tracksId) {
 
         int maxTracks = 5;
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks * tracksId.size());
         for (int trackId : tracksId) {
@@ -150,7 +150,7 @@ public class AudioSnippetPlayerManager {
     public void previewAlbum(int trackId) {
 
         int maxTracks = 3;
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         String albumName = dbManager.getAlbumName(trackId);
 
@@ -172,7 +172,7 @@ public class AudioSnippetPlayerManager {
     public void previewAlbums(ArrayList<Integer> trackIds) {
 
         int maxTracks = 3;
-        MusicLibraryDatabaseManager dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks * trackIds.size());
         for (int trackId : trackIds) {
@@ -220,7 +220,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
     private void setMusicPlayerSnippetController() {
         if (filterController == null) {
             MusicControllerView view =
-                    (MusicControllerView) Environment.getWorkspaceInstance().
+                    (MusicControllerView) Environment.getEnvironmentInstance().
                     getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
 
             //save the previously music controllers
@@ -249,7 +249,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
         if (filterController != null) {
 
             MusicControllerView view =
-                    (MusicControllerView) Environment.getWorkspaceInstance().
+                    (MusicControllerView) Environment.getEnvironmentInstance().
                     getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
 
             MusicControllerView.PlayingType type = view.getPlayingType();
@@ -350,7 +350,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
 
     @Override
     public AudioMetadata getTrackPlayingMetadata() {
-        AudioMetadata metadata = Environment.getWorkspaceInstance().getDatabaseManager().getTrackMetadata(trackPlaying);
+        AudioMetadata metadata = Environment.getEnvironmentInstance().getDatabaseManager().getTrackMetadata(trackPlaying);
         return metadata;
     }
 

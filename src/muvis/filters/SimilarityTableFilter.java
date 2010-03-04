@@ -24,7 +24,7 @@ package muvis.filters;
 import java.util.ArrayList;
 import javax.swing.RowFilter;
 import muvis.util.Observable;
-import muvis.view.TracksTableModel;
+import muvis.view.table.TracksTableModel;
 
 /*
  * Classes for implementing the filters in the list view

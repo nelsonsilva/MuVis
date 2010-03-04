@@ -65,7 +65,7 @@ public class MuVisGenreFilterDraw extends MuVisFilterDraw {
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             } else {*/
 
-                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithGenre(fNode.getGenre());
+                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithGenre(fNode.getGenre());
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             //}
 
@@ -87,7 +87,7 @@ public class MuVisGenreFilterDraw extends MuVisFilterDraw {
             if (fNode.isSelected())
                 return new Color(250, 192, 144);
             else {
-                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithGenre(fNode.getGenre());
+                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithGenre(fNode.getGenre());
                 return Util.getColor(value);
             }
         } else {

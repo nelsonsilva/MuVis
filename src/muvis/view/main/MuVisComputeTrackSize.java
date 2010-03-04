@@ -66,12 +66,12 @@ public class MuVisComputeTrackSize
                 int num = 0;
                 for(Enumeration children = fNode.children(); children.hasMoreElements(); num++){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    value += Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
+                    value += Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
                 }
                 num /= 2;
                 return ((num != 0)? (value/num) : 0);
             }
-            return Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
+            return Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
 
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);

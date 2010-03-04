@@ -83,7 +83,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         savePlaylistButton.addActionListener(this);
         remTrackButton.addActionListener(this);
         managePlaylistButton.addActionListener(this);
-        Environment.getWorkspaceInstance().getAudioPlaylist().registerObserver(this);
+        Environment.getEnvironmentInstance().getAudioPlaylist().registerObserver(this);
 
         initPlaylistList();
         initDockKey();
@@ -133,7 +133,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Environment workspace = Environment.getWorkspaceInstance();
+                    Environment workspace = Environment.getEnvironmentInstance();
 
                     MusicControllerView musicPlayerControllerView = (MusicControllerView) workspace.getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
                     musicPlayerControllerView.setPlayingType(MusicControllerView.PlayingType.PLAYLIST_MODE);
@@ -237,7 +237,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     }
 
     private void updateListTracksDisplay() {
-        Environment workspace = Environment.getWorkspaceInstance();
+        Environment workspace = Environment.getEnvironmentInstance();
         Playlist playlist = workspace.getAudioPlaylist();
         PlaylistItem prevSelectedItem = (PlaylistItem)listTracks.getSelectedValue();
         
@@ -272,7 +272,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     }
 
     private void updateListTracksDisplayNewCursor() {
-        Environment workspace = Environment.getWorkspaceInstance();
+        Environment workspace = Environment.getEnvironmentInstance();
         Playlist playlist = workspace.getAudioPlaylist();
 
         PlaylistItem newCursor = playlist.getCursor();

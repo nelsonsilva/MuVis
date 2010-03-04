@@ -18,7 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package muvis.view;
+package muvis.view.table;
 
 import java.util.Hashtable;
 import java.util.concurrent.Executors;
@@ -47,7 +47,7 @@ public class TracksTableModel extends AbstractTableModel implements Observer {
     private boolean fasterMode = true;
 
     public TracksTableModel() {
-        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         int numTracks = dbManager.getCountTracks();
         if (numTracks < 0) {
             numTracks = 0;

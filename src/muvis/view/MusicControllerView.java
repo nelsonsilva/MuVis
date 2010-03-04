@@ -200,8 +200,8 @@ public class MusicControllerView extends MusicControllerViewUI
         });
 
         //register objects and listeners
-        Environment.getWorkspaceInstance().getAudioPlayer().registerObserver(this);
-        Environment.getWorkspaceInstance().getAudioPlaylist().registerObserver(this);
+        Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
+        Environment.getEnvironmentInstance().getAudioPlaylist().registerObserver(this);
         playTrackButton.addActionListener(this);
         previousTrackButton.addActionListener(this);
         nextTrackButton.addActionListener(this);
@@ -227,7 +227,7 @@ public class MusicControllerView extends MusicControllerViewUI
             public void mouseReleased(MouseEvent e) {
                 try {
                     timelineSliderValue = musicTimelineSlider.getValue();
-                    Environment.getWorkspaceInstance().getAudioPlayer().seek(timelineSliderValue);
+                    Environment.getEnvironmentInstance().getAudioPlayer().seek(timelineSliderValue);
                     musicTimelineTimer.restart();
                 } catch (BasicPlayerException ex) {
                     ex.printStackTrace();
@@ -244,7 +244,7 @@ public class MusicControllerView extends MusicControllerViewUI
         });
 
         //setting the volume
-        volumeSlider.setValue((int) Environment.getWorkspaceInstance().getAudioPlayer().getVolume());
+        volumeSlider.setValue((int) Environment.getEnvironmentInstance().getAudioPlayer().getVolume());
 
         //Setting the properties for the timelineslider timer
         int delay = 1000; //milliseconds
@@ -364,7 +364,7 @@ public class MusicControllerView extends MusicControllerViewUI
      */
     @Override
     public void update(Observable obs, Object arg) {
-        MuVisAudioPlayer player = Environment.getWorkspaceInstance().getAudioPlayer();
+        MuVisAudioPlayer player = Environment.getEnvironmentInstance().getAudioPlayer();
         if (obs instanceof MuVisAudioPlayer) {
             if (MuVisAudioPlayer.Event.RESUMED.equals(arg) && player.isPlaying()) {
                 //start the timer

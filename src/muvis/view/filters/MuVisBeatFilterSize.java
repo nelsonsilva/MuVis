@@ -76,7 +76,7 @@ public class MuVisBeatFilterSize
 
             String beat = fNode.getBeat();
 
-            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithBeat(beat);
+            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithBeat(beat);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

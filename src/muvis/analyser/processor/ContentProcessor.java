@@ -66,8 +66,8 @@ public class ContentProcessor implements Observer, Observable {
     public ContentProcessor() {
         observers = new ArrayList<Observer>();
         threadPool = Executors.newFixedThreadPool(5);
-        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
-        NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
+        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
         tracksNBTree = nbtreeManager.getNBTree("tracksNBTree");
         albumsTree = nbtreeManager.getNBTree("albumsNBTree");
         artistsTree = nbtreeManager.getNBTree("artistsNBTree");

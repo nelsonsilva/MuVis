@@ -78,7 +78,7 @@ public class MuVisYearFilterSize
             int startYear = fNode.getYear();
             int range = fNode.getYearRange();
 
-            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
+            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksInYearRange(startYear, range);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

@@ -49,8 +49,8 @@ public class ContentUnprocessor implements Observer, Observable {
     public ContentUnprocessor() {
         observers = new ArrayList<Observer>();
         threadPool = Executors.newFixedThreadPool(1);
-        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
-        NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
+        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
         albumsTree = nbtreeManager.getNBTree("albumsNBTree");
         artistsTree = nbtreeManager.getNBTree("artistsNBTree");
     }

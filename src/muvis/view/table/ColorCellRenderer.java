@@ -19,7 +19,7 @@
 * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package muvis.view;
+package muvis.view.table;
 
 import java.awt.Color;
 import java.awt.Component;

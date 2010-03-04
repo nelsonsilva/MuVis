@@ -47,8 +47,6 @@ public class MuVisAudioPlayer implements BasicPlayerListener, Observable {
      * by the muvis audio player
      */
     public enum Event {
-        /*PLAYING*/
-
         PAUSED, STOPPED, OPENED, VOLUME_CHANGED, NOTHING, SEEKED,
         NEW_TRACK_PLAYING, RESUMED
     }
@@ -361,6 +359,14 @@ public class MuVisAudioPlayer implements BasicPlayerListener, Observable {
         updateObservers();
     }
 
+    /**
+     * Method that returns the string that represents the file being played
+     * @return the filePlayling
+     */
+    public String getFilePlayling() {
+        return filePlayling;
+    }
+
     /* Methods for the observer pattern */
     /**
      * Register an observer to listen to this player
@@ -390,13 +396,5 @@ public class MuVisAudioPlayer implements BasicPlayerListener, Observable {
         for (Observer obs : observers) {
             obs.update(this, event);
         }
-    }
-
-    /**
-     * Method that returns the string that represents the file being played
-     * @return the filePlayling
-     */
-    public String getFilePlayling() {
-        return filePlayling;
     }
 }

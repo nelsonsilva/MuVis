@@ -58,7 +58,7 @@ public class MP3AudioSnippetExtractor {
     public static byte[] extractAudioSnippet(String filename) {
 
         try {
-            AudioMetadata metadata = Environment.getWorkspaceInstance().getDatabaseManager().getTrackMetadata(filename);
+            AudioMetadata metadata = Environment.getEnvironmentInstance().getDatabaseManager().getTrackMetadata(filename);
             if (metadata == null) {
                 metadata = extractor.getAudioMetadata(filename);
             }

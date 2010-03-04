@@ -64,7 +64,7 @@ public class MuVisDurationFilterDraw extends MuVisFilterDraw {
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             } else {*/
 
-                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
+                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             //}
 
@@ -86,7 +86,7 @@ public class MuVisDurationFilterDraw extends MuVisFilterDraw {
             if (fNode.isSelected())
                 return new Color(250, 192, 144);
             else {
-                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
+                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
                 return Util.getColor(value);
             }
         } else {

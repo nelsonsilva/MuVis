@@ -23,7 +23,7 @@ package muvis.filters;
 
 import javax.swing.RowFilter;
 import muvis.util.Observer;
-import muvis.view.TracksTableModel;
+import muvis.view.table.TracksTableModel;
 
 /**
  *

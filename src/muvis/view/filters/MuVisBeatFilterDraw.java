@@ -56,7 +56,7 @@ public class MuVisBeatFilterDraw extends MuVisFilterDraw {
 
             String tooltip = "";
 
-            int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithBeat(fNode.getBeat());
+            int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithBeat(fNode.getBeat());
             tooltip = "<html>" + name + "<p>Tracks available: " + value;
 
             return tooltip;
@@ -77,7 +77,7 @@ public class MuVisBeatFilterDraw extends MuVisFilterDraw {
             if (fNode.isSelected()) {
                 return new Color(250, 192, 144);
             } else {
-                int value = Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithBeat(fNode.getBeat());
+                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithBeat(fNode.getBeat());
                 return Util.getColor(value);
             }
         } else {

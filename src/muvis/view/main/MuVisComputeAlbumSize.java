@@ -66,13 +66,13 @@ public class MuVisComputeAlbumSize
                 int num = 0;
                 for(Enumeration children = fNode.children(); children.hasMoreElements(); num++){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    value += Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
+                    value += Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
                 }
                 num /= 2;
                 return (value/num);
             }
 
-            return Environment.getWorkspaceInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
+            return Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

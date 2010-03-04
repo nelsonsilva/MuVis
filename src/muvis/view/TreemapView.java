@@ -56,7 +56,7 @@ public class TreemapView extends TreemapViewUI implements View {
 
         root = new MuVisTreemapNode();
         TreemapFilterManager filterManager = new TreemapFilterManager(root);
-        Environment.getWorkspaceInstance().setTreemapFilterManager(filterManager);
+        Environment.getEnvironmentInstance().setTreemapFilterManager(filterManager);
 
         //treemap filters
         TreemapDurationFilter treemapDurationFilter =

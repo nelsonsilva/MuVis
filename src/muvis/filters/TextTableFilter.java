@@ -24,7 +24,7 @@ package muvis.filters;
 import javax.swing.RowFilter;
 import muvis.util.Observable;
 import muvis.view.TextFieldListener;
-import muvis.view.TracksTableModel;
+import muvis.view.table.TracksTableModel;
 
 /**
  * Class that holds a RowFilter for the ListView Visualization.

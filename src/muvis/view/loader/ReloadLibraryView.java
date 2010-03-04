@@ -174,7 +174,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
             newFrame.dispose();
 
             try {
-                Environment.getWorkspaceInstance().loadWorkspace();
+                Environment.getEnvironmentInstance().loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");

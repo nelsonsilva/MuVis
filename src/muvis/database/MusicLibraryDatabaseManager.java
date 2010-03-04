@@ -64,7 +64,7 @@ public class MusicLibraryDatabaseManager implements Observable {
 
     public void connect() {
         try {
-            String dataFolderPath = Environment.getWorkspaceInstance().getDataFolderPath();
+            String dataFolderPath = Environment.getEnvironmentInstance().getDataFolderPath();
             conn = DriverManager.getConnection("jdbc:hsqldb:file:" + dataFolderPath + "db/muvisdb", "sa", "");
         } catch (SQLException e) {
             e.printStackTrace();

@@ -76,7 +76,7 @@ public class MuVisMoodFilterSize
 
             String mood = fNode.getMood();
 
-            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksWithMood(mood);
+            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithMood(mood);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

@@ -43,7 +43,7 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public void loadPlaylist(String playlistname, String currentDirectory){
-        Environment workspace = Environment.getWorkspaceInstance();
+        Environment workspace = Environment.getEnvironmentInstance();
         workspace.getAudioPlaylist().removeAllItems();
         workspace.getAudioPlaylist().load(playlistname, currentDirectory + Util.getOSEscapeSequence());
     }
@@ -55,7 +55,7 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public boolean savePlaylist(String playlistName, String currentDirectory){
-        Environment workspace = Environment.getWorkspaceInstance();
+        Environment workspace = Environment.getEnvironmentInstance();
         return workspace.getAudioPlaylist().save(playlistName, currentDirectory + Util.getOSEscapeSequence());
     }
 
@@ -65,13 +65,13 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public void removeTrackFromPlaylist(PlaylistItem item){
-        Environment workspace = Environment.getWorkspaceInstance();
+        Environment workspace = Environment.getEnvironmentInstance();
         workspace.getAudioPlaylist().removeItem(item);
     }
 
     @Override
     public void removeTracksFromPlaylist(ArrayList<PlaylistItem> items) {
-        Playlist playlist = Environment.getWorkspaceInstance().getAudioPlaylist();
+        Playlist playlist = Environment.getEnvironmentInstance().getAudioPlaylist();
         playlist.removeItems(items);
     }
 }

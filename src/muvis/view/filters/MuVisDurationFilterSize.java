@@ -77,7 +77,7 @@ public class MuVisDurationFilterSize
             int max = fNode.getMaxValue();
             int min = fNode.getMinValue();
 
-            return Environment.getWorkspaceInstance().getDatabaseManager().getTracksBetweenTimeRange(min, max);
+            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksBetweenTimeRange(min, max);
 
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);

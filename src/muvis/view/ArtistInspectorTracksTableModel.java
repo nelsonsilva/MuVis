@@ -43,7 +43,7 @@ public class ArtistInspectorTracksTableModel extends AbstractTableModel implemen
     private Hashtable<Integer, TableRecord> records;
 
     public ArtistInspectorTracksTableModel(ArrayList<Integer> trackIds) {
-        dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
+        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         records = new Hashtable<Integer, TableRecord>(trackIds.size());
         //loading all the tracks to this table
         for (Integer id : trackIds) {

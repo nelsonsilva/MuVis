@@ -168,7 +168,7 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
             try {
                 //library already loaded
-                Environment.getWorkspaceInstance().loadWorkspace();
+                Environment.getEnvironmentInstance().loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");
@@ -186,6 +186,7 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
         frameTest.validate();
         frameTest.setVisible(true);
         frameTest.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //EXIT_ON_CLOSE
+        Environment.getEnvironmentInstance().setRootFrame(frameTest);
 
         return frameTest;
     }
