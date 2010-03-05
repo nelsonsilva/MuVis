@@ -133,70 +133,10 @@ public class JTableMouseAdapter extends MouseAdapter {
 
         closeMenu.setText(Messages.CLOSE_LABEL);
 
+        previewElementMenu.addActionListener(new PreviewElementAction(tracksTable));
         addElementToPlaylistMenu.addActionListener( new AddToPlaylistAction(tracksTable, controller));
         findSimilarElementMenu.addActionListener(new FindSimilarElementsAction(tracksTable));
         findNonSimilarElementMenu.addActionListener(new FindNonSimilarElementsAction(tracksTable));
-        
-        /*previewElementMenu.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource() instanceof JMenuItem) {
-                    JMenuItem item = (JMenuItem) e.getSource();
-
-                    if (item.getText().contains("Preview Track")) {
-                        //preview of a track
-                        if (tracksTable.getSelectedRowCount() <= 1) {
-                            int row = tracksTable.getRowSorter().convertRowIndexToModel(lastSelectedRow);
-                            int trackId = (Integer) model.getValueAt(row, 0);
-                            Environment.getWorkspaceInstance().getSnippetManager().previewTrack(trackId);
-                        } else {
-                            ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTable.getSelectedRowCount());
-                            for (int row : tracksTable.getSelectedRows()) {
-                                int rowModel = tracksTable.getRowSorter().convertRowIndexToModel(row);
-                                int id = (Integer) model.getValueAt(rowModel, 0);
-                                trackIds.add(id);
-                            }
-                            Environment.getWorkspaceInstance().getSnippetManager().previewTracks(trackIds);
-                        }
-
-                    } else if (item.getText().contains("Album")) {
-                        //preview of an album
-                        if (tracksTable.getSelectedRowCount() <= 1) {
-                            int row = tracksTable.getRowSorter().convertRowIndexToModel(lastSelectedRow);
-                            int trackId = (Integer) model.getValueAt(row, 0);
-                            Environment.getWorkspaceInstance().getSnippetManager().previewAlbum(trackId);
-                        } else {
-                            ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTable.getSelectedRowCount());
-                            for (int row : tracksTable.getSelectedRows()) {
-                                int rowModel = tracksTable.getRowSorter().convertRowIndexToModel(row);
-                                int id = (Integer) model.getValueAt(rowModel, 0);
-                                trackIds.add(id);
-                            }
-                            Environment.getWorkspaceInstance().getSnippetManager().previewAlbums(trackIds);
-                        }
-
-                    } else if (item.getText().contains("Artist")) {
-                        //preview of an artist
-                        if (tracksTable.getSelectedRowCount() <= 1) {
-                            int row = tracksTable.getRowSorter().convertRowIndexToModel(lastSelectedRow);
-                            int trackId = (Integer) model.getValueAt(row, 0);
-                            Environment.getWorkspaceInstance().getSnippetManager().previewArtist(trackId);
-                        } else {
-                            ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTable.getSelectedRowCount());
-                            for (int row : tracksTable.getSelectedRows()) {
-                                int rowModel = tracksTable.getRowSorter().convertRowIndexToModel(row);
-                                int id = (Integer) model.getValueAt(rowModel, 0);
-                                trackIds.add(id);
-                            }
-                            Environment.getWorkspaceInstance().getSnippetManager().previewArtists(trackIds);
-                        }
-
-                    }
-
-                }
-            }
-        });*/
 
         contextMenu.add(previewElementMenu);
         contextMenu.add(findSimilarElementMenu);
