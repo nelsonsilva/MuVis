@@ -58,10 +58,8 @@ import muvis.util.Util;
 import muvis.view.controllers.ListViewTableViewController;
 import muvis.view.main.MuVisTreemapNode;
 import muvis.view.main.filters.NoFilter;
-import muvis.view.main.filters.TreemapAlbumSimilarityFilter;
-import muvis.view.main.filters.TreemapArtistSimilarityFilter;
 import muvis.view.main.filters.TreemapFilterManager;
-import muvis.view.main.filters.TreemapTrackSimilarityFilter;
+import muvis.view.main.filters.TreemapSimilarityFilter;
 import muvis.view.table.JTableMouseAdapter;
 import nbtree.NBPoint;
 import nbtree.NBTree;
@@ -877,7 +875,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
                                             }
 
-                                            TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
+                                            TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
                                             Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
                                             Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 
@@ -904,7 +902,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                             }
                                         }
 
-                                        TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
+                                        TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
                                         Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
                                         Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 
@@ -967,7 +965,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                                 }
                                             }
 
-                                            TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
+                                            TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
                                             Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
                                             Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 
@@ -995,7 +993,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                             }
                                         }
 
-                                        TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
+                                        TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
                                         Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
                                         Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 

@@ -35,7 +35,7 @@ public class SimilarElementsView extends SimilarElementsViewUI implements Action
         super(parent, true);
         setLocationRelativeTo(parent);
 
-        numberSimilarLabel.setText("Number of similar " + elementDescription + ":");
+        numberSimilarLabel.setText(elementDescription + ":");
 
         cancelFilterButton.addActionListener(this);
         filterLibraryButton.addActionListener(this);

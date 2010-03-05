@@ -86,5 +86,14 @@ public class Messages {
     public static final String CLOSE_LABEL = "Close";
 
     public static final String TRACK_NAME_LABEL = "Track";
+    public static final String ALBUM_NAME_LABEL = "Album";
+    public static final String ARTIST_NAME_LABEL = "Artist";
+
+    /**
+     * Similarity View
+     */
+    public static final String NUMBER_SIMILAR_TRACKS_LABEL = "Number of similar tracks";
+    public static final String NUMBER_SIMILAR_ALBUMS_LABEL = "Number of similar albums";
+    public static final String NUMBER_SIMILAR_ARTISTS_LABEL = "Number of similar tracks";
     
 }

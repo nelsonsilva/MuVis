@@ -48,8 +48,8 @@ import muvis.view.MainViewHolder;
 import muvis.view.SimilarElementsView;
 import muvis.view.TreemapArtistInspectorView;
 import muvis.view.main.filters.NoFilter;
-import muvis.view.main.filters.TreemapArtistSimilarityFilter;
 import muvis.view.main.filters.TreemapFilterManager;
+import muvis.view.main.filters.TreemapSimilarityFilter;
 import nbtree.NBPoint;
 import nbtree.NBTree;
 import nbtree.exceptions.NBTreeException;
@@ -229,7 +229,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                                         }
                                     }
 
-                                    TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
+                                    TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
                                     Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
                                     Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 
@@ -363,7 +363,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
                                     }
                                 }
 
-                                TreemapArtistSimilarityFilter filterTreemap = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
+                                TreemapSimilarityFilter filterTreemap = new TreemapSimilarityFilter(new NoFilter(), tracks);
                                 Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filterTreemap);
                                 Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
 

@@ -24,14 +24,15 @@ import java.util.ArrayList;
 import muvis.util.Observable;
 
 /**
- * Album Similarity Filter
+ * Track Similarity Filter - Class that implements the similarity filter for
+ * tracks, by using the treemap
  * @author Ricardo
  */
-public class TreemapAlbumSimilarityFilter extends FilterDecorator {
+public class TreemapSimilarityFilter extends FilterDecorator {
 
     private ArrayList<Integer> trackIds;
 
-    public TreemapAlbumSimilarityFilter(TreemapFilter filter, ArrayList<Integer> trackIds) {
+    public TreemapSimilarityFilter(TreemapFilter filter, ArrayList<Integer> trackIds) {
         super(filter);
         this.trackIds = trackIds;
     }
@@ -43,7 +44,6 @@ public class TreemapAlbumSimilarityFilter extends FilterDecorator {
         if (!trackIds.isEmpty()) {
             query = "(";
             for (int trackId : trackIds) {
-
                 if (firstTime) {
                     query = query + " (id=" + trackId + ")";
                     firstTime = false;
