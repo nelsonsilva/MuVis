@@ -124,7 +124,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
         seeAllArtistsButton.addActionListener(this);
 
-        tracksTableArtistInspector.addMouseListener( new JTableMouseAdapter());
+        tracksTableArtistInspector.addMouseListener( new JTableMouseAdapter(controller));
 
         /*tracksTableArtistInspector.addMouseListener(new MouseAdapter() {
 
@@ -804,11 +804,11 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                 if (selectedAlbumsToFilter.size() > 0) {
                                     for (String albumSelected : selectedAlbumsToFilter) {
                                         String []albumProperties = albumSelected.split("\n");
-                                        controller.addAlbumToPlaylist(artistNameLabel.getText(), albumProperties[0], parent);
+                                        controller.addAlbumToPlaylist(artistNameLabel.getText(), albumProperties[0]);
                                     }
                                 } else {
                                     String []albumProperties = album.split("\n");
-                                    controller.addAlbumToPlaylist(artistNameLabel.getText(), albumProperties[0], parent);
+                                    controller.addAlbumToPlaylist(artistNameLabel.getText(), albumProperties[0]);
                                 }
                             }
                         });

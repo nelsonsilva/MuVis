@@ -21,7 +21,6 @@
 package muvis.view.controllers;
 
 import java.util.ArrayList;
-import javax.swing.JFrame;
 import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.playlist.PlaylistItem;
@@ -39,14 +38,14 @@ public class ListViewTableViewController implements ControllerInterface {
         dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
     }
 
-    public void addTrackToPlaylist(int trackId, JFrame parent) {
+    public void addTrackToPlaylist(int trackId) {
 
         AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
         PlaylistItem pliItem = new PlaylistItem(dbManager.getFilename(trackId), "", metadata);
         Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
     }
 
-    public void addAlbumToPlaylist(int trackId, JFrame parent) {
+    public void addAlbumToPlaylist(int trackId) {
         String album = dbManager.getAlbumName(trackId);
         ArrayList<String> albumTracks = dbManager.getAlbumTracks(album);
 
@@ -57,7 +56,7 @@ public class ListViewTableViewController implements ControllerInterface {
         }
     }
 
-    public void addAlbumToPlaylist(String artist, String album, JFrame parent) {
+    public void addAlbumToPlaylist(String artist, String album) {
         ArrayList<String> albumTracks = dbManager.getAlbumTracks(artist, album);
 
         for (String track : albumTracks) {
@@ -67,7 +66,7 @@ public class ListViewTableViewController implements ControllerInterface {
          }
     }
 
-    public void addArtistToPlaylist(int trackId, JFrame parent) {
+    public void addArtistToPlaylist(int trackId) {
         String artist = dbManager.getArtistName(trackId);
         ArrayList<String> artistTracks = dbManager.getArtistTracks(artist);
 

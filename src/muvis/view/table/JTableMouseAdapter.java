@@ -29,12 +29,19 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import muvis.Messages;
+import muvis.view.controllers.ListViewTableViewController;
 
 /**
- *
+ * 
  * @author Ricardo
  */
 public class JTableMouseAdapter extends MouseAdapter {
+
+    protected ListViewTableViewController controller;
+
+    public JTableMouseAdapter(ListViewTableViewController controller){
+        this.controller = controller;
+    }
 
     private int lastSelectedRow = 0;
 
@@ -126,68 +133,11 @@ public class JTableMouseAdapter extends MouseAdapter {
 
         closeMenu.setText(Messages.CLOSE_LABEL);
 
-        findNonSimilarElementMenu.addActionListener(new FindNonSimilarElementsAction(tracksTable));
+        addElementToPlaylistMenu.addActionListener( new AddToPlaylistAction(tracksTable, controller));
         findSimilarElementMenu.addActionListener(new FindSimilarElementsAction(tracksTable));
-
-        /*
-        addElementToPlaylistMenu.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource() instanceof JMenuItem) {
-                    JMenuItem item = (JMenuItem) e.getSource();
-
-                    if (item.getText().contains("Track")) {
-                        //add a track to playlist
-                        threadPool.execute(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                //add album to playlist
-                                int[] rows = tracksTableView.getSelectedRows();
-                                for (int i = 0; i < rows.length; i++) {
-                                    int rowModel = tracksTableView.getRowSorter().convertRowIndexToModel(rows[i]);
-                                    int id = (Integer) model.getValueAt(rowModel, 0);
-                                    controller.addTrackToPlaylist(id, parent);
-                                }
-                            }
-                        });
-
-                    } else if (item.getText().contains("Album")) {
-                        threadPool.execute(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                //add album to playlist
-                                int[] rows = tracksTableView.getSelectedRows();
-                                for (int i = 0; i < rows.length; i++) {
-                                    int rowModel = tracksTableView.getRowSorter().convertRowIndexToModel(rows[i]);
-                                    int id = (Integer) model.getValueAt(rowModel, 0);
-                                    controller.addAlbumToPlaylist(id, parent);
-                                }
-                            }
-                        });
-
-                    } else if (item.getText().contains("Artist")) {
-                        threadPool.execute(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                //add artist to playlist
-                                int[] rows = tracksTableView.getSelectedRows();
-                                for (int i = 0; i < rows.length; i++) {
-                                    int rowModel = tracksTableView.getRowSorter().convertRowIndexToModel(rows[i]);
-                                    int id = (Integer) model.getValueAt(rowModel, 0);
-                                    controller.addArtistToPlaylist(id, parent);
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
-
-        previewElementMenu.addActionListener(new ActionListener() {
+        findNonSimilarElementMenu.addActionListener(new FindNonSimilarElementsAction(tracksTable));
+        
+        /*previewElementMenu.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -45,6 +45,7 @@ import muvis.NBTreeManager;
 import muvis.Environment;*/
 import muvis.Messages;
 import muvis.view.View;
+import muvis.view.controllers.ListViewTableViewController;
 /*import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
 import muvis.util.Util;
@@ -67,12 +68,12 @@ public class ListViewTableView extends ListViewTableUI implements View {
     //private MusicLibraryDatabaseManager dbManager;
     //private ExecutorService threadPool;
     private TableRowSorter<TracksTableModel> sorter;
-    //private ListViewTableViewController controller;
+    private ListViewTableViewController controller;
     private TracksTableModel model;
 
     public ListViewTableView(final JFrame parent) {
         //dbManager = Environment.getWorkspaceInstance().getDatabaseManager();
-        //controller = new ListViewTableViewController();
+        controller = new ListViewTableViewController();
         //threadPool = Executors.newFixedThreadPool(1);
 
         model = new TracksTableModel();
@@ -111,7 +112,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
         tracksTableView.removeColumn(mood);
 
         //tracksTableView.addMouseListener();
-        tracksTableView.addMouseListener(new JTableMouseAdapter());
+        tracksTableView.addMouseListener(new JTableMouseAdapter(controller));
     }
 
     /**
