@@ -74,7 +74,7 @@ public class Environment {
     /**
      * The only instance of Workspace
      */
-    private static Environment workspace = new Environment();
+    private static Environment environment = new Environment();
 
     /**
      * @return the string that represents the data folder path
@@ -214,9 +214,9 @@ public class Environment {
 
         nbtreesManager = new NBTreeManager();
         try {
-            nbtreesManager.addNBTree("tracksNBTree", new NBTree("tracksNBTree", dataPropertiesFolder + "nbtree/"));
-            nbtreesManager.addNBTree("albumsNBTree", new NBTree("albumsNBTree", dataPropertiesFolder + "nbtree/"));
-            nbtreesManager.addNBTree("artistsNBTree", new NBTree("artistsNBTree", dataPropertiesFolder + "nbtree/"));
+            nbtreesManager.addNBTree(Elements.TRACKS_NBTREE, new NBTree(Elements.TRACKS_NBTREE, dataPropertiesFolder + "nbtree/"));
+            nbtreesManager.addNBTree(Elements.ALBUMS_NBTREE, new NBTree(Elements.ALBUMS_NBTREE, dataPropertiesFolder + "nbtree/"));
+            nbtreesManager.addNBTree(Elements.ARTISTS_NBTREE, new NBTree(Elements.ARTISTS_NBTREE, dataPropertiesFolder + "nbtree/"));
         } catch (NBTreeException ex) {
             ex.printStackTrace();
             System.out.println("An error occured when trying to initialize the nbtreemanager!");
@@ -256,7 +256,7 @@ public class Environment {
      * @return workspace The only instance of Workspace
      */
     public static Environment getEnvironmentInstance() {
-        return workspace;
+        return environment;
     }
 
     /**

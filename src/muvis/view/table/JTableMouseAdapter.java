@@ -43,9 +43,7 @@ public class JTableMouseAdapter extends MouseAdapter {
         this.controller = controller;
     }
 
-    private int lastSelectedRow = 0;
-
-    private void maybeShowPopup(MouseEvent e) {
+    private void mouseHandler(MouseEvent e) {
 
         JTable tracksTable = (JTable)e.getSource();
 
@@ -53,8 +51,6 @@ public class JTableMouseAdapter extends MouseAdapter {
             Point p = new Point(e.getX(), e.getY());
             int col = tracksTable.columnAtPoint(p);
             int row = tracksTable.rowAtPoint(p);
-
-            lastSelectedRow = row;
 
             // translate table index to model index
             int mcol = tracksTable.getColumn(
@@ -79,6 +75,8 @@ public class JTableMouseAdapter extends MouseAdapter {
                     contextMenu.show(tracksTable, p.x, p.y);
                 }
             }
+        } else if (e.getClickCount() == 2){
+            //ask controller to play song
         }
     }
 
@@ -150,11 +148,11 @@ public class JTableMouseAdapter extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        maybeShowPopup(e);
+        mouseHandler(e);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        maybeShowPopup(e);
+        mouseHandler(e);
     }
 }
