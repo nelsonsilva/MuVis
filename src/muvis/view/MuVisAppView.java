@@ -21,6 +21,8 @@
 
 package muvis.view;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import muvis.view.table.ListViewTableView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -536,8 +538,11 @@ public class MuVisAppView extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     MusicControllerView controller =
                             (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
-
-                    controller.stopPlayer();
+                    try {
+                        controller.stopPlayer();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
 

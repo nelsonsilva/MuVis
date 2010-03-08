@@ -57,5 +57,6 @@ CREATE TABLE information_tracks_table (
 	year LONGVARCHAR,
 	beat LONGVARCHAR,
 	mood LONGVARCHAR,
+        filename LONGVARCHAR,
 	FOREIGN KEY (id) REFERENCES tracks_table(id) ON DELETE CASCADE
 );

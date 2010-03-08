@@ -21,6 +21,13 @@
 
 package muvis.audio;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.Tag;
+
 /**
  * Class that encapsulates the textual metadata extracted from the mp3file
  * @author Ricardo
@@ -71,6 +78,48 @@ public class AudioMetadata {
      * Audio piece filename
      */
     private String filename;
+
+    /**
+     * Sets the artwork for this Audio piece
+     * @param artwork the image
+     */
+    public void setArtwork(BufferedImage artwork) {
+        //TO DO - saving should be done directly on the underlying file!
+    }
+
+    /**
+     * Sets the artwork for this Audio piece, given the image location
+     * @param imagePath the image location
+     */
+    public void setArtwork(String imagePath){
+        //TO DO
+    }
+
+    public BufferedImage getArtwork() {
+
+        BufferedImage image = null;
+        try{
+            File sourceFile = new File(filename);
+            AudioFile mp3file = AudioFileIO.read(sourceFile);
+            Tag tag = mp3file.getTag();
+            image = tag.getFirstArtwork().getImage();
+
+        }  catch (Exception e) {
+            try{
+                image = ImageIO.read(getClass().getResource("/images/not_available.jpg"));
+            } catch (Exception ex){}
+        }
+
+        return image;
+    }
+
+    /**
+     * Gets the track filename
+     * @return
+     */
+    public String getFilename() {
+        return filename;
+    }
 
     /**
      * Method that returns the length of the track.
@@ -224,10 +273,11 @@ public class AudioMetadata {
      * 7. Bitrate
      * 8. Genre
      * 9. Filename
+     * 10. Artwork
      */
     public Object[] toArray(){
 
-        Object [] metadataFields = new Object[9];
+        Object [] metadataFields = new Object[10];
         metadataFields[0] = duration;
         metadataFields[1] = title;
         metadataFields[2] = author;
@@ -237,6 +287,7 @@ public class AudioMetadata {
         metadataFields[6] = bitrate;
         metadataFields[7] = genre;
         metadataFields[8] = filename;
+        metadataFields[9] = getArtwork();
 
         return metadataFields;
     }

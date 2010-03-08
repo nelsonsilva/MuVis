@@ -28,8 +28,6 @@
 package muvis.view;
 
 import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import muvis.util.JImagePanel;
 
 /**

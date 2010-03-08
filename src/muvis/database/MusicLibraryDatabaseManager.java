@@ -727,6 +727,7 @@ public class MusicLibraryDatabaseManager implements Observable {
                 "year LONGVARCHAR," +
                 "beat LONGVARCHAR, " +
                 "mood LONGVARCHAR, " +
+                "filename LONGVARCHAR, " +
                 "FOREIGN KEY (id) REFERENCES tracks_table(id) ON DELETE CASCADE" +
                 ")";
 
@@ -754,6 +755,7 @@ public class MusicLibraryDatabaseManager implements Observable {
                 metadata.setAuthor(rs.getString("artist_name"));
                 metadata.setDuration(rs.getInt("duration"));
                 metadata.setGenre(rs.getString("genre"));
+                metadata.setFilename(rs.getString("filename"));
 
                 int year = Integer.parseInt(rs.getString("year"));
                 if (year == Integer.MIN_VALUE) {
@@ -1319,8 +1321,8 @@ public class MusicLibraryDatabaseManager implements Observable {
             int trackId = getTrackId(filename);
 
             String update = "INSERT INTO information_tracks_table(id,track_title," +
-                    "artist_name,album_name,duration,genre,year) " +
-                    "VALUES(?,?,?,?,?,?,?)";
+                    "artist_name,album_name,duration,genre,year,filename) " +
+                    "VALUES(?,?,?,?,?,?,?,?)";
 
             PreparedStatement st = conn.prepareStatement(update);
             st.setInt(1, trackId);
@@ -1330,6 +1332,7 @@ public class MusicLibraryDatabaseManager implements Observable {
             st.setLong(5, duration);
             st.setString(6, genre);
             st.setString(7, year);
+            st.setString(8, filename);
             st.executeUpdate();
             st.close();
         }

@@ -30,7 +30,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -73,9 +78,10 @@ public class MusicControllerView extends MusicControllerViewUI
         getMusicPlayerActiveController().playPreviousTrack();
     }
 
-    public void stopPlayer() {
+    public void stopPlayer() throws IOException {
         getMusicPlayerActiveController().stopTrack();
-        displayInfoPanel("Artist & album - not available", "Track name - not available", "Year - not available");
+        BufferedImage image = ImageIO.read(getClass().getResource("/images/not_available.jpg"));
+        displayInfoPanel("Artist & album - not available", "Track name - not available", "Year - not available", image);
     }
 
     public void playTrack() {
@@ -182,10 +188,6 @@ public class MusicControllerView extends MusicControllerViewUI
                 }
             }
 
-            private void displayAlbumCoverPreview(BufferedImage image){
-                
-            }
-
             @Override
             public void mousePressed(MouseEvent e) {}
 
@@ -207,11 +209,8 @@ public class MusicControllerView extends MusicControllerViewUI
         nextTrackButton.addActionListener(this);
         stopPlayerButton.addActionListener(this);
         volumeSlider.addChangeListener(this);
-
-        //musicTimelineSlider.setMajorTickSpacing(60);
-        //musicTimelineSlider.setMinorTickSpacing(1);
+        
         musicTimelineSlider.setPaintTicks(true);
-        //musicTimelineSlider.setPaintLabels(true);
 
         musicTimelineSlider.addMouseListener(new MouseListener() {
 
@@ -296,7 +295,9 @@ public class MusicControllerView extends MusicControllerViewUI
         } else if (event.getSource() == previousTrackButton) {
             playPreviousTrack();
         } else if (event.getSource() == stopPlayerButton) {
-            stopPlayer();
+            try{
+                stopPlayer();
+            } catch (Exception e){}
         }
     }
 
@@ -306,10 +307,11 @@ public class MusicControllerView extends MusicControllerViewUI
      * @param trackName
      * @param trackYear
      */
-    private void displayInfoPanel(String artistAlbum, String trackName, String trackYear) {
+    private void displayInfoPanel(String artistAlbum, String trackName, String trackYear, BufferedImage artwork) {
         artistAlbumInfoLabel.setText(artistAlbum);
         trackNameLabel.setText(trackName);
         trackyearLabel.setText(trackYear);
+        ((JImagePanel)albumCoverPanel).setImage(artwork);
     }
 
     /*updates the info panel with the track being played - uses the controller
@@ -319,7 +321,7 @@ public class MusicControllerView extends MusicControllerViewUI
 
         AudioMetadata metadata = getMusicPlayerActiveController().getTrackPlayingMetadata();
         displayInfoPanel(metadata.getAuthor() + "-" + metadata.getAlbum(),
-                metadata.getTitle(), metadata.getYear());
+                metadata.getTitle(), metadata.getYear(), metadata.getArtwork());
     }
 
     //updates the timelinesliderparameters
@@ -385,8 +387,11 @@ public class MusicControllerView extends MusicControllerViewUI
                 musicTimelineTimer.stop();
                 musicTimelineSlider.setValue(0);
                 playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Play16.gif"))); // NOI18N
-                displayInfoPanel("Artist & album - not available",
-                    "Track name - not available", "Year - not available");
+                try {
+                    displayInfoPanel("Artist & album - not available", "Track name - not available", "Year - not available", ImageIO.read(getClass().getResource("/images/not_available.jpg")));
+                } catch (IOException ex) {
+                    Logger.getLogger(MusicControllerView.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 key.setName("Music Player");
             } else if (MuVisAudioPlayer.Event.PAUSED.equals(arg)) {
                 musicTimelineTimer.stop();

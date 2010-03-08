@@ -20,10 +20,6 @@
  */
 package muvis.view.controllers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -63,14 +59,6 @@ public class LoadLibraryController implements ControllerInterface {
             configFile.setProperty("library_folder" + i, folder.toString());
             i++;
         }
-        /*try {
-            FileOutputStream stream = new FileOutputStream(new File(".properties"));
-            configFile.store(stream, "");
-        } catch (FileNotFoundException ex) {
-            throw new CantSavePropertiesFileException("Can't save the configuration file!");
-        } catch (IOException ex) {
-            throw new CantSavePropertiesFileException("Can't save the configuration file!");
-        }*/
         Environment.getEnvironmentInstance().saveConfigFile();
     }
 

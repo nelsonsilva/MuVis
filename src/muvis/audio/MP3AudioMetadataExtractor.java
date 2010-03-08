@@ -20,8 +20,10 @@
  */
 package muvis.audio;
 
+import java.awt.image.BufferedImage;
 import muvis.exceptions.CannotRetrieveMP3TagException;
 import java.io.File;
+import javax.imageio.ImageIO;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
@@ -57,6 +59,7 @@ public class MP3AudioMetadataExtractor implements AudioMetadataExtractor {
         AudioFile mp3file;
         String artist, album, title, bitrate, year, genre;
         int duration, trackNumber;
+        BufferedImage artwork = null;
         try {
             mp3file = AudioFileIO.read(sourceFile);
             Tag tag = mp3file.getTag();
@@ -70,6 +73,12 @@ public class MP3AudioMetadataExtractor implements AudioMetadataExtractor {
             year = validatedYear(tag.getFirst(FieldKey.YEAR));
             genre = validatedGenre(tag.getFirst(FieldKey.GENRE));
             trackNumber = 0;
+            try{
+                artwork = tag.getFirstArtwork().getImage();
+                trackNumber = 0;
+            } catch (Exception e){
+                artwork = ImageIO.read(getClass().getResource("/images/not_available.jpg"));
+            }
 
             metadata.setAuthor(artist);
             metadata.setAlbum(album);
@@ -79,7 +88,8 @@ public class MP3AudioMetadataExtractor implements AudioMetadataExtractor {
             metadata.setYear(year);
             metadata.setGenre(genre);
             metadata.setTrackNumber(trackNumber);
-            metadata.setTrackNumber(trackNumber);
+            metadata.setArtwork(artwork);
+
 
         } catch (Exception ex) {
             //Could not retrieve MP3 Tags
