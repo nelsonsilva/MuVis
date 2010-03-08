@@ -39,10 +39,14 @@ import muvis.audio.playlist.Playlist;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.filters.TableFilterManager;
+import muvis.util.Util;
 import muvis.view.ViewManager;
 import muvis.view.main.filters.TreemapFilterManager;
 import nbtree.NBTree;
 import nbtree.exceptions.NBTreeException;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationFactory;
 
 /**
  * This Singleton class holds the main elements of MuVis application
@@ -69,19 +73,12 @@ public class Environment {
     private static DockingDesktop desk;
     private static TableFilterManager tableFilterManager;
     private static TreemapFilterManager treemapFilterManager;
-    private static String dataPropertiesFolder;
     private static JFrame rootFrame;
+    private static Configuration configuration;
     /**
      * The only instance of Workspace
      */
     private static Environment environment = new Environment();
-
-    /**
-     * @return the string that represents the data folder path
-     */
-    public String getDataFolderPath(){
-        return dataPropertiesFolder;
-    }
 
     /**
      * @return the treemapFilterManager
@@ -200,6 +197,14 @@ public class Environment {
 
     private Environment() {
 
+        //Loading the main configuration
+        ConfigurationFactory factory = new ConfigurationFactory("config.xml");
+        try {
+            configuration = factory.getConfiguration();
+        } catch (ConfigurationException ex) {
+            System.out.println("Couldn't not load the configuration file! Possible reason: " + ex.toString());
+        }
+        
         initializeDataFolders();
         
         //initialize all the elements in the workspace
@@ -214,9 +219,13 @@ public class Environment {
 
         nbtreesManager = new NBTreeManager();
         try {
-            nbtreesManager.addNBTree(Elements.TRACKS_NBTREE, new NBTree(Elements.TRACKS_NBTREE, dataPropertiesFolder + "nbtree/"));
-            nbtreesManager.addNBTree(Elements.ALBUMS_NBTREE, new NBTree(Elements.ALBUMS_NBTREE, dataPropertiesFolder + "nbtree/"));
-            nbtreesManager.addNBTree(Elements.ARTISTS_NBTREE, new NBTree(Elements.ARTISTS_NBTREE, dataPropertiesFolder + "nbtree/"));
+            String dataFolder = configuration.getString("muvis.data_folder");
+            String nbtreeMainFolder = configuration.getString("muvis.nbtree_folder");
+            String nbtreeFullfolder = dataFolder + Util.getOSEscapeSequence() + nbtreeMainFolder + Util.getOSEscapeSequence();
+
+            nbtreesManager.addNBTree(Elements.TRACKS_NBTREE, new NBTree(Elements.TRACKS_NBTREE, nbtreeFullfolder));
+            nbtreesManager.addNBTree(Elements.ALBUMS_NBTREE, new NBTree(Elements.ALBUMS_NBTREE, nbtreeFullfolder));
+            nbtreesManager.addNBTree(Elements.ARTISTS_NBTREE, new NBTree(Elements.ARTISTS_NBTREE, nbtreeFullfolder));
         } catch (NBTreeException ex) {
             ex.printStackTrace();
             System.out.println("An error occured when trying to initialize the nbtreemanager!");
@@ -228,17 +237,16 @@ public class Environment {
     //initializes the data folder, or creates it if necessary
     private void initializeDataFolders() {
 
-        File file = new File("data");
-        if (file.isDirectory()) {
-            dataPropertiesFolder = "data/";
-        } else {
-            boolean success = (new File("data")).mkdir();
+        String dataFolder = configuration.getString("muvis.data_folder");
+        String nbtreeFolder = configuration.getString("muvis.nbtree_folder");
+        String databaseFolder = configuration.getString("muvis.database_folder");
+
+        File file = new File(dataFolder);
+        if (!file.isDirectory()) {
+            boolean success = (new File(dataFolder)).mkdir();
             if (success) {
-                dataPropertiesFolder = "data/";
-                new File("data/nbtree").mkdir();
-                new File("data/db").mkdir();
-            } else {
-                dataPropertiesFolder = "";
+                new File(dataFolder + Util.getOSEscapeSequence() + nbtreeFolder).mkdir();
+                new File(dataFolder + Util.getOSEscapeSequence() + databaseFolder).mkdir();
             }
         }
     }
@@ -276,6 +284,11 @@ public class Environment {
         return userPlaylist;
     }
 
+    public String getDataFolderPath(){
+        String dataFolder = configuration.getString("muvis.data_folder") + Util.getOSEscapeSequence();
+        return dataFolder;
+    }
+
     /**
      * Initializes the configuration file.
      */
@@ -292,7 +305,8 @@ public class Environment {
      * @return a boolean that indicates if the file exists
      */
     public boolean configFileExists() {
-        File file = new File(dataPropertiesFolder + ".properties");
+        String configurationFolder = configuration.getString("muvis.configuration_folder") + Util.getOSEscapeSequence();
+        File file = new File(configurationFolder + ".properties");
         if (file.exists() && file.length() != 0) {
             return true;
         } else {
@@ -303,7 +317,8 @@ public class Environment {
     //reads the configuration file
     public void readConfigFile() {
         try {
-            getConfigFile().load(new FileInputStream(new File(dataPropertiesFolder + ".properties")));
+            String configurationFolder = configuration.getString("muvis.configuration_folder") + Util.getOSEscapeSequence();
+            getConfigFile().load(new FileInputStream(new File(configurationFolder + ".properties")));
         } catch (IOException ex) {
             System.out.println("Can't load the config file.");
         }
@@ -311,7 +326,8 @@ public class Environment {
 
     //creates the configuration file.
     public void createConfigFile() {
-        File file = new File(dataPropertiesFolder + ".properties");
+        String configurationFolder = configuration.getString("muvis.configuration_folder") + Util.getOSEscapeSequence();
+        File file = new File(configurationFolder + ".properties");
         try {
             if (file.createNewFile()) {
                 getConfigFile().load(new FileInputStream(file));
@@ -325,7 +341,8 @@ public class Environment {
     //saves the config file under workspace control
     public void saveConfigFile() throws CantSavePropertiesFileException{
         try {
-            FileOutputStream stream = new FileOutputStream(new File(dataPropertiesFolder + ".properties"));
+            String configurationFolder = configuration.getString("muvis.configuration_folder") + Util.getOSEscapeSequence();
+            FileOutputStream stream = new FileOutputStream(new File(configurationFolder + ".properties"));
             configFile.store(stream, "");
         } catch (FileNotFoundException ex) {
             throw new CantSavePropertiesFileException("Can't save the configuration file!");
