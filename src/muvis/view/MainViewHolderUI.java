@@ -36,6 +36,8 @@ public class MainViewHolderUI extends javax.swing.JPanel {
     /** Creates new form ListViewTableUI */
     public MainViewHolderUI() {
         initComponents();
+
+        resetFiltersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png")));
     }
 
     /** This method is called from within the constructor to

@@ -36,6 +36,8 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
     /** Creates new form LoadLibraryViewUI */
     public LoadLibraryViewUI() {
         initComponents();
+        browseFilesystemButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder_add.png")));
+        removeLibraryFolderButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder_delete.png")));
     }
 
     /** This method is called from within the constructor to
@@ -101,6 +103,9 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
 
         removeLibraryFolderButton.setText("Remove folder");
         removeLibraryFolderButton.setEnabled(false);
+        removeLibraryFolderButton.setMaximumSize(new java.awt.Dimension(133, 23));
+        removeLibraryFolderButton.setMinimumSize(new java.awt.Dimension(133, 23));
+        removeLibraryFolderButton.setPreferredSize(new java.awt.Dimension(133, 23));
         jPanel1.add(removeLibraryFolderButton);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -112,8 +117,8 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23))
         );

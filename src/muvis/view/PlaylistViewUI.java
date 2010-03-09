@@ -36,6 +36,8 @@ public class PlaylistViewUI extends javax.swing.JPanel {
     /** Creates new form PlaylistViewUI */
     public PlaylistViewUI() {
         initComponents();
+        managePlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/playlist_edit.png")));
+        remTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png")));
     }
 
 
@@ -68,7 +70,7 @@ public class PlaylistViewUI extends javax.swing.JPanel {
         listTracks.setToolTipText("Playlist Tracks");
         listTracksScrollPanel.setViewportView(listTracks);
 
-        totalTracksInfoLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        totalTracksInfoLabel.setFont(new java.awt.Font("Tahoma", 1, 11));
         totalTracksInfoLabel.setText("Total:");
 
         javax.swing.GroupLayout listTracksPanelLayout = new javax.swing.GroupLayout(listTracksPanel);
