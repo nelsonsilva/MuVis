@@ -34,23 +34,20 @@ import muvis.view.loader.LoadLibraryView;
 public class MuVisApp extends JFrame implements Runnable {
 
     private void processLibrary() {
-        Environment workspace = Environment.getEnvironmentInstance();
+        Environment environment = Environment.getEnvironmentInstance();
 
-        if (!workspace.configFileExists()) {
-            workspace.initConfigFile();
+        if (!environment.configFileExists()) {
+            environment.initConfigFile();
 
+            JFrame frame = new JFrame();
+            environment.setRootFrame(frame);
             LoadLibraryController controller = new LoadLibraryController();
-            LoadLibraryView loadLibrary = new LoadLibraryView(this, controller);
-            add(loadLibrary);
-            setSize(loadLibrary.getPreferredSize());
-            validate();
-            setVisible(true);
-            setDefaultCloseOperation(EXIT_ON_CLOSE); //EXIT_ON_CLOSE
+            new LoadLibraryView(controller);
         } else {//library already loaded
 
             try {
                 //library already loaded
-                workspace.loadWorkspace();
+                environment.loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");
@@ -62,7 +59,7 @@ public class MuVisApp extends JFrame implements Runnable {
             frameTest.validate();
             frameTest.setVisible(true);
             frameTest.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-            workspace.setRootFrame(frameTest);
+            environment.setRootFrame(frameTest);
         }
     }
 

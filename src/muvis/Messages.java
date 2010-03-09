@@ -95,5 +95,10 @@ public class Messages {
     public static final String NUMBER_SIMILAR_TRACKS_LABEL = "Number of similar tracks";
     public static final String NUMBER_SIMILAR_ALBUMS_LABEL = "Number of similar albums";
     public static final String NUMBER_SIMILAR_ARTISTS_LABEL = "Number of similar tracks";
+
+    /**
+     * Load Library - Reload Library
+     */
     
+
 }

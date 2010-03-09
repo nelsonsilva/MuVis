@@ -43,9 +43,12 @@ public class ManagePlaylistViewUI extends javax.swing.JDialog {
         playlistListViewTable.setModel(model);
         playlistListViewTable.getRowSorter().addRowSorterListener(model);
 
-        remTracksButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png")));
-        closeSaveChangesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/accept.png")));
-        discardChangesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cancel.png")));
+        remTracksButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/list-remove.png")));
+        closeSaveChangesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/main/accept.png")));
+        discardChangesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/main/process-stop.png")));
+        savePlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/document-save.png")));
+        shufflePlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/shuffle.png")));
+        appendPlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/list-add.png")));
     }
 
     /** This method is called from within the constructor to

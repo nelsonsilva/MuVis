@@ -36,8 +36,10 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
     /** Creates new form LoadLibraryViewUI */
     public LoadLibraryViewUI() {
         initComponents();
-        browseFilesystemButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder_add.png")));
-        removeLibraryFolderButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/folder_delete.png")));
+        browseFilesystemButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/loader/folder_add.png")));
+        removeLibraryFolderButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/loader/folder_delete.png")));
+        skipLoadingLibraryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/loader/go-jump.png")));
+        loadLibraryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/loader/document-open.png")));
     }
 
     /** This method is called from within the constructor to
@@ -90,18 +92,22 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
         jPanel6.setLayout(new java.awt.GridLayout(1, 0));
 
         loadLibraryButton.setText("Load");
+        loadLibraryButton.setToolTipText("Load your music library");
         loadLibraryButton.setEnabled(false);
         jPanel6.add(loadLibraryButton);
 
         skipLoadingLibraryButton.setText("Skip");
+        skipLoadingLibraryButton.setToolTipText("Skip loading music library for now");
         jPanel6.add(skipLoadingLibraryButton);
 
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
         browseFilesystemButton.setText("Add Musics");
+        browseFilesystemButton.setToolTipText("Add a folder that contains music files");
         jPanel1.add(browseFilesystemButton);
 
         removeLibraryFolderButton.setText("Remove folder");
+        removeLibraryFolderButton.setToolTipText("Remove the selected folder");
         removeLibraryFolderButton.setEnabled(false);
         removeLibraryFolderButton.setMaximumSize(new java.awt.Dimension(133, 23));
         removeLibraryFolderButton.setMinimumSize(new java.awt.Dimension(133, 23));
@@ -116,10 +122,10 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23))
         );
         jPanel2Layout.setVerticalGroup(
@@ -129,8 +135,8 @@ public class LoadLibraryViewUI extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(92, 92, 92))
         );
 

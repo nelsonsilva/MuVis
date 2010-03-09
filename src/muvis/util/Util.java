@@ -100,6 +100,10 @@ public class Util {
         JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
+    public static void displayInformationMessage(JFrame parent, String title, String message) {
+        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
     /**
      * Converts a double array descriptor to a string descriptor
      * @param descriptor

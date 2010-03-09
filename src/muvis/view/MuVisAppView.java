@@ -21,8 +21,6 @@
 
 package muvis.view;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import muvis.view.table.ListViewTableView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -167,7 +165,6 @@ public class MuVisAppView extends JFrame {
 
         setJMenuBar(menuBar);
 
-        //final JFrame frame = this;
 
         ActionListener exitMenuListener = new ActionListener() {
 
@@ -313,14 +310,17 @@ public class MuVisAppView extends JFrame {
         };
 
         menuItem = new JMenuItem("Save workspace");
+        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/save-element.png")));
         menu.add(menuItem);
         menuItem.addActionListener(saveMenuOptionListener);
 
         menuItem = new JMenuItem("Load workspace");
+        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/document-open.png")));
         menu.add(menuItem);
         menuItem.addActionListener(loadMenuOptionListener);
 
         menuItem = new JMenuItem("Reload Library");
+        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/reload.png")));
         menu.add(menuItem);
         menuItem.addActionListener( new ActionListener() {
 
@@ -333,6 +333,7 @@ public class MuVisAppView extends JFrame {
 
         //a group of JMenuItems
         menuItem = new JMenuItem("Exit", KeyEvent.VK_F4);
+        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/system-exit.png")));
         menu.add(menuItem);
         menuItem.addActionListener(exitMenuListener);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
@@ -341,6 +342,7 @@ public class MuVisAppView extends JFrame {
         menuBar.add(menu);
 
         menuItem = new JMenuItem("Generate Playlist");
+        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/generate-playlist.png")));
         menu.add(menuItem);
         menuItem.addActionListener(generatePlaylist);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
@@ -350,6 +352,7 @@ public class MuVisAppView extends JFrame {
 
         ButtonGroup group = new ButtonGroup();
         JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem("Treemap View");
+        rbMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/treemap-view.png")));
         rbMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
         rbMenuItem.addActionListener(new ActionListener() {
 
@@ -362,6 +365,7 @@ public class MuVisAppView extends JFrame {
         menu.add(rbMenuItem);
 
         rbMenuItem = new JRadioButtonMenuItem("List View");
+        rbMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/table-view.png")));
         rbMenuItem.setSelected(true);
         rbMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
         rbMenuItem.addActionListener(new ActionListener() {
@@ -376,7 +380,7 @@ public class MuVisAppView extends JFrame {
 
         menu = new JMenu("Help");
         menuItem = new JMenuItem("About");
-        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/About16.gif"))); // NOI18N
+        menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/help.png")));
         menuItem.addActionListener(new ActionListener() {
 
             @Override

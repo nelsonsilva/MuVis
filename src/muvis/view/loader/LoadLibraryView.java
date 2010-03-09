@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import muvis.Environment;
 import muvis.exceptions.CantSavePropertiesFileException;
+import muvis.util.Util;
 import muvis.view.MuVisAppView;
 import muvis.view.controllers.LoadLibraryController;
 
@@ -42,15 +42,20 @@ import muvis.view.controllers.LoadLibraryController;
 public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener {
 
     private JFileChooser browseSystemFile;
-    private JFrame parent;
     private DefaultListModel libraryListModel;
     public boolean mustloadLibrary;
+    protected JFrame parent;
     private LoadLibraryController controller;
 
-    public LoadLibraryView(JFrame parent, LoadLibraryController controller) {
+    public LoadLibraryView(LoadLibraryController controller) {
 
-        this.parent = parent;
+        parent = Environment.getEnvironmentInstance().getRootFrame();
         parent.setTitle("Please select your library folders");
+        parent.add(this);
+        parent.setSize(this.getPreferredSize());
+        parent.validate();
+        parent.setVisible(true);
+        parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //EXIT_ON_CLOSE
         this.controller = controller;
         libraryListModel = new DefaultListModel();
         libraryFoldersList.setModel(libraryListModel);
@@ -115,15 +120,10 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
                 int size = libraryListModel.getSize();
 
-                if (size == 0) {
-                    removeLibraryFolderButton.setEnabled(false);
-                    loadLibraryButton.setEnabled(false);
-                    mustloadLibrary = false;
-                } else { //Select an index.
+                if (size != 0) {
                     if (indices[i] == libraryListModel.getSize()) {
                         //removed item in last position
                         indices[i]--;
-
                     }
                 }
             }
@@ -137,6 +137,7 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
             if (libraryListModel.getSize() == 0) {
                 removeLibraryFolderButton.setEnabled(false);
+                loadLibraryButton.setEnabled(false);
                 mustloadLibrary = false;
             }
 
@@ -148,8 +149,9 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
                     controller.saveLibraryFolders(folders);
                     controller.loadProcessLibrary(folders);
                 } catch (CantSavePropertiesFileException ex) {
-                    JOptionPane.showMessageDialog(this, "Can't save the properties file",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    Util.displayErrorMessage(Environment.getEnvironmentInstance().getRootFrame(),
+                            "Error",
+                            "Can't save the properties file!");
                     return;
                 }
 
@@ -158,14 +160,15 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
                 parent = buildMainView();
             } else {
-                JOptionPane.showMessageDialog(this, "Please select a folder first",
-                        "Information", JOptionPane.INFORMATION_MESSAGE);
+                Util.displayInformationMessage(Environment.getEnvironmentInstance().getRootFrame(),
+                        "Information",
+                        "Please select a folder first");
             }
         } else if (event.getSource() == skipLoadingLibraryButton) {
 
-            JOptionPane.showMessageDialog(this, "Please load your library later!",
-                    "Information", JOptionPane.INFORMATION_MESSAGE);
-
+            Util.displayInformationMessage(Environment.getEnvironmentInstance().getRootFrame(),
+                        "Information",
+                        "Please load your library later!");
             try {
                 //library already loaded
                 Environment.getEnvironmentInstance().loadWorkspace();
@@ -174,7 +177,6 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
                 System.out.println("Continuing without the loaded configuration");
             }
 
-            parent.dispose();
             buildMainView();
         }
     }

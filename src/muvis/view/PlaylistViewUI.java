@@ -36,8 +36,11 @@ public class PlaylistViewUI extends javax.swing.JPanel {
     /** Creates new form PlaylistViewUI */
     public PlaylistViewUI() {
         initComponents();
-        managePlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/playlist_edit.png")));
-        remTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png")));
+        
+        managePlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/playlist_edit.png")));
+        remTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/list-remove.png")));
+        loadPlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/document-open.png")));
+        savePlaylistButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/playlist/document-save.png")));
     }
 
 

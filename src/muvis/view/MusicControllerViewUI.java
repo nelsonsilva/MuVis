@@ -43,7 +43,12 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         playingModeGroup.add(filteredTracksRadioButton);
         playingModeGroup.add(playlistRadioButton);
         playingModeGroup.add(allTracksRadioButton);
-        
+
+        previousTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-skip-backward.png")));
+        nextTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-skip-forward.png")));
+        playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-start.png")));
+        stopPlayerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-stop.png")));
+        volumeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/audio-volume-medium.png")));
     }
 
     /** This method is called from within the constructor to
@@ -78,7 +83,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
         trackNameLabel = new javax.swing.JLabel();
         trackyearLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        volumeLabel = new javax.swing.JLabel();
         volumeSlider = new javax.swing.JSlider();
         albumCoverPanel = new javax.swing.JPanel();
 
@@ -131,30 +136,26 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
 
         musicControllerSepator.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        previousTrackButton.setFont(new java.awt.Font("Arial", 0, 11));
-        previousTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/StepBack16.gif"))); // NOI18N
+        previousTrackButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         previousTrackButton.setToolTipText("Play previous track");
         previousTrackButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(previousTrackButton);
 
-        stopPlayerButton.setFont(new java.awt.Font("Arial", 0, 11));
-        stopPlayerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Stop16.gif"))); // NOI18N
+        stopPlayerButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         stopPlayerButton.setToolTipText("Play the currently selected track");
         stopPlayerButton.setMaximumSize(new java.awt.Dimension(73, 23));
         stopPlayerButton.setMinimumSize(new java.awt.Dimension(73, 23));
         stopPlayerButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(stopPlayerButton);
 
-        playTrackButton.setFont(new java.awt.Font("Arial", 0, 11));
-        playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Play16.gif"))); // NOI18N
+        playTrackButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         playTrackButton.setToolTipText("Play the currently selected track");
         playTrackButton.setMaximumSize(new java.awt.Dimension(73, 23));
         playTrackButton.setMinimumSize(new java.awt.Dimension(73, 23));
         playTrackButton.setPreferredSize(new java.awt.Dimension(73, 23));
         jPanel2.add(playTrackButton);
 
-        nextTrackButton.setFont(new java.awt.Font("Arial", 0, 11));
-        nextTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/StepForward16.gif"))); // NOI18N
+        nextTrackButton.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         nextTrackButton.setToolTipText("Play the next track");
         nextTrackButton.setMaximumSize(new java.awt.Dimension(73, 23));
         nextTrackButton.setMinimumSize(new java.awt.Dimension(73, 23));
@@ -242,8 +243,6 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Volume16.gif"))); // NOI18N
-
         volumeSlider.setOrientation(javax.swing.JSlider.VERTICAL);
         volumeSlider.setToolTipText("Set the volume of the track being played");
 
@@ -283,7 +282,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                 .add(playerControllerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel1)
+                    .add(volumeLabel)
                     .add(volumeSlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(18, 18, 18)
                 .add(musicControllerSepator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -298,7 +297,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                     .add(musicControllerPanelLayout.createSequentialGroup()
                         .add(41, 41, 41)
                         .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
         musicControllerPanelLayout.setVerticalGroup(
             musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -312,7 +311,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
                                 .add(musicControllerPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(org.jdesktop.layout.GroupLayout.TRAILING, playerControllerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                     .add(org.jdesktop.layout.GroupLayout.TRAILING, musicControllerPanelLayout.createSequentialGroup()
-                                        .add(jLabel1)
+                                        .add(volumeLabel)
                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(volumeSlider, 0, 0, Short.MAX_VALUE)))
                                 .add(18, 115, Short.MAX_VALUE))
@@ -335,7 +334,6 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
     protected javax.swing.JRadioButton allTracksRadioButton;
     protected javax.swing.JLabel artistAlbumInfoLabel;
     protected javax.swing.JRadioButton filteredTracksRadioButton;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -356,6 +354,7 @@ public class MusicControllerViewUI extends javax.swing.JPanel {
     private javax.swing.JPanel trackInformationPanel;
     protected javax.swing.JLabel trackNameLabel;
     protected javax.swing.JLabel trackyearLabel;
+    protected javax.swing.JLabel volumeLabel;
     protected javax.swing.JSlider volumeSlider;
     // End of variables declaration//GEN-END:variables
 

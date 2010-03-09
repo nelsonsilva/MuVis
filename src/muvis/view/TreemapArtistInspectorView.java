@@ -20,6 +20,7 @@
  */
 package muvis.view;
 
+import java.awt.Color;
 import muvis.view.table.ColorCellRenderer;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -33,7 +34,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -42,6 +46,8 @@ import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.RowFilter.Entry;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import jdbm.btree.BTree;
@@ -52,9 +58,9 @@ import muvis.NBTreeManager;
 import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
+import muvis.util.LoweredBevelBorderExtended;
 import muvis.util.Observable;
 import muvis.util.Observer;
-import muvis.util.Util;
 import muvis.view.controllers.ListViewTableViewController;
 import muvis.view.main.MuVisTreemapNode;
 import muvis.view.main.filters.NoFilter;
@@ -126,576 +132,6 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
         tracksTableArtistInspector.addMouseListener( new JTableMouseAdapter(controller));
 
-        /*tracksTableArtistInspector.addMouseListener(new MouseAdapter() {
-
-            private int lastSelectedRow = 0;
-
-            private void maybeShowPopup(MouseEvent e) {
-                if (e.isPopupTrigger() && tracksTableArtistInspector.isEnabled()) {
-                    Point p = new Point(e.getX(), e.getY());
-                    int col = tracksTableArtistInspector.columnAtPoint(p);
-                    int row = tracksTableArtistInspector.rowAtPoint(p);
-
-                    lastSelectedRow = row;
-
-                    // translate table index to model index
-                    int mcol = tracksTableArtistInspector.getColumn(
-                            tracksTableArtistInspector.getColumnName(col)).getModelIndex();
-
-                    if (row >= 0 && row < tracksTableArtistInspector.getRowCount()) {
-
-                        // create popup menu...
-                        JPopupMenu contextMenu = createContextMenu(row,
-                                mcol);
-
-                        // Get the ListSelectionModel of the JTable
-                        if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                            ListSelectionModel model = tracksTableArtistInspector.getSelectionModel();
-
-                            // set the selected interval of rows. Using the "rowNumber"
-                            // variable for the beginning and end selects only that one row.
-                            model.setSelectionInterval(row, row);
-                        }
-
-                        // ... and show it
-                        if (contextMenu != null && contextMenu.getComponentCount() > 0) {
-                            contextMenu.show(tracksTableArtistInspector, p.x, p.y);
-                        }
-                    }
-                }
-            }
-
-            private JPopupMenu createContextMenu(int rowIndex, int columnIndex) {
-                JPopupMenu contextMenu = new JPopupMenu();
-
-                JMenuItem previewElementMenu = new JMenuItem();
-                JMenuItem findSimilarElementMenu = new JMenuItem();
-                JMenuItem findNonSimilarElementMenu = new JMenuItem();
-                JMenuItem addElementToPlaylistMenu = new JMenuItem();
-                JMenuItem closeMenu = new JMenuItem();
-
-                String colName = tracksTableArtistInspector.getModel().getColumnName(columnIndex);
-                if (colName.equals("Track name")) {
-                    if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                        previewElementMenu.setText("Preview Track");
-                        findSimilarElementMenu.setText("Find Similar Tracks");
-                        findNonSimilarElementMenu.setText("Find Non Similar Tracks");
-                        addElementToPlaylistMenu.setText("Add Track to Playlist");
-                    } else {
-                        previewElementMenu.setText("Preview Tracks");
-                        findSimilarElementMenu.setText("Find Similar Tracks");
-                        findNonSimilarElementMenu.setText("Find Non Similar Tracks");
-                        addElementToPlaylistMenu.setText("Add Tracks to Playlist");
-                    }
-                } else if (colName.equals("Artist")) {
-                    if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                        previewElementMenu.setText("Preview Artist");
-                        findSimilarElementMenu.setText("Find Similar Artists");
-                        findNonSimilarElementMenu.setText("Find Non Similar Artists");
-                        addElementToPlaylistMenu.setText("Add Artist to Playlist");
-                    } else {
-                        previewElementMenu.setText("Preview Artists");
-                        findSimilarElementMenu.setText("Find Similar Artists");
-                        findNonSimilarElementMenu.setText("Find Non Similar Artists");
-                        addElementToPlaylistMenu.setText("Add Artists to Playlist");
-                    }
-                } else if (colName.equals("Album")) {
-                    if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                        previewElementMenu.setText("Preview Album");
-                        findSimilarElementMenu.setText("Find Similar Albums");
-                        findNonSimilarElementMenu.setText("Find Non Similar Albums");
-                        addElementToPlaylistMenu.setText("Add Album to Playlist");
-                    } else {
-                        previewElementMenu.setText("Preview Albums");
-                        findSimilarElementMenu.setText("Find Similar Albums");
-                        findNonSimilarElementMenu.setText("Find Non Similar Albums");
-                        addElementToPlaylistMenu.setText("Add Albums to Playlist");
-                    }
-                } else {
-                    return contextMenu;
-                }
-
-                closeMenu.setText("Close");
-
-                findNonSimilarElementMenu.addActionListener( new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() instanceof JMenuItem) {
-                            JMenuItem item = (JMenuItem) e.getSource();
-
-                            final ArrayList<Integer> tracks = new ArrayList();
-                            final int[] trackIds = tracksTableArtistInspector.getSelectedRows();
-                            final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
-
-                            if (item.getText().contains("Track")){
-
-                                final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "tracks");
-                                ActionListener filter = new ActionListener() {
-
-                                    @Override
-                                    @SuppressWarnings("empty-statement")
-                                    public void actionPerformed(ActionEvent e) {
-                                        for (int i = 0; i < trackIds.length; i++) {
-                                            try {
-                                                int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                                                similarityDialog.dispose();
-
-                                                NBTree trackNBTree = nbtreeManager.getNBTree("tracksNBTree");
-                                                double trackKey = dbManager.getTrackKey(trackIds[i]);
-                                                if (trackKey < 0){
-                                                    Util.displayErrorMessage(parent, "Similarity Filter", "Can't get non-similar tracks!Try later!");
-                                                    break;
-                                                }
-                                                NBPoint trackPoint = trackNBTree.lookupPoint(trackKey);
-                                                BTree resultTree = trackNBTree.knnQuery(trackPoint, dbManager.getCountTracks());
-                                                TupleBrowser browser = resultTree.browse();
-                                                Tuple tuple = new Tuple();
-                                                while(browser.getNext(tuple));
-                                                for (int j = 0 ; browser.getPrevious(tuple) && j < numSimilarElements ; j++ ) {
-                                                    if (tuple.getValue() instanceof NBPoint) {
-                                                        NBPoint point = (NBPoint) tuple.getValue();
-                                                        int track = dbManager.getTrackId(point.norm());
-                                                        tracks.add(track);
-                                                    }
-                                                }
-
-                                                TreemapTrackSimilarityFilter filter = new TreemapTrackSimilarityFilter(new NoFilter(), tracks);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
-
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
-                                            } catch (NBTreeException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                };
-
-                                similarityDialog.addFilterListener(filter);
-                                similarityDialog.setVisible(true);
-
-                            } else if (item.getText().contains("Album")){
-
-                                final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "albuns");
-
-                                ActionListener filter = new ActionListener() {
-
-                                    @Override
-                                    @SuppressWarnings("empty-statement")
-                                    public void actionPerformed(ActionEvent e) {
-
-                                        int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                                        similarityDialog.dispose();
-
-                                        NBTree albumsNBTree = nbtreeManager.getNBTree("albumsNBTree");
-                                        for (int i = 0; i < trackIds.length; i++) {
-                                            try {
-                                                double albumKey = dbManager.getAlbumTrackKey(trackIds[i]);
-                                                if (albumKey < 0){
-                                                    Util.displayErrorMessage(parent, "Similarity Filter", "Can't get non-similar albums!Try later!");
-                                                    break;
-                                                }
-                                                NBPoint albumPoint = albumsNBTree.lookupPoint(albumKey);
-                                                BTree resultTree = albumsNBTree.knnQuery(albumPoint, dbManager.getCountAlbums());
-                                                TupleBrowser browser = resultTree.browse();
-                                                Tuple tuple = new Tuple();
-                                                while(browser.getNext(tuple));
-                                                for (int j = 0 ; browser.getPrevious(tuple) && j < numSimilarElements ; j++ ) {
-                                                    if (tuple.getValue() instanceof NBPoint) {
-                                                        NBPoint point = (NBPoint) tuple.getValue();
-                                                        int albumId = dbManager.getAlbumId(point.norm());
-                                                        ArrayList<Integer> albumTracks = dbManager.getAlbumTracksIds(albumId);
-                                                        tracks.addAll(albumTracks);
-                                                    }
-                                                }
-
-                                                TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
-
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
-                                            } catch (NBTreeException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                };
-
-                                similarityDialog.addFilterListener(filter);
-                                similarityDialog.setVisible(true);
-
-                            } else if (item.getText().contains("Artist")){
-
-                                final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "artists");
-
-                                ActionListener filter = new ActionListener() {
-
-                                    @Override
-                                    @SuppressWarnings("empty-statement")
-                                    public void actionPerformed(ActionEvent e) {
-
-                                        int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                                        similarityDialog.dispose();
-
-                                        NBTree artistNBTree = nbtreeManager.getNBTree("artistsNBTree");
-                                        ArrayList<String> artistNames = new ArrayList<String>();
-                                        for (int i = 0; i < trackIds.length; i++) {
-                                            try {
-                                                double artistKey = dbManager.getArtistTrackKey(trackIds[i]);
-                                                if (artistKey < 0){
-                                                    Util.displayErrorMessage(parent, "Similarity Filter", "Can't get similar artists!Try later!");
-                                                    break;
-                                                }
-                                                NBPoint artistPoint = artistNBTree.lookupPoint(artistKey);
-                                                BTree resultTree = artistNBTree.knnQuery(artistPoint, dbManager.getCountArtists());
-                                                TupleBrowser browser = resultTree.browse();
-                                                Tuple tuple = new Tuple();
-                                                while (browser.getNext(tuple));
-                                                for (int j = 0; browser.getPrevious(tuple) && j < numSimilarElements ; j++){
-                                                    if (tuple.getValue() instanceof NBPoint) {
-                                                        NBPoint point = (NBPoint) tuple.getValue();
-                                                        String artistName = dbManager.getArtistName(point.norm());
-                                                        ArrayList<Integer> artistTracks = dbManager.getArtistTracksIds(artistName);
-                                                        tracks.addAll(artistTracks);
-                                                        artistNames.add(artistName);
-                                                    }
-                                                }
-
-                                                TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
-
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
-                                            } catch (NBTreeException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                };
-
-                                similarityDialog.addFilterListener(filter);
-                                similarityDialog.setVisible(true);
-                            }
-
-                            SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                            Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                            Environment.getWorkspaceInstance().getTableFilterManager().filter();
-
-                            closeView();
-                        }
-                    }
-                });
-
-                findSimilarElementMenu.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-
-                        if (e.getSource() instanceof JMenuItem) {
-                            JMenuItem item = (JMenuItem) e.getSource();
-
-                            final ArrayList<Integer> tracks = new ArrayList();
-                            final int[] trackIds = tracksTableArtistInspector.getSelectedRows();
-                            final NBTreeManager nbtreeManager = Environment.getWorkspaceInstance().getNbtreesManager();
-                            if (item.getText().contains("Track")) { //searching for similar tracks
-
-                                final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "tracks");
-                                ActionListener filter = new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        for (int i = 0; i < trackIds.length; i++) {
-                                            try {
-                                                int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                                                similarityDialog.dispose();
-
-                                                NBTree trackNBTree = nbtreeManager.getNBTree("tracksNBTree");
-                                                double trackKey = dbManager.getTrackKey(trackIds[i]);
-                                                if (trackKey < 0){
-                                                    Util.displayErrorMessage(parent, "Similarity Filter", "Can't get similar tracks!Try later!");
-                                                    break;
-                                                }
-                                                NBPoint trackPoint = trackNBTree.lookupPoint(trackKey);
-                                                BTree resultTree = trackNBTree.knnQuery(trackPoint, numSimilarElements);
-                                                TupleBrowser browser = resultTree.browse();
-                                                Tuple tuple = new Tuple();
-                                                while (browser.getNext(tuple)) {
-                                                    if (tuple.getValue() instanceof NBPoint) {
-                                                        NBPoint point = (NBPoint) tuple.getValue();
-                                                        int track = dbManager.getTrackId(point.norm());
-                                                        tracks.add(track);
-                                                    }
-                                                }
-
-                                                TreemapTrackSimilarityFilter filter = new TreemapTrackSimilarityFilter(new NoFilter(), tracks);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
-
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
-                                            } catch (NBTreeException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                };
-
-                                similarityDialog.addFilterListener(filter);
-                                similarityDialog.setVisible(true);
-
-
-                            } else if (item.getText().contains("Album")) { //searching for similar albums
-
-                                final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "albuns");
-
-                                ActionListener filter = new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-
-                                        int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                                        similarityDialog.dispose();
-
-                                        NBTree albumsNBTree = nbtreeManager.getNBTree("albumsNBTree");
-                                        for (int i = 0; i < trackIds.length; i++) {
-                                            try {
-                                                double albumKey = dbManager.getAlbumTrackKey(trackIds[i]);
-                                                if (albumKey < 0){
-                                                    Util.displayErrorMessage(parent, "Similarity Filter", "Can't get similar albums!Try later!");
-                                                    break;
-                                                }
-                                                NBPoint albumPoint = albumsNBTree.lookupPoint(albumKey);
-                                                BTree resultTree = albumsNBTree.knnQuery(albumPoint, numSimilarElements);
-                                                TupleBrowser browser = resultTree.browse();
-                                                Tuple tuple = new Tuple();
-                                                while (browser.getNext(tuple)) {
-                                                    if (tuple.getValue() instanceof NBPoint) {
-                                                        NBPoint point = (NBPoint) tuple.getValue();
-                                                        int albumId = dbManager.getAlbumId(point.norm());
-                                                        ArrayList<Integer> albumTracks = dbManager.getAlbumTracksIds(albumId);
-                                                        tracks.addAll(albumTracks);
-                                                    }
-                                                }
-
-                                                TreemapAlbumSimilarityFilter filter = new TreemapAlbumSimilarityFilter(new NoFilter(), tracks);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
-
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
-                                            } catch (NBTreeException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                };
-
-                                similarityDialog.addFilterListener(filter);
-                                similarityDialog.setVisible(true);
-
-                            } else if (item.getText().contains("Artist")) { //searching for similar artists
-
-                                final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "artists");
-
-                                ActionListener filter = new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-
-                                        int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                                        similarityDialog.dispose();
-
-                                        NBTree artistNBTree = nbtreeManager.getNBTree("artistsNBTree");
-                                        ArrayList<String> artistNames = new ArrayList<String>();
-                                        for (int i = 0; i < trackIds.length; i++) {
-                                            try {
-                                                double artistKey = dbManager.getArtistTrackKey(trackIds[i]);
-                                                if (artistKey < 0){
-                                                    Util.displayErrorMessage(parent, "Similarity Filter", "Can't get similar artists!Try later!");
-                                                    break;
-                                                }
-                                                NBPoint artistPoint = artistNBTree.lookupPoint(artistKey);
-                                                BTree resultTree = artistNBTree.knnQuery(artistPoint, numSimilarElements);
-                                                TupleBrowser browser = resultTree.browse();
-                                                Tuple tuple = new Tuple();
-                                                while (browser.getNext(tuple)) {
-                                                    if (tuple.getValue() instanceof NBPoint) {
-                                                        NBPoint point = (NBPoint) tuple.getValue();
-                                                        String artistName = dbManager.getArtistName(point.norm());
-                                                        ArrayList<Integer> artistTracks = dbManager.getArtistTracksIds(artistName);
-                                                        tracks.addAll(artistTracks);
-                                                        artistNames.add(artistName);
-                                                    }
-                                                }
-
-                                                TreemapArtistSimilarityFilter filter = new TreemapArtistSimilarityFilter(new NoFilter(), artistNames);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                                Environment.getWorkspaceInstance().getTreemapFilterManager().filter();
-
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
-                                            } catch (NBTreeException ex) {
-                                                ex.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                };
-
-                                similarityDialog.addFilterListener(filter);
-                                similarityDialog.setVisible(true);
-                            }
-
-                            SimilarityTableFilter filter = new SimilarityTableFilter(tracks);
-                            Environment.getWorkspaceInstance().getTableFilterManager().addTableFilter(filter);
-                            Environment.getWorkspaceInstance().getTableFilterManager().filter();
-
-                            closeView();
-                        }
-                    }
-                });
-
-                addElementToPlaylistMenu.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() instanceof JMenuItem) {
-                            JMenuItem item = (JMenuItem) e.getSource();
-
-                            if (item.getText().contains("Track")) {
-                                //add a track to playlist
-                                threadPool.execute(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        //add album to playlist
-                                        int[] rows = tracksTableArtistInspector.getSelectedRows();
-                                        for (int i = 0; i < rows.length; i++) {
-                                            int rowModel = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(rows[i]);
-                                            int id = (Integer) model.getValueAt(rowModel, 0);
-                                            controller.addTrackToPlaylist(id, parent);
-                                        }
-                                    }
-                                });
-
-                            } else if (item.getText().contains("Album")) {
-                                threadPool.execute(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        //add album to playlist
-                                        int[] rows = tracksTableArtistInspector.getSelectedRows();
-                                        for (int i = 0; i < rows.length; i++) {
-                                            int rowModel = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(rows[i]);
-                                            int id = (Integer) model.getValueAt(rowModel, 0);
-                                            controller.addAlbumToPlaylist(id, parent);
-                                        }
-                                    }
-                                });
-
-                            } else if (item.getText().contains("Artist")) {
-                                threadPool.execute(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        //add artist to playlist
-                                        int[] rows = tracksTableArtistInspector.getSelectedRows();
-                                        for (int i = 0; i < rows.length; i++) {
-                                            int rowModel = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(rows[i]);
-                                            int id = (Integer) model.getValueAt(rowModel, 0);
-                                            controller.addArtistToPlaylist(id, parent);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-
-                previewElementMenu.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (e.getSource() instanceof JMenuItem) {
-                            JMenuItem item = (JMenuItem) e.getSource();
-
-                            if (item.getText().contains("Preview Track")) {
-                                //preview of a track
-                                if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                                    int row = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(lastSelectedRow);
-                                    int trackId = (Integer) model.getValueAt(row, 0);
-                                    Environment.getWorkspaceInstance().getSnippetManager().previewTrack(trackId);
-                                } else {
-                                    ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableArtistInspector.getSelectedRowCount());
-                                    for (int row : tracksTableArtistInspector.getSelectedRows()) {
-                                        int rowModel = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(row);
-                                        int id = (Integer) model.getValueAt(rowModel, 0);
-                                        trackIds.add(id);
-                                    }
-                                    Environment.getWorkspaceInstance().getSnippetManager().previewTracks(trackIds);
-                                }
-
-                            } else if (item.getText().contains("Album")) {
-                                //preview of an album
-                                if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                                    int row = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(lastSelectedRow);
-                                    int trackId = (Integer) model.getValueAt(row, 0);
-                                    Environment.getWorkspaceInstance().getSnippetManager().previewAlbum(trackId);
-                                } else {
-                                    ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableArtistInspector.getSelectedRowCount());
-                                    for (int row : tracksTableArtistInspector.getSelectedRows()) {
-                                        int rowModel = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(row);
-                                        int id = (Integer) model.getValueAt(rowModel, 0);
-                                        trackIds.add(id);
-                                    }
-                                    Environment.getWorkspaceInstance().getSnippetManager().previewAlbums(trackIds);
-                                }
-
-                            } else if (item.getText().contains("Artist")) {
-                                //preview of an artist
-                                if (tracksTableArtistInspector.getSelectedRowCount() <= 1) {
-                                    int row = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(lastSelectedRow);
-                                    int trackId = (Integer) model.getValueAt(row, 0);
-                                    Environment.getWorkspaceInstance().getSnippetManager().previewArtist(trackId);
-                                } else {
-                                    ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTableArtistInspector.getSelectedRowCount());
-                                    for (int row : tracksTableArtistInspector.getSelectedRows()) {
-                                        int rowModel = tracksTableArtistInspector.getRowSorter().convertRowIndexToModel(row);
-                                        int id = (Integer) model.getValueAt(rowModel, 0);
-                                        trackIds.add(id);
-                                    }
-                                    Environment.getWorkspaceInstance().getSnippetManager().previewArtists(trackIds);
-                                }
-
-                            }
-                        }
-                    }
-                });
-
-                contextMenu.add(previewElementMenu);
-                contextMenu.add(findSimilarElementMenu);
-                contextMenu.add(findNonSimilarElementMenu);
-                contextMenu.add(addElementToPlaylistMenu);
-                contextMenu.addSeparator();
-                contextMenu.add(closeMenu);
-
-                return contextMenu;
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                maybeShowPopup(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                maybeShowPopup(e);
-            }
-        });*/
-
         prevAlbumsButton.addActionListener(new ActionListener() {
 
             @Override
@@ -718,12 +154,19 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
             }
         });
 
-        albumButton1.addActionListener(new ActionListener() {
+        class AlbumButtonListener implements ActionListener{
+
+            protected JTextArea albumLabel;
+
+            public AlbumButtonListener(JTextArea albumLabel){
+                this.albumLabel = albumLabel;
+            }
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String [] label = albumLabel1.getText().split("\n");
-                if (albumButton1.isSelected()) {
+                String [] label = albumLabel.getText().split("\n");
+                JButton albumButton = (JButton)e.getSource();
+                if (albumButton.isSelected()) {
                     if (!selectedAlbumsToFilter.contains(label[0])) {
                         selectedAlbumsToFilter.add(label[0]);
                         filterAlbumsDisplayed();
@@ -735,7 +178,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                     }
                 }
             }
-        });
+        }
 
         class AlbumButton extends MouseAdapter {
 
@@ -1030,62 +473,10 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
             }
         }
 
-        albumButton2.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String [] label = albumLabel2.getText().split("\n");
-                if (albumButton2.isSelected()) {
-                    if (!selectedAlbumsToFilter.contains(label[0])) {
-                        selectedAlbumsToFilter.add(label[0]);
-                        filterAlbumsDisplayed();
-                    }
-                } else {
-                    if (selectedAlbumsToFilter.contains(label[0])) {
-                        selectedAlbumsToFilter.remove(label[0]);
-                        filterAlbumsDisplayed();
-                    }
-                }
-            }
-        });
-
-        albumButton3.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String [] label = albumLabel3.getText().split("\n");
-                if (albumButton3.isSelected()) {
-                    if (!selectedAlbumsToFilter.contains(label[0])) {
-                        selectedAlbumsToFilter.add(label[0]);
-                        filterAlbumsDisplayed();
-                    }
-                } else {
-                    if (selectedAlbumsToFilter.contains(label[0])) {
-                        selectedAlbumsToFilter.remove(label[0]);
-                        filterAlbumsDisplayed();
-                    }
-                }
-            }
-        });
-
-        albumButton4.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String [] label = albumLabel4.getText().split("\n");
-                if (albumButton4.isSelected()) {
-                    if (!selectedAlbumsToFilter.contains(label[0])) {
-                        selectedAlbumsToFilter.add(label[0]);
-                        filterAlbumsDisplayed();
-                    }
-                } else {
-                    if (selectedAlbumsToFilter.contains(label[0])) {
-                        selectedAlbumsToFilter.remove(label[0]);
-                        filterAlbumsDisplayed();
-                    }
-                }
-            }
-        });
+        albumButton1.addActionListener(new AlbumButtonListener(albumLabel1));
+        albumButton2.addActionListener(new AlbumButtonListener(albumLabel2));
+        albumButton3.addActionListener(new AlbumButtonListener(albumLabel3));
+        albumButton4.addActionListener(new AlbumButtonListener(albumLabel4));
 
         albumButton1.addMouseListener(new AlbumButton(albumButton1, albumLabel1));
         albumButton2.addMouseListener(new AlbumButton(albumButton2, albumLabel2));

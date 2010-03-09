@@ -1,29 +1,28 @@
 /*
-* The GPLv3 licence :
-* -----------------
-* Copyright (c) 2009 Ricardo Dias
-*
-* This file is part of MuVis.
-*
-* MuVis is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* MuVis is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ * The GPLv3 licence :
+ * -----------------
+ * Copyright (c) 2009 Ricardo Dias
+ *
+ * This file is part of MuVis.
+ *
+ * MuVis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MuVis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package muvis.analyser.processor;
 
 import comirva.audio.extraction.AudioFeatureExtractionThread;
 import comirva.audio.extraction.FluctuationPatternExtractionThread;
-import comirva.data.DataMatrix; 
+import comirva.data.DataMatrix;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
@@ -35,6 +34,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.JFrame;
+import muvis.Elements;
 import muvis.NBTreeManager;
 import muvis.Environment;
 import muvis.analyser.loader.Loader;
@@ -59,7 +59,7 @@ public class ContentProcessor implements Observer, Observable {
     private ExecutorService threadPool;
     private int nextFileToProcess = -1;
     private MusicLibraryDatabaseManager dbManager;
-    private NBTree tracksNBTree,  albumsTree,  artistsTree;
+    private NBTree tracksNBTree, albumsTree, artistsTree;
     private File[] filesToProcess;
     private LoadingLibraryViewUI loadingLibraryUI;
 
@@ -68,9 +68,9 @@ public class ContentProcessor implements Observer, Observable {
         threadPool = Executors.newFixedThreadPool(5);
         dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        tracksNBTree = nbtreeManager.getNBTree("tracksNBTree");
-        albumsTree = nbtreeManager.getNBTree("albumsNBTree");
-        artistsTree = nbtreeManager.getNBTree("artistsNBTree");
+        tracksNBTree = nbtreeManager.getNBTree(Elements.TRACKS_NBTREE);
+        albumsTree = nbtreeManager.getNBTree(Elements.ALBUMS_NBTREE);
+        artistsTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
     }
 
     /**
@@ -102,14 +102,14 @@ public class ContentProcessor implements Observer, Observable {
                         fileToProc = nextFileToProcess;
                         file = filesToProcess[fileToProc];
 
-                        loadingLibraryUI.loadingTracksLabel.setText("Loading track "+fileToProc+" of "+filesToProcess.length);
+                        loadingLibraryUI.loadingTracksLabel.setText("Loading track " + fileToProc + " of " + filesToProcess.length);
                         loadingLibraryUI.trackPathNameLabel.setText(file.getAbsolutePath());
                         loadingLibraryUI.loadingLibraryProgressBar.setValue(fileToProc);
                     } else {
                         return;
                     }
 
-                    if (numFilesProcessed == 100){
+                    if (numFilesProcessed == 100) {
                         try {
                             sleep(2000);
                         } catch (InterruptedException ex) {
@@ -119,7 +119,7 @@ public class ContentProcessor implements Observer, Observable {
                     }
                 }
 
-                
+
                 try {
 
                     AudioMetadata metadata =
@@ -154,7 +154,7 @@ public class ContentProcessor implements Observer, Observable {
     class ContentProcessorTrackThread extends Thread {
 
         final private Object lock;
-        private int id,  numTries = 0, numFilesProcessed = 0;
+        private int id, numTries = 0, numFilesProcessed = 0;
         private int fileToProc = -1;
 
         public ContentProcessorTrackThread(Object lock, int threadId) {
@@ -176,7 +176,7 @@ public class ContentProcessor implements Observer, Observable {
                             fileToProc = nextFileToProcess;
                             file = filesToProcess[fileToProc];
 
-                            loadingLibraryUI.loadingTracksLabel.setText("Loading track "+fileToProc+" of "+filesToProcess.length);
+                            loadingLibraryUI.loadingTracksLabel.setText("Loading track " + fileToProc + " of " + filesToProcess.length);
                             loadingLibraryUI.trackPathNameLabel.setText(file.getAbsolutePath());
                             loadingLibraryUI.loadingLibraryProgressBar.setValue(fileToProc);
                         } else {
@@ -188,7 +188,7 @@ public class ContentProcessor implements Observer, Observable {
                 //process now the file
                 try {
 
-                    if (numFilesProcessed == 100){
+                    if (numFilesProcessed == 100) {
                         sleep(5000);
                         numFilesProcessed = 0;
                     }
@@ -262,11 +262,11 @@ public class ContentProcessor implements Observer, Observable {
             loadingLibraryUI.loadingLibraryProgressBar.setMaximum(total);
             loadingLibraryUI.loadingTracksLabel.setText("");
             loadingLibraryUI.trackPathNameLabel.setText("");
-            
+
             for (String artist : artistNames) {
 
                 i++;
-                loadingLibraryUI.loadingTracksLabel.setText("Processing artist " + i + " of "+total);
+                loadingLibraryUI.loadingTracksLabel.setText("Processing artist " + i + " of " + total);
                 loadingLibraryUI.trackPathNameLabel.setText("");
 
                 ArrayList<String> artistAlbums = dbManager.getArtistAlbums(artist);
@@ -391,7 +391,7 @@ public class ContentProcessor implements Observer, Observable {
                     loadingLibraryUI.processingStageLabel.setText("Initilizing stages...");
                     loadingLibraryUI.loadingTracksLabel.setText("");
                     loadingLibraryUI.trackPathNameLabel.setText("");
-                    
+
                     frame.add(loadingLibraryUI);
                     frame.pack();
                     frame.setVisible(true);
@@ -415,7 +415,6 @@ public class ContentProcessor implements Observer, Observable {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-
                         }
                     };
                     loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(listener1);
@@ -456,7 +455,6 @@ public class ContentProcessor implements Observer, Observable {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-
                         }
                     };
                     loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(listener2);
@@ -507,7 +505,6 @@ public class ContentProcessor implements Observer, Observable {
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            
                         }
                     };
                     loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(listener3);
@@ -552,7 +549,6 @@ public class ContentProcessor implements Observer, Observable {
             obs.update(this, null);
         }
     }
-
 
     private double[] sum(double[] vec1, double[] vec2) {
 

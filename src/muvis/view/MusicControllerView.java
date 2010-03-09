@@ -30,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -371,7 +370,7 @@ public class MusicControllerView extends MusicControllerViewUI
             if (MuVisAudioPlayer.Event.RESUMED.equals(arg) && player.isPlaying()) {
                 //start the timer
                 musicTimelineTimer.start();
-                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Pause16.gif"))); // NOI18N
+                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-pause.png"))); // NOI18N
             } else if (MuVisAudioPlayer.Event.NEW_TRACK_PLAYING.equals(arg)) {
                 //start the time but...
                 musicTimelineTimer.start();
@@ -380,13 +379,13 @@ public class MusicControllerView extends MusicControllerViewUI
                 updateInfoPanel();
                 musicTimelineSlider.setValue(0);
                 
-                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Pause16.gif"))); // NOI18N
+                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-pause.png"))); // NOI18N
                 key.setNotification(true);
             } else if (MuVisAudioPlayer.Event.STOPPED.equals(arg)) {
                 //stop the timer because the player is either stop or paused
                 musicTimelineTimer.stop();
                 musicTimelineSlider.setValue(0);
-                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Play16.gif"))); // NOI18N
+                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-start.png"))); // NOI18N
                 try {
                     displayInfoPanel("Artist & album - not available", "Track name - not available", "Year - not available", ImageIO.read(getClass().getResource("/images/not_available.jpg")));
                 } catch (IOException ex) {
@@ -395,7 +394,7 @@ public class MusicControllerView extends MusicControllerViewUI
                 key.setName("Music Player");
             } else if (MuVisAudioPlayer.Event.PAUSED.equals(arg)) {
                 musicTimelineTimer.stop();
-                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/media/Play16.gif"))); // NOI18N
+                playTrackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-start.png"))); // NOI18N
             } else if (MuVisAudioPlayer.Event.VOLUME_CHANGED.equals(arg)) {
                 //volumeSlider.setValue((int) player.getVolume());
                 //this must be mapped to the interface space

@@ -89,10 +89,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="jScrollPane1" alignment="0" pref="607" max="32767" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="jPanel1" min="-2" pref="291" max="-2" attributes="0"/>
-                          <EmptySpace pref="170" max="32767" attributes="0"/>
-                          <Component id="jPanel6" min="-2" pref="146" max="-2" attributes="0"/>
+                          <EmptySpace pref="130" max="32767" attributes="0"/>
+                          <Component id="jPanel6" min="-2" pref="186" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
@@ -106,8 +106,8 @@
                   <Component id="jScrollPane1" min="-2" pref="83" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jPanel6" min="-2" max="-2" attributes="1"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="1"/>
+                      <Component id="jPanel6" min="-2" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
               </Group>
@@ -145,6 +145,7 @@
             <Component class="javax.swing.JButton" name="loadLibraryButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Load"/>
+                <Property name="toolTipText" type="java.lang.String" value="Load your music library"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
@@ -154,6 +155,7 @@
             <Component class="javax.swing.JButton" name="skipLoadingLibraryButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Skip"/>
+                <Property name="toolTipText" type="java.lang.String" value="Skip loading music library for now"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
@@ -171,6 +173,7 @@
             <Component class="javax.swing.JButton" name="browseFilesystemButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add Musics"/>
+                <Property name="toolTipText" type="java.lang.String" value="Add a folder that contains music files"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
@@ -179,6 +182,7 @@
             <Component class="javax.swing.JButton" name="removeLibraryFolderButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Remove folder"/>
+                <Property name="toolTipText" type="java.lang.String" value="Remove the selected folder"/>
                 <Property name="enabled" type="boolean" value="false"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[133, 23]"/>

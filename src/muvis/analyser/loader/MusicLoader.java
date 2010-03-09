@@ -31,7 +31,6 @@ import muvis.util.Util;
  * Implements the Music Loader for the MuVis player.
  * Scans the directories and processes it.
  * @author Ricardo
- * @version 1.0
  */
 public class MusicLoader implements Loader, Observable {
 

@@ -27,6 +27,7 @@
 
 package muvis.view;
 
+import java.awt.Image;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +39,19 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
     /** Creates new form TreemapArtistInspectorViewUI */
     public TreemapArtistInspectorViewUI() {
         initComponents();
+
+        seeAllArtistsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/others/back-arrow.png")));
+        nextAlbumsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/others/go-next.png")));
+        prevAlbumsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/others/go-previous.png")));
+
+        javax.swing.ImageIcon icon = new javax.swing.ImageIcon(getClass().getResource("/images/not_available.jpg"));
+        Image im = icon.getImage().getScaledInstance(149, 167, Image.SCALE_SMOOTH);
+        icon.setImage(im);
+
+        albumButton1.setIcon(icon);
+        albumButton2.setIcon(icon);
+        albumButton3.setIcon(icon);
+        albumButton4.setIcon(icon);
     }
 
     /** This method is called from within the constructor to
@@ -80,7 +94,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(600, 600));
         setPreferredSize(new java.awt.Dimension(600, 600));
 
-        artistNameLabel.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        artistNameLabel.setFont(new java.awt.Font("Tahoma", 1, 24));
         artistNameLabel.setText("Artist name");
 
         seeAllArtistsButton.setText("All artists");
@@ -108,7 +122,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
 
         albumsHolderPanel.setMaximumSize(new java.awt.Dimension(800, 305));
 
-        albumsInfoLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        albumsInfoLabel.setFont(new java.awt.Font("Tahoma", 1, 11));
         albumsInfoLabel.setText("x - y / z Albuns , with q tracks.");
         albumsInfoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -128,15 +142,16 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        prevAlbumsButton.setText("<");
         prevAlbumsButton.setEnabled(false);
         prevAlbumsButton.setMaximumSize(new java.awt.Dimension(41, 265));
         prevAlbumsButton.setMinimumSize(new java.awt.Dimension(41, 265));
         prevAlbumsButton.setPreferredSize(new java.awt.Dimension(41, 265));
         jPanel1.add(prevAlbumsButton);
 
-        albumButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Red-X.png"))); // NOI18N
+        albumButton1.setAlignmentY(0.0F);
+        albumButton1.setBorder(null);
         albumButton1.setEnabled(false);
+        albumButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane2.setBorder(null);
         jScrollPane2.setEnabled(false);
@@ -146,7 +161,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumLabel1.setBackground(new java.awt.Color(240, 240, 240));
         albumLabel1.setColumns(10);
         albumLabel1.setEditable(false);
-        albumLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
+        albumLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         albumLabel1.setLineWrap(true);
         albumLabel1.setRows(3);
         albumLabel1.setText("Album name");
@@ -180,8 +195,10 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
 
         jPanel1.add(albumPanel1);
 
-        albumButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Red-X.png"))); // NOI18N
+        albumButton2.setAlignmentY(0.0F);
+        albumButton2.setBorder(null);
         albumButton2.setEnabled(false);
+        albumButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane3.setBorder(null);
         jScrollPane3.setEnabled(false);
@@ -225,8 +242,10 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
 
         jPanel1.add(albumPanel2);
 
-        albumButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Red-X.png"))); // NOI18N
+        albumButton3.setAlignmentY(0.0F);
+        albumButton3.setBorder(null);
         albumButton3.setEnabled(false);
+        albumButton3.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane4.setBorder(null);
         jScrollPane4.setEnabled(false);
@@ -262,7 +281,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumPanel3Layout.setVerticalGroup(
             albumPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(albumPanel3Layout.createSequentialGroup()
-                .addComponent(albumButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(albumButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                 .addContainerGap())
@@ -272,8 +291,8 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
 
         albumPanel4.setPreferredSize(new java.awt.Dimension(150, 264));
 
-        albumButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Red-X.png"))); // NOI18N
         albumButton4.setToolTipText("");
+        albumButton4.setBorder(null);
         albumButton4.setEnabled(false);
         albumButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -321,7 +340,6 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
 
         jPanel1.add(albumPanel4);
 
-        nextAlbumsButton.setText(">");
         nextAlbumsButton.setEnabled(false);
         nextAlbumsButton.setMaximumSize(new java.awt.Dimension(41, 265));
         nextAlbumsButton.setMinimumSize(new java.awt.Dimension(41, 265));
@@ -384,7 +402,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
     protected javax.swing.JTextArea albumLabel2;
     protected javax.swing.JTextArea albumLabel3;
     protected javax.swing.JTextArea albumLabel4;
-    private javax.swing.JPanel albumPanel1;
+    protected javax.swing.JPanel albumPanel1;
     private javax.swing.JPanel albumPanel2;
     private javax.swing.JPanel albumPanel3;
     private javax.swing.JPanel albumPanel4;
