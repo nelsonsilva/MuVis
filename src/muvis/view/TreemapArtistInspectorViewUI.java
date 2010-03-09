@@ -45,7 +45,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         prevAlbumsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/others/go-previous.png")));
 
         javax.swing.ImageIcon icon = new javax.swing.ImageIcon(getClass().getResource("/images/not_available.jpg"));
-        Image im = icon.getImage().getScaledInstance(149, 167, Image.SCALE_SMOOTH);
+        Image im = icon.getImage().getScaledInstance(150, 167, Image.SCALE_SMOOTH);
         icon.setImage(im);
 
         albumButton1.setIcon(icon);
@@ -106,7 +106,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
             .addGroup(headerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(artistNameLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 449, Short.MAX_VALUE)
                 .addComponent(seeAllArtistsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -133,7 +133,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(albumsInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(429, Short.MAX_VALUE))
+                .addContainerGap(431, Short.MAX_VALUE))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,6 +151,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumButton1.setAlignmentY(0.0F);
         albumButton1.setBorder(null);
         albumButton1.setEnabled(false);
+        albumButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         albumButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane2.setBorder(null);
@@ -161,7 +162,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumLabel1.setBackground(new java.awt.Color(240, 240, 240));
         albumLabel1.setColumns(10);
         albumLabel1.setEditable(false);
-        albumLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        albumLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         albumLabel1.setLineWrap(true);
         albumLabel1.setRows(3);
         albumLabel1.setText("Album name");
@@ -178,7 +179,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumPanel1.setLayout(albumPanel1Layout);
         albumPanel1Layout.setHorizontalGroup(
             albumPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(albumButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+            .addComponent(albumButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
             .addGroup(albumPanel1Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,6 +199,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumButton2.setAlignmentY(0.0F);
         albumButton2.setBorder(null);
         albumButton2.setEnabled(false);
+        albumButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         albumButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane3.setBorder(null);
@@ -245,6 +247,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumButton3.setAlignmentY(0.0F);
         albumButton3.setBorder(null);
         albumButton3.setEnabled(false);
+        albumButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         albumButton3.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane4.setBorder(null);
@@ -292,9 +295,12 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumPanel4.setPreferredSize(new java.awt.Dimension(150, 264));
 
         albumButton4.setToolTipText("");
+        albumButton4.setAlignmentY(0.0F);
         albumButton4.setBorder(null);
+        albumButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         albumButton4.setEnabled(false);
         albumButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        albumButton4.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jScrollPane5.setBorder(null);
         jScrollPane5.setEnabled(false);
@@ -323,7 +329,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
             albumPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(albumPanel4Layout.createSequentialGroup()
                 .addGroup(albumPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(albumButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(albumButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                     .addGroup(albumPanel4Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -332,9 +338,9 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumPanel4Layout.setVerticalGroup(
             albumPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(albumPanel4Layout.createSequentialGroup()
-                .addComponent(albumButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(albumButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -352,7 +358,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
             albumsHolderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(infoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(albumsHolderPanelLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
                 .addContainerGap())
         );
         albumsHolderPanelLayout.setVerticalGroup(
@@ -376,7 +382,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(albumsHolderPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(headerPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

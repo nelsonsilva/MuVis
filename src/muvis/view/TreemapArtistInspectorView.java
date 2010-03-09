@@ -21,12 +21,15 @@
 package muvis.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
 import muvis.view.table.ColorCellRenderer;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -39,6 +42,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -56,6 +60,8 @@ import jdbm.helper.TupleBrowser;
 import muvis.Elements;
 import muvis.NBTreeManager;
 import muvis.Environment;
+import muvis.Messages;
+import muvis.audio.AudioMetadata;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
 import muvis.util.LoweredBevelBorderExtended;
@@ -165,7 +171,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
             @Override
             public void actionPerformed(ActionEvent e) {
                 String [] label = albumLabel.getText().split("\n");
-                JButton albumButton = (JButton)e.getSource();
+                JToggleButton albumButton = (JToggleButton)e.getSource();
                 if (albumButton.isSelected()) {
                     if (!selectedAlbumsToFilter.contains(label[0])) {
                         selectedAlbumsToFilter.add(label[0]);
@@ -534,18 +540,18 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
         sorter = new TableRowSorter<ArtistInspectorTracksTableModel>(model);
         tracksTableArtistInspector.setRowSorter(sorter);
         //specific information about the columns
-        TableColumn time = tracksTableArtistInspector.getColumn("Duration");
+        TableColumn time = tracksTableArtistInspector.getColumn(Messages.COL_TRACK_DURATION_LABEL);
         time.setCellRenderer(new ColorCellRenderer());
         time.setPreferredWidth(60);
         time.setMaxWidth(60);
         time.setMinWidth(40);
 
-        TableColumn trackNum = tracksTableArtistInspector.getColumn("Nr.");
+        TableColumn trackNum = tracksTableArtistInspector.getColumn(Messages.COL_TRACK_NUMBER_LABEL);
         trackNum.setPreferredWidth(40);
         trackNum.setMaxWidth(60);
         trackNum.setCellRenderer(new ColorCellRenderer());
 
-        TableColumn genreCol = tracksTableArtistInspector.getColumn("Genre");
+        TableColumn genreCol = tracksTableArtistInspector.getColumn(Messages.COL_TRACK_GENRE_LABEL);
         genreCol.setPreferredWidth(80);
         genreCol.setMaxWidth(150);
 
@@ -602,11 +608,19 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                 String label = albumsToDisplay.get(i);
                 label += "\n" + dbManager.getAlbumYear(artistNameLabel.getText(), albumsToDisplay.get(i));
                 String [] albumProperties;
+                String albumTrack = dbManager.getAlbumFirstTrack(artistNameLabel.getText(), albumsToDisplay.get(i));
                 switch (i) {
                     case 0:
                         albumLabel1.setText(label);
                         albumButton1.setEnabled(true);
                         albumLabel1.setEnabled(true);
+                        if (!albumTrack.equals("")){
+                            BufferedImage artwork = dbManager.getTrackMetadata(albumTrack).getArtwork();
+                            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(artwork);
+                            Image im = icon.getImage().getScaledInstance(150, 167, Image.SCALE_SMOOTH);
+                            icon.setImage(im);
+                            albumButton1.setIcon(icon);
+                        }
                         albumProperties = albumLabel1.getText().split("\n");
                         if (selectedAlbumsToFilter.contains(albumProperties[0])) {
                             albumButton1.setSelected(true);
@@ -616,6 +630,13 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                         albumLabel2.setText(label);
                         albumButton2.setEnabled(true);
                         albumLabel2.setEnabled(true);
+                        if (!albumTrack.equals("")){
+                            BufferedImage artwork = dbManager.getTrackMetadata(albumTrack).getArtwork();
+                            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(artwork);
+                            Image im = icon.getImage().getScaledInstance(150, 167, Image.SCALE_SMOOTH);
+                            icon.setImage(im);
+                            albumButton2.setIcon(icon);
+                        }
                         albumProperties = albumLabel2.getText().split("\n");
                         if (selectedAlbumsToFilter.contains(albumProperties[0])) {
                             albumButton2.setSelected(true);
@@ -625,6 +646,13 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                         albumLabel3.setText(label);
                         albumButton3.setEnabled(true);
                         albumLabel3.setEnabled(true);
+                        if (!albumTrack.equals("")){
+                            BufferedImage artwork = dbManager.getTrackMetadata(albumTrack).getArtwork();
+                            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(artwork);
+                            Image im = icon.getImage().getScaledInstance(150, 167, Image.SCALE_SMOOTH);
+                            icon.setImage(im);
+                            albumButton3.setIcon(icon);
+                        }
                         albumProperties = albumLabel3.getText().split("\n");
                         if (selectedAlbumsToFilter.contains(albumProperties[0])) {
                             albumButton3.setSelected(true);
@@ -634,6 +662,13 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                         albumLabel4.setText(label);
                         albumButton4.setEnabled(true);
                         albumLabel4.setEnabled(true);
+                        if (!albumTrack.equals("")){
+                            BufferedImage artwork = dbManager.getTrackMetadata(albumTrack).getArtwork();
+                            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(artwork);
+                            Image im = icon.getImage().getScaledInstance(150, 167, Image.SCALE_SMOOTH);
+                            icon.setImage(im);
+                            albumButton4.setIcon(icon);
+                        }
                         albumProperties = albumLabel4.getText().split("\n");
                         if (selectedAlbumsToFilter.contains(albumProperties[0])) {
                             albumButton4.setSelected(true);
@@ -655,6 +690,11 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
             label += " tracks";
             albumsInfoLabel.setText(label);
         }
+    }
+
+    public void getAlbumArtwork(String artist, String album){
+
+        
     }
 
     private void cleanDisplay() {
@@ -699,6 +739,6 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
         albumsPage = 0;
 
         MainViewHolder mainViewHolder = (MainViewHolder) Environment.getEnvironmentInstance().getViewManager().getView("mainView");
-        mainViewHolder.setView("TreeMapView");
+        mainViewHolder.setView(Elements.TREEMAP_VIEW);
     }
 }
