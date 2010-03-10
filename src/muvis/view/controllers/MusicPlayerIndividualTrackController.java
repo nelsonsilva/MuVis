@@ -58,6 +58,7 @@ public class MusicPlayerIndividualTrackController implements MusicPlayerControll
                 player.stop();
             }
             player.play(Environment.getEnvironmentInstance().getDatabaseManager().getFilename(trackId));
+            isPlaying = true;
         } catch (BasicPlayerException ex) {
             ex.printStackTrace();
         }
@@ -110,7 +111,6 @@ public class MusicPlayerIndividualTrackController implements MusicPlayerControll
         if (enabled){
             if (obs instanceof MuVisAudioPlayer) {
                 if (MuVisAudioPlayer.Event.STOPPED.equals(arg)) {
-                    Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
                 }
             }
         }
