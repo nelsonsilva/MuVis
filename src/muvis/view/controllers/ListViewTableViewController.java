@@ -21,6 +21,9 @@
 package muvis.view.controllers;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
 import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.playlist.PlaylistItem;

@@ -36,9 +36,9 @@ import muvis.util.Observer;
 public class MusicPlayerPlaylistController implements MusicPlayerControllerInterface, Observer {
 
     private boolean isPlaying;
+    private boolean enabled;
     private Playlist playlist;
     private MuVisAudioPlayer player;
-    private boolean enabled;
 
     public MusicPlayerPlaylistController() {
         isPlaying = false;

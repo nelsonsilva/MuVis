@@ -53,6 +53,7 @@ import muvis.util.Util;
 import muvis.view.controllers.MusicPlayerControllerInterface;
 import muvis.view.controllers.MusicPlayerFilterController;
 import muvis.view.controllers.MusicPlayerGeneralController;
+import muvis.view.controllers.MusicPlayerIndividualTrackController;
 
 /**
  * This class implements the ControllerView for the musicplayer, handling the
@@ -98,6 +99,12 @@ public class MusicControllerView extends MusicControllerViewUI
             playlistRadioButton.doClick();
         } else if (PlayingType.GENERAL_MODE.equals(playingType)){
             allTracksRadioButton.doClick();
+        } else if (PlayingType.INDIVIDUAL_TRACK.equals(playingType)){
+            try{
+                activeController.stopTrack();
+            } catch (Exception ex){}
+            setMusicPlayerActiveController(individualTrackModeController);
+            this.playingType = PlayingType.INDIVIDUAL_TRACK;
         }
     }
 
@@ -112,6 +119,7 @@ public class MusicControllerView extends MusicControllerViewUI
     private MusicPlayerControllerInterface playlistModeController;
     private MusicPlayerControllerInterface filteredTracksModeController;
     private MusicPlayerControllerInterface allTracksModeController;
+    private MusicPlayerControllerInterface individualTrackModeController;
     //The active controller for this player
     private MusicPlayerControllerInterface activeController;
     //Parent JFrame
@@ -126,6 +134,7 @@ public class MusicControllerView extends MusicControllerViewUI
         this.playlistModeController = new MusicPlayerPlaylistController();
         this.filteredTracksModeController = new MusicPlayerFilterController();
         this.allTracksModeController = new MusicPlayerGeneralController();
+        this.individualTrackModeController = new MusicPlayerIndividualTrackController();
         this.activeController = playlistModeController;
         activeController.setEnable(true);
 
@@ -431,6 +440,14 @@ public class MusicControllerView extends MusicControllerViewUI
 
     public MusicPlayerControllerInterface getMusicPlayerPlaylistController() {
         return playlistModeController;
+    }
+
+    public MusicPlayerControllerInterface getMusicPlayerIndividualController() {
+        return individualTrackModeController;
+    }
+
+    public void setMusicPlayerIndividualController(MusicPlayerControllerInterface individualController) {
+        this.individualTrackModeController = individualController;
     }
 
     /**

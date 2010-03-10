@@ -28,8 +28,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import muvis.Elements;
+import muvis.Environment;
 import muvis.Messages;
+import muvis.view.MusicControllerView;
+import muvis.view.ViewManager;
 import muvis.view.controllers.ListViewTableViewController;
+import muvis.view.controllers.MusicPlayerControllerInterface;
+import muvis.view.controllers.MusicPlayerIndividualTrackController;
 
 /**
  * 
@@ -77,6 +83,14 @@ public class JTableMouseAdapter extends MouseAdapter {
             }
         } else if (e.getClickCount() == 2){
             //ask controller to play song
+            int row = tracksTable.getRowSorter().convertRowIndexToModel(tracksTable.getSelectedRow());
+            int trackId = (Integer) tracksTable.getModel().getValueAt(row, 0);
+            ViewManager vm = Environment.getEnvironmentInstance().getViewManager();
+
+            MusicControllerView mpController = (MusicControllerView)vm.getView(Elements.MUSIC_PLAYER_VIEW);
+            ((MusicPlayerIndividualTrackController)mpController.getMusicPlayerIndividualController()).setTrackId(trackId);
+            mpController.setPlayingType(MusicControllerView.PlayingType.INDIVIDUAL_TRACK);
+            mpController.playTrack();
         }
     }
 
