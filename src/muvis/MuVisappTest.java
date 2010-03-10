@@ -43,15 +43,15 @@ public class MuVisappTest {
                 public void run() {
                     JFrame.setDefaultLookAndFeelDecorated(true);
 
-                    /*try {
+                    try {
                         // Set System L&F
-                        UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager.getLookAndFeel());
-                        UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
+                        //UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager.getLookAndFeel());
+                        //UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
                         UIManager.setLookAndFeel(new net.sourceforge.napkinlaf.NapkinLookAndFeel());
-                        UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
+                        //UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
                     } catch (Exception e){
                         e.printStackTrace();
-                    }*/
+                    }
 
 
                     MuVisApp app = new MuVisApp();

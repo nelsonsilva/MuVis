@@ -116,5 +116,6 @@ public class Messages {
      * Generic strings
      */
     public static final String EMPTY_STRING = "";
+    public static final String JFILE_CHOOSER_SELECT_LIBRARY = "Select a library folder";
 
 }

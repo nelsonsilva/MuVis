@@ -33,7 +33,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import muvis.Environment;
+import muvis.Messages;
 import muvis.exceptions.CantSavePropertiesFileException;
+import muvis.util.Util;
 import muvis.view.controllers.ReloadLibraryController;
 
 /**
@@ -63,7 +65,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
         loadLibraryButton.addActionListener(this);
         skipLoadingLibraryButton.addActionListener(this);
 
-        skipLoadingLibraryButton.setText("Close");
+        skipLoadingLibraryButton.setText(Messages.CLOSE_LABEL);
 
         browseSystemFile = new JFileChooser();
         mustloadLibrary = false;
@@ -84,14 +86,14 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
                 @Override
                 public void run() {
                     browseSystemFile.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                    browseSystemFile.setDialogTitle("Select a library folder");
+                    browseSystemFile.setDialogTitle(Messages.JFILE_CHOOSER_SELECT_LIBRARY);
                     browseSystemFile.setAcceptAllFileFilterUsed(false);
                     int returned = browseSystemFile.showOpenDialog(parent);
                     if (returned == JFileChooser.APPROVE_OPTION) {
 
                         File file = browseSystemFile.getSelectedFile();
                         String pathName = file.getAbsoluteFile().toString();
-                        if (!pathName.equals("")) {
+                        if (!pathName.equals(Messages.EMPTY_STRING)) {
                             addNewFolderToView(pathName);
                             mustloadLibrary = true;
                             loadLibraryButton.setEnabled(true);
@@ -134,7 +136,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
              */
             for (Object item : itemsToRemove) {
                 libraryListModel.removeElement(item);
-                if (previousFolders.contains(item) && !shouldLoad){
+                if (previousFolders.contains(item.toString()) && !shouldLoad){
                     shouldLoad = true;
                 }
             }
@@ -161,14 +163,12 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
                     controller.loadProcessLibrary(folders);
                     controller.saveLibraryFolders(folders);
                 } catch (CantSavePropertiesFileException ex) {
-                    JOptionPane.showMessageDialog(this, "Can't save the properties file",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    Util.displayErrorMessage(newFrame, "Error", "Can't save the properties file");
                     return;
                 }
                 newFrame.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Please select a folder first",
-                        "Information", JOptionPane.INFORMATION_MESSAGE);
+                Util.displayInformationMessage(newFrame, "Information", "Please select a folder first");
             }
         } else if (event.getSource() == skipLoadingLibraryButton) {
             newFrame.dispose();
