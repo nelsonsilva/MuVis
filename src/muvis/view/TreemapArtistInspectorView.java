@@ -291,7 +291,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "albuns");
+                        final SimilarElementsView similarityDialog = new SimilarElementsView(parent, Messages.FIND_SIMILAR_ALBUMS_LABEL);
                         final ArrayList<Integer> tracks = new ArrayList<Integer>();
                         ActionListener filter = new ActionListener() {
 
@@ -379,7 +379,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        final SimilarElementsView similarityDialog = new SimilarElementsView(parent, "albums");
+                        final SimilarElementsView similarityDialog = new SimilarElementsView(parent, Messages.FIND_NON_SIMILAR_ALBUMS_LABEL);
                         final ArrayList<Integer> tracks = new ArrayList<Integer>();
                         ActionListener filter = new ActionListener() {
 

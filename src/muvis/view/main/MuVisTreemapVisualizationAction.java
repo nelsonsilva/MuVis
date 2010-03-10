@@ -39,6 +39,7 @@ import jdbm.helper.TupleBrowser;
 import muvis.Elements;
 import muvis.NBTreeManager;
 import muvis.Environment;
+import muvis.Messages;
 import muvis.audio.AudioMetadata;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.database.MusicLibraryDatabaseManager;
@@ -191,7 +192,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
 
                     if (item.getText().contains("Artist")) {
 
-                        final SimilarElementsView similarityDialog = new SimilarElementsView(parentFrame, "artists");
+                        final SimilarElementsView similarityDialog = new SimilarElementsView(parentFrame, Messages.FIND_NON_SIMILAR_ARTISTS_LABEL);
 
                         ActionListener filter = new ActionListener() {
 
@@ -320,7 +321,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
 
                 if (e.getSource() instanceof JMenuItem) {
 
-                    final SimilarElementsView similarityDialog = new SimilarElementsView(parentFrame, "artists");
+                    final SimilarElementsView similarityDialog = new SimilarElementsView(parentFrame, Messages.FIND_SIMILAR_ARTISTS_LABEL);
 
                     final NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
                     final MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
