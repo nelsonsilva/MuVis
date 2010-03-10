@@ -36,6 +36,8 @@ public class LoadingLibraryViewUI extends javax.swing.JPanel {
     /** Creates new form LoadingLibraryViewUI */
     public LoadingLibraryViewUI() {
         initComponents();
+        skipLoadingLibraryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/loader/go-jump.png")));
+        pauseLibraryLoadingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-pause.png")));
     }
 
     /** This method is called from within the constructor to
@@ -74,7 +76,7 @@ public class LoadingLibraryViewUI extends javax.swing.JPanel {
         trackPathNameLabel.setBackground(new java.awt.Color(240, 240, 240));
         trackPathNameLabel.setColumns(10);
         trackPathNameLabel.setEditable(false);
-        trackPathNameLabel.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        trackPathNameLabel.setFont(new java.awt.Font("Tahoma", 0, 11));
         trackPathNameLabel.setLineWrap(true);
         trackPathNameLabel.setRows(2);
         trackPathNameLabel.setWrapStyleWord(true);
@@ -123,12 +125,12 @@ public class LoadingLibraryViewUI extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pauseLibraryLoadingButton)
-                .addGap(10, 10, 10)
-                .addComponent(skipLoadingLibraryButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pauseLibraryLoadingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(skipLoadingLibraryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,10 +179,12 @@ public class LoadingLibraryViewUI extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addContainerGap()
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

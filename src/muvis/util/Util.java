@@ -41,17 +41,6 @@ public class Util {
     public static String[] protocols = {"http:", "file:", "ftp:", "https:", "ftps:", "jar:"};
     public static String[] mood = {"Calm", "Energetic", "Dark", "Positive"};
     public static String[] beat = {"Slow", "Moderate", "Fast", "Very fast"};
-    private static Util instance = null;
-
-    /**
-     * Returns Util instance.
-     */
-    public synchronized static Util getInstance() {
-        if (instance == null) {
-            instance = new Util();
-        }
-        return instance;
-    }
 
     public static BufferedImage resize(BufferedImage image, int width, int height) {
 
@@ -104,12 +93,20 @@ public class Util {
         JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public static int displayConfirmationMessage(JFrame parent, String message, String title){
+        Object[] options = {"Yes","No"};
+
+        return JOptionPane.showOptionDialog(parent, message, title, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+
+    }
+
     /**
      * Converts a double array descriptor to a string descriptor
      * @param descriptor
      * @return
      */
-    public String doubleArrayToString(double[] descriptor, char separator) {
+    public static String doubleArrayToString(double[] descriptor, char separator) {
 
         String descriptorStr = "";
 
@@ -128,7 +125,7 @@ public class Util {
      * @param descriptor
      * @return
      */
-    public double[] stringToDoubleArray(String descriptor) {
+    public static double[] stringToDoubleArray(String descriptor) {
 
         String[] descriptors = descriptor.split(",");
 
@@ -300,5 +297,60 @@ public class Util {
         } else {
             a.add(new MP3AudioFile(file));
         }
+    }
+
+    /**
+     * Method that sums two vectores.
+     * Important: vectores should have the same size, otherwise, two situations
+     * can occur:
+     * 1st: vec1.size is lower than vec2.size and method will sum the vec1.size()
+     *      with (vec2.size - vec1.size)
+     * 2nd: vec1.size is higher than vec2.size and the method will not work
+     * @param vec1
+     * @param vec2
+     * @return
+     */
+    public static double[] sum(double[] vec1, double[] vec2) {
+
+        if (vec1.length != vec2.length) {
+            return null;
+        } else {
+
+            double[] result = new double[vec1.length];
+            for (int i = 0; i < vec1.length; i++) {
+                result[i] = vec1[i] + vec2[i];
+            }
+            return result;
+        }
+    }
+
+    /**
+     * Method that normalizes the descriptor passed as a parameter
+     * Limits for this method are:
+     * --- Min: 0
+     * --- Max: 200
+     * @param descriptor
+     * @return
+     */
+    public static double[] normalize(double[] descriptor) {
+
+        int max = 200;
+        int min = 0;
+        int minNorm = 0;
+        int maxNorm = 1;
+
+        double[] normalizedDescriptor = new double[descriptor.length];
+
+        for (int i = 0; i < descriptor.length; i++) {
+
+            double parc1 = descriptor[i] - min;
+            double parc2 = max - min;
+            double num = minNorm + (parc1 / parc2) * (maxNorm - minNorm);
+
+            //update the new position
+            normalizedDescriptor[i] = num;
+        }
+
+        return normalizedDescriptor;
     }
 }

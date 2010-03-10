@@ -84,6 +84,10 @@ public class Messages {
      */
 
     public static final String CLOSE_LABEL = "Close";
+    public static final String RESUME_LABEL = "Resume";
+    public static final String PAUSE_LABEL = "Pause";
+    public static final String PLAY_LABEL = "Play";
+    public static final String CONFIRMATION_LABEL = "Confirmation";
 
     public static final String TRACK_NAME_LABEL = "Track";
     public static final String ALBUM_NAME_LABEL = "Album";
@@ -99,6 +103,18 @@ public class Messages {
     /**
      * Load Library - Reload Library
      */
-    
+    public static final String LOAD_LIBRARY_FRAME_LABEL = "Loading Library";
+    public static final String LOAD_LIBRARY_INITIALIZE_STAGES = "Initializing stages...";
+    public static final String LOAD_LIBRARY_TAGS_EXTRACTION = "Stage 1 of 3 - Tags extraction";
+    public static final String LOAD_LIBRARY_CONTENT_TRACKS_EXTRACTION = "Stage 2 of 3 -  Content processing";
+    public static final String LOAD_LIBRARY_FULL_CONTENT_EXTRACTION = "Stage 3 of 3 - Finishing library processing";
+    public static final String LOAD_LIBRARY_FINISH_LABEL = "Library Processing Finished! Please restart MuVis!";
+    public static final String LOAD_LIBRARY_CONFIRMATION_SCREEN = "Do you really wish to stop library loading?\nMuVis will load your library later.";
+
+
+    /**
+     * Generic strings
+     */
+    public static final String EMPTY_STRING = "";
 
 }

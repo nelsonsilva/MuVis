@@ -276,6 +276,15 @@ public class Environment {
     }
 
     /**
+     * Gets an element in the configuration file
+     * @param property
+     * @return
+     */
+    public Object getProperty(String property){
+        return configuration.getProperty(property);
+    }
+
+    /**
      * This method returns the playlist built by the user, so we can add tracks,
      * get track being played, etc.
      * @return userPlaylist The playlist built by the user

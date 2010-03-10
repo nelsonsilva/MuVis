@@ -33,10 +33,14 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import muvis.Elements;
 import muvis.NBTreeManager;
 import muvis.Environment;
+import muvis.Messages;
 import muvis.analyser.loader.Loader;
 import muvis.audio.AudioMetadata;
 import muvis.audio.AudioMetadataExtractor;
@@ -62,6 +66,12 @@ public class ContentProcessor implements Observer, Observable {
     private NBTree tracksNBTree, albumsTree, artistsTree;
     private File[] filesToProcess;
     private LoadingLibraryViewUI loadingLibraryUI;
+    private boolean libraryLoadingFinished;
+    private State processorState;
+
+    enum State{
+        RUN, PAUSE, STOP
+    }
 
     public ContentProcessor() {
         observers = new ArrayList<Observer>();
@@ -71,6 +81,7 @@ public class ContentProcessor implements Observer, Observable {
         tracksNBTree = nbtreeManager.getNBTree(Elements.TRACKS_NBTREE);
         albumsTree = nbtreeManager.getNBTree(Elements.ALBUMS_NBTREE);
         artistsTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
+        libraryLoadingFinished = false;
     }
 
     /**
@@ -96,6 +107,17 @@ public class ContentProcessor implements Observer, Observable {
             File file;
 
             while (true) {
+                if (processorState.equals(ContentProcessor.State.PAUSE)){
+                    try {
+                        sleep(2000);
+                        continue;
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                } else if (processorState.equals(ContentProcessor.State.STOP)){
+                    //ends the processing abruptly
+                    return;
+                }
                 synchronized (parent) {
                     if (nextFileToProcess < (filesToProcess.length - 1)) {
                         nextFileToProcess++;
@@ -169,6 +191,17 @@ public class ContentProcessor implements Observer, Observable {
 
             System.out.println("Starting thread with id: " + id);
             while (true) {
+                if (processorState.equals(ContentProcessor.State.PAUSE)){
+                    try {
+                        sleep(2000);
+                        continue;
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                } else if (processorState.equals(ContentProcessor.State.STOP)){
+                    //ends the processing abruptly
+                    return;
+                }
                 if (numTries == 0) {
                     synchronized (lock) {
                         if (nextFileToProcess < (filesToProcess.length - 1)) {
@@ -221,7 +254,7 @@ public class ContentProcessor implements Observer, Observable {
                     double[] descriptor = featuresMatrix.toDoubleArray()[0];
 
                     //normalizing the descriptor
-                    descriptor = normalize(descriptor);
+                    descriptor = Util.normalize(descriptor);
 
                     double key = -1;
                     key = dbManager.getTrackKey(file.getAbsolutePath());
@@ -260,11 +293,27 @@ public class ContentProcessor implements Observer, Observable {
 
             loadingLibraryUI.loadingLibraryProgressBar.setMinimum(0);
             loadingLibraryUI.loadingLibraryProgressBar.setMaximum(total);
-            loadingLibraryUI.loadingTracksLabel.setText("");
-            loadingLibraryUI.trackPathNameLabel.setText("");
+            loadingLibraryUI.loadingTracksLabel.setText(Messages.EMPTY_STRING);
+            loadingLibraryUI.trackPathNameLabel.setText(Messages.EMPTY_STRING);
 
             for (String artist : artistNames) {
 
+                while (processorState.equals(ContentProcessor.State.PAUSE)){
+                    try {
+                        sleep(2000);
+                        if (processorState.equals(ContentProcessor.State.STOP)){
+                            //ends the processing abruptly
+                            return;
+                        }
+                        continue;
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                if (processorState.equals(ContentProcessor.State.STOP)){
+                    //ends the processing abruptly
+                    return;
+                }
                 i++;
                 loadingLibraryUI.loadingTracksLabel.setText("Processing artist " + i + " of " + total);
                 loadingLibraryUI.trackPathNameLabel.setText("");
@@ -285,7 +334,7 @@ public class ContentProcessor implements Observer, Observable {
                             if (point != null) {
 
                                 double[] trackDescriptor = tracksNBTree.lookupPoint(key).toArray();
-                                albumDescriptor = sum(albumDescriptor, trackDescriptor);
+                                albumDescriptor = Util.sum(albumDescriptor, trackDescriptor);
                                 numAlbumTracks++;
                             } else {
                                 continue;
@@ -304,7 +353,7 @@ public class ContentProcessor implements Observer, Observable {
                     try {
 
                         //normalize audio descriptor
-                        albumDescriptor = normalize(albumDescriptor);
+                        albumDescriptor = Util.normalize(albumDescriptor);
 
                         double albumKey = dbManager.getAlbumKey(artist, album);
 
@@ -328,7 +377,7 @@ public class ContentProcessor implements Observer, Observable {
 
                 double[] artistDescriptor = new double[1200];
                 for (double[] albumDescriptor : albumsDescriptors) {
-                    artistDescriptor = sum(artistDescriptor, albumDescriptor);
+                    artistDescriptor = Util.sum(artistDescriptor, albumDescriptor);
                 }
                 //calculating the new descriptor
                 for (int j = 0; j < 1200; j++) {
@@ -336,7 +385,7 @@ public class ContentProcessor implements Observer, Observable {
                 }
                 try {
                     //normalize artist descriptor
-                    artistDescriptor = normalize(artistDescriptor);
+                    artistDescriptor = Util.normalize(artistDescriptor);
 
                     double artistKey = dbManager.getArtistKey(artist);
                     if (artistKey != -1) {
@@ -358,6 +407,196 @@ public class ContentProcessor implements Observer, Observable {
         }
     }
 
+    class ContentProcessorGUIThread extends Thread {
+
+        ArrayList<Thread> threads;
+
+        private void buildGUI() {
+
+            final JFrame frame = new JFrame(Messages.LOAD_LIBRARY_FRAME_LABEL);
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            loadingLibraryUI = new LoadingLibraryViewUI();
+            loadingLibraryUI.skipLoadingLibraryButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //library processing must be stopped before disposing the frame
+                    if (!libraryLoadingFinished) {
+                        int skip = Util.displayConfirmationMessage(frame, Messages.LOAD_LIBRARY_CONFIRMATION_SCREEN, Messages.CONFIRMATION_LABEL);
+                        if (skip == 0) { //must stop all the library processing
+                            processorState = ContentProcessor.State.STOP;
+                            frame.dispose();
+                        }
+                        //else do nothing
+                    } else {
+                        frame.dispose();
+                    }
+                }
+            });
+
+            loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(new ActionListener() {
+
+                boolean paused = false;
+
+                @Override
+                @SuppressWarnings("static-access")
+                public void actionPerformed(ActionEvent e) {
+
+                    JButton button = (JButton) e.getSource();
+                    if (!paused) {
+                        button.setText(Messages.RESUME_LABEL);
+                        paused = true;
+                        button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-start.png")));
+                        processorState = ContentProcessor.State.PAUSE;
+                    } else {
+                        button.setText(Messages.PAUSE_LABEL);
+                        paused = false;
+                        button.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/music/media-playback-pause.png")));
+                        processorState = ContentProcessor.State.RUN;
+                    }
+                }
+            });
+
+            loadingLibraryUI.loadingLibraryProgressBar.setMinimum(0);
+            loadingLibraryUI.loadingLibraryProgressBar.setMaximum(filesToProcess.length);
+            loadingLibraryUI.processingStageLabel.setText(Messages.LOAD_LIBRARY_INITIALIZE_STAGES);
+            loadingLibraryUI.loadingTracksLabel.setText(Messages.EMPTY_STRING);
+            loadingLibraryUI.trackPathNameLabel.setText(Messages.EMPTY_STRING);
+
+            frame.add(loadingLibraryUI);
+            frame.pack();
+            frame.setVisible(true);
+        }
+
+        @Override
+        public void run() {
+
+            buildGUI();
+            Executors.newFixedThreadPool(1).execute(new Thread() {
+
+                @Override
+                public void run() {
+
+                    processorState = ContentProcessor.State.RUN;
+                    int threadNum = Integer.parseInt(Environment.getEnvironmentInstance().getProperty("loader.threads_tags_extraction").toString());
+
+                    threads = new ArrayList<Thread>(threadNum);
+
+                    loadingLibraryUI.processingStageLabel.setText(Messages.LOAD_LIBRARY_TAGS_EXTRACTION);
+
+                    for (int i = 0; i < threadNum; i++) {
+
+                        Thread th = new PreliminarContentProcessorThread(this);
+                        th.setPriority(Thread.MIN_PRIORITY);
+                        threads.add(th);
+                        threadPool.execute(th);
+                        try {
+                            th.join();
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    //shutdown the threadPool and wait for it to finish
+                    threadPool.shutdown();
+
+                    while (!threadPool.isTerminated()) {
+                        try {
+                            sleep(3000);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                            continue;
+                        }
+                    }
+
+                    //dispose this threads
+                    threads.clear();
+                    threadNum = Integer.parseInt(Environment.getEnvironmentInstance().getProperty("loader.threads_content_extraction").toString());
+                    threadPool = Executors.newFixedThreadPool(threadNum);
+
+                    loadingLibraryUI.processingStageLabel.setText(Messages.LOAD_LIBRARY_CONTENT_TRACKS_EXTRACTION);
+                    loadingLibraryUI.loadingLibraryProgressBar.setValue(0);
+                    loadingLibraryUI.loadingTracksLabel.setText(Messages.EMPTY_STRING);
+                    loadingLibraryUI.trackPathNameLabel.setText(Messages.EMPTY_STRING);
+
+                    nextFileToProcess = -1;
+
+                    for (int i = 0; i < threadNum; i++) {
+
+                        Thread t = new ContentProcessorTrackThread(this, i);
+                        t.setPriority(Thread.MIN_PRIORITY);
+                        threads.add(t);
+                        threadPool.execute(t);
+                        try {
+                            t.join();
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    threadPool.shutdown();
+
+                    while (!threadPool.isTerminated()) {
+                        try {
+                            sleep(3000);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                            continue;
+                        }
+                    }
+
+                    //dispose some more threads
+                    threads.clear();
+
+                    try {
+                        tracksNBTree.save();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    loadingLibraryUI.processingStageLabel.setText(Messages.LOAD_LIBRARY_FULL_CONTENT_EXTRACTION);
+                    loadingLibraryUI.loadingLibraryProgressBar.setValue(0);
+                    loadingLibraryUI.loadingTracksLabel.setText(Messages.EMPTY_STRING);
+                    loadingLibraryUI.trackPathNameLabel.setText(Messages.EMPTY_STRING);
+
+                    threadPool = Executors.newFixedThreadPool(1);
+
+                    Thread th = new ContentProcessorAlbumsArtistsThread();
+                    th.setPriority(Thread.MIN_PRIORITY);
+                    threadPool.execute(th);
+                    threadPool.shutdown();
+                    while (!threadPool.isTerminated()) {
+                        try {
+                            sleep(3000);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                            continue;
+                        }
+                    }
+
+                    try {
+                        albumsTree.save();
+                        artistsTree.save();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    loadingLibraryUI.processingStageLabel.setText(Messages.LOAD_LIBRARY_FINISH_LABEL);
+                    loadingLibraryUI.loadingTracksLabel.setText(Messages.EMPTY_STRING);
+                    loadingLibraryUI.trackPathNameLabel.setText(Messages.EMPTY_STRING);
+                    loadingLibraryUI.pauseLibraryLoadingButton.setEnabled(false);
+                    loadingLibraryUI.pauseLibraryLoadingButton.setVisible(false);
+                    loadingLibraryUI.skipLoadingLibraryButton.setText(Messages.CLOSE_LABEL);
+                    loadingLibraryUI.skipLoadingLibraryButton.setIcon(null);
+                    libraryLoadingFinished = true;
+                }
+            });
+        }
+    }
+
+    /**
+     * ###############################
+     * Observable and Observer methods
+     * ###############################
+     */
     @Override
     public void update(Observable obs, Object arg) {
 
@@ -370,172 +609,13 @@ public class ContentProcessor implements Observer, Observable {
                 filesToProcess[i] = file.getAudioFile();
                 i++;
             }
-
-            Executors.newFixedThreadPool(1).execute(new Thread() {
-
-                @Override
-                public void run() {
-
-                    final JFrame frame = new JFrame("Loading Library");
-                    loadingLibraryUI = new LoadingLibraryViewUI();
-                    loadingLibraryUI.skipLoadingLibraryButton.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            frame.dispose();
-                        }
-                    });
-
-                    loadingLibraryUI.loadingLibraryProgressBar.setMinimum(0);
-                    loadingLibraryUI.loadingLibraryProgressBar.setMaximum(filesToProcess.length);
-                    loadingLibraryUI.processingStageLabel.setText("Initilizing stages...");
-                    loadingLibraryUI.loadingTracksLabel.setText("");
-                    loadingLibraryUI.trackPathNameLabel.setText("");
-
-                    frame.add(loadingLibraryUI);
-                    frame.pack();
-                    frame.setVisible(true);
-
-                    int threadNum = 2;
-                    System.out.println("Library tags extraction started!");
-
-                    ArrayList<PreliminarContentProcessorThread> threadsP =
-                            new ArrayList<PreliminarContentProcessorThread>(threadNum);
-
-                    for (int i = 0; i < threadNum; i++) {
-
-                        PreliminarContentProcessorThread th = new PreliminarContentProcessorThread(this);
-                        th.setPriority(Thread.MIN_PRIORITY);
-                        threadsP.add(th);
-                        threadPool.execute(th);
-                    }
-
-                    loadingLibraryUI.processingStageLabel.setText("Stage 1 of 3 - Tags extraction");
-                    ActionListener listener1 = new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                        }
-                    };
-                    loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(listener1);
-
-                    for (PreliminarContentProcessorThread th : threadsP) {
-                        try {
-                            th.join();
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    threadPool.shutdown();
-
-                    while (!threadPool.isTerminated()) {
-                        try {
-                            sleep(30000);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                            continue;
-                        }
-                    }
-
-                    //dispose this threads
-                    threadsP.clear();
-                    threadPool = Executors.newFixedThreadPool(threadNum);
-
-                    System.out.println("Library tags extraction finished!");
-                    System.gc();
-
-                    loadingLibraryUI.processingStageLabel.setText("Stage 2 of 3 -  Content processing");
-                    loadingLibraryUI.loadingLibraryProgressBar.setValue(0);
-                    loadingLibraryUI.loadingTracksLabel.setText("");
-                    loadingLibraryUI.trackPathNameLabel.setText("");
-
-                    loadingLibraryUI.pauseLibraryLoadingButton.removeActionListener(listener1);
-
-                    ActionListener listener2 = new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                        }
-                    };
-                    loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(listener2);
-
-                    System.out.println("Library processing started!");
-                    nextFileToProcess = -1;
-
-                    ArrayList<ContentProcessorTrackThread> threads =
-                            new ArrayList<ContentProcessorTrackThread>(threadNum);
-
-                    for (int i = 0; i < threadNum; i++) {
-                        ContentProcessorTrackThread t = new ContentProcessorTrackThread(this, i);
-                        t.setPriority(Thread.MIN_PRIORITY);
-                        threads.add(t);
-                        threadPool.execute(t);
-                    }
-
-                    for (ContentProcessorTrackThread th : threads) {
-                        try {
-                            th.join();
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    threadPool.shutdown();
-
-                    while (!threadPool.isTerminated()) {
-                        try {
-                            sleep(30000);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                            continue;
-                        }
-                    }
-                    try {
-                        tracksNBTree.save();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    loadingLibraryUI.processingStageLabel.setText("Stage 3 of 3 - Finishing library processing");
-                    loadingLibraryUI.loadingLibraryProgressBar.setValue(0);
-                    loadingLibraryUI.loadingTracksLabel.setText("");
-                    loadingLibraryUI.trackPathNameLabel.setText("");
-
-                    loadingLibraryUI.pauseLibraryLoadingButton.removeActionListener(listener2);
-                    ActionListener listener3 = new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                        }
-                    };
-                    loadingLibraryUI.pauseLibraryLoadingButton.addActionListener(listener3);
-
-                    //dispose some more threads
-                    threads.clear();
-                    ContentProcessorAlbumsArtistsThread th = new ContentProcessorAlbumsArtistsThread();
-                    th.setPriority(Thread.MIN_PRIORITY);
-                    th.run();
-                    try {
-                        albumsTree.save();
-                        artistsTree.save();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    System.out.println("Processing library finished!");
-
-                    loadingLibraryUI.processingStageLabel.setText("Library Processing Finished!Please restart MuVis!");
-                    loadingLibraryUI.loadingTracksLabel.setText("");
-                    loadingLibraryUI.trackPathNameLabel.setText("");
-                    loadingLibraryUI.pauseLibraryLoadingButton.setVisible(false);
-                    loadingLibraryUI.skipLoadingLibraryButton.setText("Close");
-                }
-            });
+            Executors.newFixedThreadPool(1).execute(new ContentProcessorGUIThread());
         }
     }
 
     @Override
     public void registerObserver(Observer obs) {
         observers.add(obs);
-
     }
 
     @Override
@@ -548,41 +628,5 @@ public class ContentProcessor implements Observer, Observable {
         for (Observer obs : observers) {
             obs.update(this, null);
         }
-    }
-
-    private double[] sum(double[] vec1, double[] vec2) {
-
-        if (vec1.length != vec2.length) {
-            return null;
-        } else {
-
-            double[] result = new double[vec1.length];
-            for (int i = 0; i < vec1.length; i++) {
-                result[i] = vec1[i] + vec2[i];
-            }
-            return result;
-        }
-    }
-
-    private double[] normalize(double[] descriptor) {
-
-        int max = 200;
-        int min = 0;
-        int minNorm = 0;
-        int maxNorm = 1;
-
-        double[] normalizedDescriptor = new double[descriptor.length];
-
-        for (int i = 0; i < descriptor.length; i++) {
-
-            double parc1 = descriptor[i] - min;
-            double parc2 = max - min;
-            double num = minNorm + (parc1 / parc2) * (maxNorm - minNorm);
-
-            //update the new position
-            normalizedDescriptor[i] = num;
-        }
-
-        return normalizedDescriptor;
     }
 }
