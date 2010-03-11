@@ -37,6 +37,7 @@ public class Elements {
     public static String LIST_VIEW = "ListView";
     public static String ARTIST_INSPECTOR_VIEW = "artistInspector";
     public static String MAIN_VIEW = "mainView";
+    public static String MUVIS_APP_VIEW = "muvisAppView";
 
     public static String ARTISTS_NBTREE = "artistsNBTree";
     public static String ALBUMS_NBTREE = "albumsNBTree";

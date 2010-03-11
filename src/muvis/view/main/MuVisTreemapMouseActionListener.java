@@ -32,7 +32,9 @@ import muvis.view.main.actions.SimilarityTreemapAction;
 import net.bouthier.treemapSwing.TMView;
 
 /**
- *
+ * Main view Treemap mouse listener. Gives support to the main actions such as:
+ * adding elements to playlist, using similarity filter or making a preview of
+ * the selected elements.
  * @author Ricardo
  */
 public class MuVisTreemapMouseActionListener extends MainViewsMouseAdapter {

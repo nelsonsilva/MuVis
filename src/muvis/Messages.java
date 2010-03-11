@@ -29,6 +29,37 @@ public class Messages {
 
     /**
      * #########################
+     * MuVis Generic Messages
+     * #########################
+     */
+    public static String MUVIS_QUOTE = "MuVis - Because Music Visualization matters";
+    public static String MUVIS_ABOUT_LABEL = "About MuVis";
+
+    /**
+     * #########################
+     * MuVis Interface Menus
+     * #########################
+     */
+
+    /**
+     * #########################
+     * System Tray Messages
+     * #########################
+     */
+    
+    public static String SYSTEM_TRAY_NOT_SUPPORTED = "SystemTray is not supported";
+    public static String SYSTEM_TRAY_ABOUT_MENU_ITEM = "About";
+    public static String SYSTEM_TRAY_HIDE_MENU_ITEM = "Hide";
+    public static String SYSTEM_TRAY_SHOW_MENU_ITEM = "Show";
+    public static String SYSTEM_TRAY_PLAY_MENU_ITEM = "Play";
+    public static String SYSTEM_TRAY_PAUSE_MENU_ITEM = "Play";
+    public static String SYSTEM_TRAY_STOP_MENU_ITEM = "Stop";
+    public static String SYSTEM_TRAY_NEXT_TRACK_MENU_ITEM = "Next track";
+    public static String SYSTEM_TRAY_PREV_TRACK_MENU_ITEM = "Prev track";
+    public static String SYSTEM_TRAY_EXIT_MENU_ITEM = "Exit";
+
+    /**
+     * #########################
      * MuVis JTable Messages
      * #########################
      */

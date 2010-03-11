@@ -23,8 +23,6 @@ package muvis.view.main;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import muvis.Elements;
@@ -35,13 +33,12 @@ import net.bouthier.treemapSwing.TMAction;
 import net.bouthier.treemapSwing.TMView;
 
 /**
- * Treemap UI interaction handler
+ * Treemap UI interaction handler.
+ * Mouse listener is delegated to the MuVisTreemapMouseActionListener entity.
  * @author Ricardo
  */
 public class MuVisTreemapVisualizationAction extends TMAction {
 
-    private MuVisTreemapNode nodeUnder;
-    private JFrame parentFrame;
     private MainViewHolder mainViewHolder;
     private TreemapArtistInspectorView artistInspector;
     private ArrayList<MuVisTreemapNode> selectedNodes;
@@ -49,7 +46,6 @@ public class MuVisTreemapVisualizationAction extends TMAction {
 
     public MuVisTreemapVisualizationAction(TMView view, JFrame frame) {
         super(view);
-        parentFrame = frame;
         selectedNodes = new ArrayList<MuVisTreemapNode>();
         mouseListener = new MuVisTreemapMouseActionListener(view, selectedNodes);
     }

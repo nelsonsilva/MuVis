@@ -25,7 +25,7 @@ import muvis.similarity.SimilarityManager.SimilarityMode;
 import muvis.view.main.MuVisTreemapNode;
 
 /**
- *
+ * Entity responsible for finding non similar elements (artists) in the treemap.
  * @author Ricardo
  */
 public class FindNonSimilarElementsTreemapAction extends SimilarityTreemapAction {

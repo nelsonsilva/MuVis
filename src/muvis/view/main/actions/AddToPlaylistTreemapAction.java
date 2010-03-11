@@ -35,7 +35,7 @@ import muvis.view.main.MuVisTreemapNode;
 import muvis.view.main.filters.TreemapFilterManager;
 
 /**
- *
+ * Action for adding tracks, albums or artists to the current playlist.
  * @author Ricardo
  */
 public class AddToPlaylistTreemapAction implements ActionListener {

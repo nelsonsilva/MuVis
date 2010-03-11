@@ -18,19 +18,30 @@
  * You should have received a copy of the GNU General Public License
  * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package muvis.view.main.actions;
+package muvis.view.actions;
 
-import java.util.ArrayList;
-import muvis.similarity.SimilarityManager.SimilarityMode;
-import muvis.view.main.MuVisTreemapNode;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import muvis.Elements;
+import muvis.Environment;
+import muvis.view.MuVisAppView;
 
 /**
- * Entity responsible for finding similar elements (artists) in the treemap
+ * Generic action for exiting the MuVis application
  * @author Ricardo
  */
-public class FindSimilarElementsTreemapAction extends SimilarityTreemapAction {
+public class MuVisExitAction implements ActionListener {
 
-    public FindSimilarElementsTreemapAction(ArrayList<MuVisTreemapNode> selectedNodes) {
-        super(selectedNodes, SimilarityMode.SIMILAR);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            Environment.getEnvironmentInstance().saveWorkspace();
+            MuVisAppView view = (MuVisAppView)Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUVIS_APP_VIEW);
+            view.saveDocking();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        System.exit(0);
     }
 }

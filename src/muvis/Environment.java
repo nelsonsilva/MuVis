@@ -364,7 +364,7 @@ public class Environment {
 
         @Override
         public void run() {
-            System.out.println("GC Workspace running!");
+            System.out.println("GC at Environment running!");
             System.gc();
         }
         

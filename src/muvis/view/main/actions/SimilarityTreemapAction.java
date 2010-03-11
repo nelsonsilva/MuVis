@@ -36,7 +36,8 @@ import muvis.view.main.filters.NoFilter;
 import muvis.view.main.filters.TreemapSimilarityFilter;
 
 /**
- *
+ * Generic action for similarity action on the treemap.
+ * Childs only need to call super with the respective SimilarityMode
  * @author Ricardo
  */
 public abstract class SimilarityTreemapAction implements ActionListener {

@@ -28,7 +28,7 @@ import muvis.Environment;
 import muvis.view.main.MuVisTreemapNode;
 
 /**
- *
+ * Entity responsible for playing previews of select artists in the treemap
  * @author Ricardo
  */
 public class PreviewTreemapAction implements ActionListener {

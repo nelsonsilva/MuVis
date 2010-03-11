@@ -38,40 +38,32 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import com.vlsolutions.swing.docking.*;
-import java.awt.AWTException;
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import muvis.Elements;
 import muvis.Environment;
+import muvis.Messages;
 import muvis.audio.AudioMetadata;
-import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.database.MusicLibraryDatabaseManager;
-import muvis.util.Observable;
-import muvis.util.Observer;
+import muvis.view.actions.AboutMuVisAction;
+import muvis.view.actions.MuVisExitAction;
 import muvis.view.controllers.PlaylistController;
 import muvis.view.controllers.PlaylistControllerInterface;
 import muvis.view.controllers.ReloadLibraryController;
 import muvis.view.loader.ReloadLibraryView;
 import muvis.view.main.filters.TreemapFilterManager;
+import muvis.view.tray.MuVisTrayView;
 import org.xml.sax.SAXException;
 
 public class MuVisAppView extends JFrame {
@@ -96,10 +88,10 @@ public class MuVisAppView extends JFrame {
     public MuVisAppView() {
 
         this.frame = this;
-        this.setTitle("MuVis - Because Music Visualization matters");
+        this.setTitle(Messages.MUVIS_QUOTE);
 
         threadPool = Executors.newFixedThreadPool(1);
-        new SystemTrayView();
+        new MuVisTrayView();
 
         //init controllers
         playlistController = new PlaylistController();
@@ -111,9 +103,9 @@ public class MuVisAppView extends JFrame {
         tracksViewTable = new ListViewTableView(this);
         treemapView = new TreemapView(this);
         mainView = new MainViewHolder(this);
-        mainView.addView("ListView", tracksViewTable);
-        mainView.addView("TreeMapView", treemapView);
-        mainView.setView("ListView");
+        mainView.addView(Elements.LIST_VIEW, tracksViewTable);
+        mainView.addView(Elements.TREEMAP_VIEW, treemapView);
+        mainView.setView(Elements.LIST_VIEW);
         mainView.initializeFilters();
 
         ViewManager viewManager = Environment.getEnvironmentInstance().getViewManager();
@@ -123,6 +115,7 @@ public class MuVisAppView extends JFrame {
         viewManager.addView(Elements.LIST_VIEW, tracksViewTable);
         viewManager.addView(Elements.TREEMAP_VIEW, treemapView);
         viewManager.addView(Elements.MAIN_VIEW, mainView);
+        viewManager.addView(Elements.MUVIS_APP_VIEW, this);
         TreemapArtistInspectorView artistInspectorView = new TreemapArtistInspectorView(frame);
         viewManager.addView(Elements.ARTIST_INSPECTOR_VIEW, artistInspectorView);
         mainView.addView(Elements.ARTIST_INSPECTOR_VIEW, artistInspectorView);
@@ -131,7 +124,6 @@ public class MuVisAppView extends JFrame {
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().add(desk); // desk becomes the only one component
-
 
         try {
             // desk becomes the only one component
@@ -165,7 +157,6 @@ public class MuVisAppView extends JFrame {
 
         setJMenuBar(menuBar);
 
-
         ActionListener exitMenuListener = new ActionListener() {
 
             @Override
@@ -187,19 +178,23 @@ public class MuVisAppView extends JFrame {
             }
         };
 
-        //create custom close operation
-        addWindowListener(new WindowAdapter() {
+        class MuVisAppWindowAdapter extends WindowAdapter{
+
+            MuVisExitAction exitAction;
+
+            MuVisAppWindowAdapter(){
+                exitAction = new MuVisExitAction();
+            }
 
             @Override
             public void windowClosing(WindowEvent e) {
-                exitProcedure();
+                exitAction.actionPerformed(null);
             }
+        }
 
-            private void exitProcedure() {
-                //Exiting the application
-                closeApplication();
-            }
-        });
+        //create custom close operation
+        addWindowListener(new MuVisAppWindowAdapter());
+
         ActionListener saveMenuOptionListener = new ActionListener() {
 
             @Override
@@ -231,10 +226,10 @@ public class MuVisAppView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                JFileChooser fc = new JFileChooser(new File("C:\\"));
+                JFileChooser fc = new JFileChooser(new File(""));
                 fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 fc.setDialogTitle("Save your workspace");
-                FileFilter fFilter = new javax.swing.filechooser.FileNameExtensionFilter("Results file", "out");
+                FileFilter fFilter = new javax.swing.filechooser.FileNameExtensionFilter("Workspace file", "xml");
                 fc.addChoosableFileFilter(fFilter);
                 fc.setAcceptAllFileFilterUsed(false);
                 int returned = fc.showOpenDialog(frame);
@@ -381,30 +376,9 @@ public class MuVisAppView extends JFrame {
         menu = new JMenu("Help");
         menuItem = new JMenuItem("About");
         menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/menus/help.png")));
-        menuItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String message = "MuVis - Because Music Visualization matters\nv0.1 @2009\n Created by Ricardo Dias";
-                JOptionPane.showMessageDialog(frame, message,
-                        "About MuVis", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+        menuItem.addActionListener( new AboutMuVisAction());
         menu.add(menuItem);
         menuBar.add(menu);
-    }
-
-    protected void closeApplication() {
-        try {
-            //saving the state of the application
-            Environment.getEnvironmentInstance().saveWorkspace();
-            saveDocking();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.out.println("Couldn't save the desk disposition!");
-        }
-        //Exiting the application
-        System.exit(0);
     }
 
     /**
@@ -472,167 +446,5 @@ public class MuVisAppView extends JFrame {
         }
     }
 
-    class SystemTrayView {
-
-        public SystemTrayView() {
-
-            //Check the SystemTray is supported
-            if (!SystemTray.isSupported()) {
-                System.out.println("SystemTray is not supported");
-                return;
-            }
-            final PopupMenu popup = new PopupMenu();
-            final TrayIcon trayIcon =
-                    new TrayIcon(createImage("/images/logo.png", "MuVis - Because Music Visualization matters"));
-            final SystemTray tray = SystemTray.getSystemTray();
-
-            // Create a pop-up menu components
-            MenuItem aboutItem = new MenuItem("About");
-            MenuItem displayMenu = new MenuItem("Hide");
-            MenuItem playItem = new MenuItem("Play");
-            MenuItem stopItem = new MenuItem("Stop");
-            MenuItem nextTrackItem = new MenuItem("Next track");
-            MenuItem prevTrackItem = new MenuItem("Prev track");
-            MenuItem exitItem = new MenuItem("Exit");
-
-            exitItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    closeApplication();
-                }
-            });
-
-            class PlayPauseListener implements ActionListener, Observer {
-
-                MusicControllerView controller;
-                MenuItem item;
-
-                PlayPauseListener(MenuItem item){
-                    
-                    Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
-                    this.item = item;
-                }
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (controller == null){
-                        controller = (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
-                    }
-                    controller.playTrack();
-                }
-
-                @Override
-                public void update(Observable obs, Object arg) {
-                    if (obs instanceof MuVisAudioPlayer){
-                        MuVisAudioPlayer player = (MuVisAudioPlayer)obs;
-
-                        if (player.isPlaying()){
-                            item.setLabel("Pause");
-                        } else item.setLabel("Play");
-                    }
-                }
-            }
-
-            playItem.addActionListener(new PlayPauseListener(playItem));
-
-            stopItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MusicControllerView controller =
-                            (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
-                    try {
-                        controller.stopPlayer();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            prevTrackItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MusicControllerView controller =
-                            (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
-
-                    controller.playPreviousTrack();
-                }
-            });
-
-            nextTrackItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MusicControllerView controller =
-                            (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
-
-                    controller.playNextTrack();
-                }
-            });
-
-            aboutItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String message = "MuVis - Because Music Visualization matters\nv1.0 @2009\n Created by Ricardo Dias";
-                    JOptionPane.showMessageDialog(frame, message,
-                            "About MuVis", JOptionPane.INFORMATION_MESSAGE);
-                }
-            });
-
-            displayMenu.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    boolean visibility = frame.isVisible();
-                    visibility = !visibility;
-
-                    if (e.getSource() instanceof MenuItem) {
-                        MenuItem item = (MenuItem) e.getSource();
-                        if (visibility) {
-                            item.setLabel("Hide");
-                        } else {
-                            item.setLabel("Show");
-                        }
-                    }
-                    frame.setVisible(visibility);
-                }
-            });
-
-            //Add components to pop-up menu
-            popup.add(aboutItem);
-            popup.add(displayMenu);
-            popup.addSeparator();
-            popup.add(playItem);
-            popup.add(stopItem);
-            popup.add(nextTrackItem);
-            popup.add(prevTrackItem);
-            popup.addSeparator();
-            popup.add(exitItem);
-
-            trayIcon.setPopupMenu(popup);
-
-            try {
-                tray.add(trayIcon);
-            } catch (AWTException e) {
-                System.out.println("TrayIcon could not be added.");
-            }
-
-        }
-
-        //Obtain the image URL
-        protected Image createImage(String path, String description) {
-            URL imageURL = SystemTrayView.class.getResource(path);
-
-            if (imageURL == null) {
-                System.err.println("Resource not found: " + path);
-                return null;
-            } else {
-                return (new ImageIcon(imageURL, description)).getImage();
-            }
-        }
-    }
+    
 }
