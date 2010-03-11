@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package muvis.view.table;
+package muvis.view.table.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,11 +32,11 @@ import muvis.Messages;
  *
  * @author Ricardo
  */
-public class PreviewElementAction implements ActionListener {
+public class PreviewElementTableAction implements ActionListener {
 
     protected JTable tracksTable;
 
-    public PreviewElementAction(JTable tracksTable) {
+    public PreviewElementTableAction(JTable tracksTable) {
         this.tracksTable = tracksTable;
     }
 

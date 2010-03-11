@@ -138,7 +138,7 @@ public class SimilarityManager {
                 double artistKey = dbManager.getArtistTrackKey(trackIds[i]);
                 if (artistKey < 0) {
                     //Util.displayErrorMessage(Environment.getEnvironmentInstance().getRootFrame(), "Similarity Filter", "Can't get non-similar artists!Try later!");
-                    break;
+                    continue;
                 }
                 NBPoint artistPoint = artistNBTree.lookupPoint(artistKey);
                 BTree resultTree = artistNBTree.knnQuery(artistPoint, dbManager.getCountArtists());
@@ -153,6 +153,46 @@ public class SimilarityManager {
                     if (tuple.getValue() instanceof NBPoint) {
                         NBPoint point = (NBPoint) tuple.getValue();
                         String artistName = dbManager.getArtistName(point.norm());
+                        ArrayList<Integer> artistTracks = dbManager.getArtistTracksIds(artistName);
+                        tracks.addAll(artistTracks);
+                    }
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (NBTreeException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return tracks;
+    }
+
+    public static ArrayList<Integer> getSimilarArtists(ArrayList<String> artistsName, int numSimilarArtists, SimilarityMode similarityMode) {
+
+        ArrayList<Integer> tracks = new ArrayList();
+        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
+        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+
+        NBTree artistNBTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
+        for (String artistName : artistsName){
+            try {
+                double artistKey = dbManager.getArtistKey(artistName);
+                if (artistKey < 0) {
+                    //cannot retrive similarity information for this element
+                    continue;
+                }
+                NBPoint artistPoint = artistNBTree.lookupPoint(artistKey);
+                BTree resultTree = artistNBTree.knnQuery(artistPoint, dbManager.getCountArtists());
+                TupleBrowser browser = resultTree.browse();
+                Tuple tuple = new Tuple();
+
+                if (similarityMode.equals(SimilarityMode.NON_SIMILAR)) while (browser.getNext(tuple));
+
+                for (int j = 0; ((similarityMode.equals(SimilarityMode.NON_SIMILAR))?
+                    browser.getPrevious(tuple) : browser.getNext(tuple)) && j < numSimilarArtists;
+                    j++) {
+                    if (tuple.getValue() instanceof NBPoint) {
                         ArrayList<Integer> artistTracks = dbManager.getArtistTracksIds(artistName);
                         tracks.addAll(artistTracks);
                     }

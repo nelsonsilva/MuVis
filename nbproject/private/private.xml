@@ -3,6 +3,10 @@
     <data xmlns="http://www.netbeans.org/ns/profiler/1" version="0.9.1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1">
         <file>
+            <url>src/muvis/view/table/JTableMouseAdapter.java</url>
+            <line>36</line>
+        </file>
+        <file>
             <url>src/muvis/audio/MP3AudioMetadataExtractor.java</url>
             <line>94</line>
         </file>

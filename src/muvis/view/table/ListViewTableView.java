@@ -78,7 +78,7 @@ public class ListViewTableView extends ListViewTableUI implements View {
         TableColumn mood = tracksTableView.getColumn(Messages.COL_TRACK_MOOD_LABEL);
         tracksTableView.removeColumn(mood);
 
-        tracksTableView.addMouseListener(new JTableMouseAdapter(controller));
+        tracksTableView.addMouseListener(new JTableMouseAdapter(tracksTableView,controller));
     }
 
     /**

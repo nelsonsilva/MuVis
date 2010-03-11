@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package muvis.view.table;
+package muvis.view.table.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,11 +37,11 @@ import muvis.view.main.filters.TreemapSimilarityFilter;
  * Find non similar Elements (tracks, albums, artists) common action
  * @author Ricardo
  */
-public class FindNonSimilarElementsAction implements ActionListener {
+public class FindNonSimilarElementsTableAction implements ActionListener {
 
     protected JTable tracksTable;
 
-    public FindNonSimilarElementsAction(JTable tracksTable) {
+    public FindNonSimilarElementsTableAction(JTable tracksTable) {
         this.tracksTable = tracksTable;
     }
 

@@ -64,7 +64,6 @@ import muvis.Messages;
 import muvis.audio.AudioMetadata;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
-import muvis.util.LoweredBevelBorderExtended;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.controllers.ListViewTableViewController;
@@ -136,7 +135,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
         seeAllArtistsButton.addActionListener(this);
 
-        tracksTableArtistInspector.addMouseListener( new JTableMouseAdapter(controller));
+        tracksTableArtistInspector.addMouseListener( new JTableMouseAdapter(tracksTableArtistInspector,controller));
 
         prevAlbumsButton.addActionListener(new ActionListener() {
 
