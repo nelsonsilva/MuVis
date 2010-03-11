@@ -82,15 +82,14 @@ public abstract class SimilarityTreemapAction implements ActionListener {
                         String artist = sNode.getName();
                         double artistKey = dbManager.getArtistKey(artist);
                         if (artistKey < 0) {
-                            //this artist is a dead end, because no similarity information
-                            //was found
+                            //this artist is a dead end, because no similarity information was found
                             continue;
                         } else {
                             artistNames.add(artist);
                         }
                     }
 
-                    SimilarityManager.getSimilarArtists(artistNames, numSimilarElements, similarityMode);
+                    tracks.addAll(SimilarityManager.getSimilarArtists(artistNames, numSimilarElements, similarityMode));
 
                     TreemapSimilarityFilter filterTreemap = new TreemapSimilarityFilter(new NoFilter(), tracks);
                     Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filterTreemap);

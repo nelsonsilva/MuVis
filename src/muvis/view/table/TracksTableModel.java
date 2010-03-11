@@ -1,31 +1,31 @@
 /*
-* The GPLv3 licence :
-* -----------------
-* Copyright (c) 2009 Ricardo Dias
-*
-* This file is part of MuVis.
-*
-* MuVis is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* MuVis is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
+ * The GPLv3 licence :
+ * -----------------
+ * Copyright (c) 2009 Ricardo Dias
+ *
+ * This file is part of MuVis.
+ *
+ * MuVis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MuVis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MuVis.  If not, see <http://www.gnu.org/licenses/>.
  */
 package muvis.view.table;
 
 import java.util.Hashtable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import javax.swing.table.AbstractTableModel;
 import muvis.Environment;
+import muvis.Messages;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.database.TableRecord;
 import muvis.util.Observable;
@@ -37,14 +37,23 @@ import static java.util.concurrent.TimeUnit.*;
  * Class that holds the Model for the list visualization of the library.
  * @author Ricardo
  */
-public class TracksTableModel extends AbstractTableModel implements Observer {
+public class TracksTableModel extends AbstractTableModel {
 
-    private String[] columnNames = new String[]{"Nr.", "Track name", "Artist",
-        "Album", "Duration", "Genre", "Year", "Beat", "Mood"};
-    private MusicLibraryDatabaseManager dbManager;
-    private Hashtable<Integer, TableRecord> records;
-    private ScheduledExecutorService scheduler;
-    private boolean fasterMode = true;
+    protected String[] columnNames = new String[]{
+        Messages.COL_TRACK_NUMBER_LABEL,
+        Messages.COL_TRACK_NAME_LABEL,
+        Messages.COL_ARTIST_NAME_LABEL,
+        Messages.COL_ALBUM_NAME_LABE,
+        Messages.COL_TRACK_DURATION_LABEL,
+        Messages.COL_TRACK_GENRE_LABEL,
+        Messages.COL_TRACK_YEAR_LABEL,
+        Messages.COL_TRACK_BEAT_LABEL,
+        Messages.COL_TRACK_MOOD_LABEL };
+
+    protected MusicLibraryDatabaseManager dbManager;
+    protected Hashtable<Integer, TableRecord> records;
+    protected ScheduledExecutorService scheduler;
+    protected boolean fasterMode = true;
 
     public TracksTableModel() {
         dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
@@ -54,38 +63,13 @@ public class TracksTableModel extends AbstractTableModel implements Observer {
         }
         records = new Hashtable<Integer, TableRecord>(numTracks);
 
+        UpdateTable updateTable = new UpdateTable(this);
+
         scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(updateTable, 10, 10, SECONDS);
 
-        // Get a handle, starting now, with a 10 second delay
-        class UpdateTable implements Runnable, Observer {
-
-            TracksTableModel model;
-            boolean update = false;
-
-            @Override
-            public void run() {
-                if (update){
-                    fireTableDataChanged();
-                    update = false;
-                }
-            }
-
-            @Override
-            public void update(Observable obs, Object arg) {
-                if (obs instanceof MusicLibraryDatabaseManager){
-                    update = true;
-                }
-            }
-        }
-
-        UpdateTable updateTable = new UpdateTable();
-        dbManager.registerObserver(updateTable);
-
-        final ScheduledFuture<?> timeHandle =
-                scheduler.scheduleAtFixedRate(updateTable, 10, 90, SECONDS);
-
-        if (fasterMode){
-            for(int i = 0; i < numTracks ; i++){
+        if (fasterMode) {
+            for (int i = 0; i < numTracks; i++) {
                 getValueAt(i, 1);
             }
         }
@@ -125,7 +109,7 @@ public class TracksTableModel extends AbstractTableModel implements Observer {
             modCol = modCol + 1;
         }
 
-        if (!records.containsKey(modRow)){
+        if (!records.containsKey(modRow)) {
             TableRecord rec = dbManager.getRowAt(modRow);
             records.put(modRow, rec);
         }
@@ -152,11 +136,31 @@ public class TracksTableModel extends AbstractTableModel implements Observer {
             return String.class;
         }
     }
+}
 
-    /**
-     * This method is called when the database changes
-     */
+// Get a handle, starting now, with a 10 second delay
+class UpdateTable implements Runnable, Observer {
+
+    TracksTableModel model;
+    boolean update = false;
+
+    public UpdateTable(TracksTableModel model) {
+        this.model = model;
+        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
+    }
+
+    @Override
+    public void run() {
+        if (update) {
+            model.fireTableDataChanged();
+            update = false;
+        }
+    }
+
     @Override
     public void update(Observable obs, Object arg) {
+        if (obs instanceof MusicLibraryDatabaseManager) {
+            update = true;
+        }
     }
 }
