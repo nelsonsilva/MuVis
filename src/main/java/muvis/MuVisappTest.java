@@ -41,18 +41,12 @@ public class MuVisappTest {
 
                 @Override
                 public void run() {
-                    JFrame.setDefaultLookAndFeelDecorated(true);
-
-                    /*try {
-                        // Set System L&F
-                        //UIManager.setLookAndFeel(ch.randelshofer.quaqua.QuaquaManager.getLookAndFeel());
-                        //UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
-                        UIManager.setLookAndFeel(new net.sourceforge.napkinlaf.NapkinLookAndFeel());
-                        //UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }*/
-
+                    // This was not working on Linux - JFrame.setDefaultLookAndFeelDecorated(true);
+                    try {
+                        UIManager.setLookAndFeel(
+                                UIManager.getSystemLookAndFeelClassName());
+                    } catch (Exception ignored) {
+                    }
 
                     MuVisApp app = new MuVisApp();
                     app.run();
