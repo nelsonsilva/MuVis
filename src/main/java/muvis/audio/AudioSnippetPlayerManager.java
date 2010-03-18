@@ -26,12 +26,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.MusicControllerView;
+import muvis.view.ViewManager;
 import muvis.view.controllers.MusicPlayerControllerInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class that implements an audio player for playing snippets
@@ -39,6 +40,8 @@ import muvis.view.controllers.MusicPlayerControllerInterface;
  */
 public class AudioSnippetPlayerManager {
 
+    @Autowired
+    private MusicLibraryDatabaseManager dbManager;
     private TracksPreviewer tracksPreviewer;
     private ExecutorService threadPool;
 
@@ -47,10 +50,13 @@ public class AudioSnippetPlayerManager {
         threadPool = Executors.newFixedThreadPool(1);
     }
 
+    public AudioSnippetPlayerManager() {
+        // TODO - AudioSnippetPlayerManager
+    }
+
     public void previewArtists(ArrayList<String> artistsToPreview, boolean b) {
 
         int maxTracks = 5;
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks * artistsToPreview.size());
         ArrayList<String> allTracks = new ArrayList<String>();
@@ -75,7 +81,6 @@ public class AudioSnippetPlayerManager {
 
     public void previewTrack(int trackId) {
 
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         String filename = dbManager.getFilename(trackId);
 
         ArrayList<String> tracks = new ArrayList<String>();
@@ -86,8 +91,6 @@ public class AudioSnippetPlayerManager {
     }
 
     public void previewTracks(ArrayList<Integer> trackIds) {
-
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>();
         for (int trackId : trackIds) {
@@ -100,7 +103,6 @@ public class AudioSnippetPlayerManager {
     public void previewArtist(String artistName) {
 
         int maxTracks = 5;
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks);
         ArrayList<String> allTracks = dbManager.getArtistTracks(artistName);
@@ -119,7 +121,6 @@ public class AudioSnippetPlayerManager {
 
     public void previewArtist(int trackId) {
 
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
         String artistName = dbManager.getArtistName(trackId);
         previewArtist(artistName);
     }
@@ -127,7 +128,6 @@ public class AudioSnippetPlayerManager {
     public void previewArtists(ArrayList<Integer> tracksId) {
 
         int maxTracks = 5;
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks * tracksId.size());
         for (int trackId : tracksId) {
@@ -150,7 +150,6 @@ public class AudioSnippetPlayerManager {
     public void previewAlbum(int trackId) {
 
         int maxTracks = 3;
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         String albumName = dbManager.getAlbumName(trackId);
 
@@ -172,7 +171,6 @@ public class AudioSnippetPlayerManager {
     public void previewAlbums(ArrayList<Integer> trackIds) {
 
         int maxTracks = 3;
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         ArrayList<String> tracks = new ArrayList<String>(maxTracks * trackIds.size());
         for (int trackId : trackIds) {
@@ -195,7 +193,11 @@ public class AudioSnippetPlayerManager {
 
 class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterface {
 
-    private MuVisAudioPlayer snippetPlayer;
+    @Autowired private MuVisAudioPlayer snippetPlayer;
+    @Autowired private ViewManager viewManager;
+    @Autowired private MP3AudioSnippetExtractor  mp3AudioSnippetExtractor;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    
     private ArrayList<String> tracks;
     private Iterator<String> it;
     private String trackPlaying;
@@ -220,8 +222,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
     private void setMusicPlayerSnippetController() {
         if (filterController == null) {
             MusicControllerView view =
-                    (MusicControllerView) Environment.getEnvironmentInstance().
-                    getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                    (MusicControllerView) viewManager.getView(Elements.MUSIC_PLAYER_VIEW);
 
             //save the previously music controllers
             filterController = view.getMusicPlayerFilterController();
@@ -249,8 +250,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
         if (filterController != null) {
 
             MusicControllerView view =
-                    (MusicControllerView) Environment.getEnvironmentInstance().
-                    getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                    (MusicControllerView) viewManager.getView(Elements.MUSIC_PLAYER_VIEW);
 
             MusicControllerView.PlayingType type = view.getPlayingType();
             if (type.equals(MusicControllerView.PlayingType.FILTER_MODE)) {
@@ -323,7 +323,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
     private void previewTrack(String filename) {
 
         try {
-            byte[] snippet = MP3AudioSnippetExtractor.extractAudioSnippet(filename);
+            byte[] snippet = mp3AudioSnippetExtractor.extractAudioSnippet(filename);
             snippetPlayer.play(snippet);
             isPreviewing = true;
         } catch (BasicPlayerException ex) {
@@ -350,7 +350,7 @@ class TracksPreviewer implements Runnable, Observer, MusicPlayerControllerInterf
 
     @Override
     public AudioMetadata getTrackPlayingMetadata() {
-        AudioMetadata metadata = Environment.getEnvironmentInstance().getDatabaseManager().getTrackMetadata(trackPlaying);
+        AudioMetadata metadata = dbManager.getTrackMetadata(trackPlaying);
         return metadata;
     }
 

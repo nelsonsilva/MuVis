@@ -30,12 +30,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.view.MainViewsMouseAdapter;
 import muvis.view.MusicControllerView;
 import muvis.view.ViewManager;
 import muvis.view.controllers.ListViewTableViewController;
 import muvis.view.controllers.MusicPlayerIndividualTrackController;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -43,6 +43,7 @@ import muvis.view.controllers.MusicPlayerIndividualTrackController;
  */
 public class JTableMouseAdapter extends MainViewsMouseAdapter {
 
+    @Autowired private ViewManager viewManager;
     protected ListViewTableViewController controller;
     protected JTable tracksTable;
     protected ActionListener previewAction, addToPlaylistAction, findSimilarAction, findNonSimilarAction;
@@ -102,9 +103,8 @@ public class JTableMouseAdapter extends MainViewsMouseAdapter {
             //ask controller to play song
             int row = tracksTable.getRowSorter().convertRowIndexToModel(tracksTable.getSelectedRow());
             int trackId = (Integer) tracksTable.getModel().getValueAt(row, 0);
-            ViewManager vm = Environment.getEnvironmentInstance().getViewManager();
 
-            MusicControllerView mpController = (MusicControllerView) vm.getView(Elements.MUSIC_PLAYER_VIEW);
+            MusicControllerView mpController = (MusicControllerView) viewManager.getView(Elements.MUSIC_PLAYER_VIEW);
             ((MusicPlayerIndividualTrackController) mpController.getMusicPlayerIndividualController()).setTrackId(trackId);
             mpController.setPlayingType(MusicControllerView.PlayingType.INDIVIDUAL_TRACK);
             mpController.playTrack();

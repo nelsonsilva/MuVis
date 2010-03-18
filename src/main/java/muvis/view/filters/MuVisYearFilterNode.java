@@ -21,16 +21,17 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Ricardo
  */
 public class MuVisYearFilterNode extends MuVisFilterNode implements Observer {
+
 
     protected int startYear = 0;
     protected int yearRange = 0;
@@ -57,7 +58,7 @@ public class MuVisYearFilterNode extends MuVisFilterNode implements Observer {
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
+        dbManager.registerObserver(this);
     }
 
     @Override

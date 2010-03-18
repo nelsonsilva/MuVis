@@ -24,8 +24,8 @@ import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
-import muvis.Environment;
 import muvis.Messages;
+import muvis.MuVisApp;
 
 /**
  *
@@ -36,7 +36,7 @@ public class MuVisVisibilityAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        JFrame frame = Environment.getEnvironmentInstance().getRootFrame();
+        JFrame frame = MuVisApp.getRootFrame();
         boolean visibility = frame.isVisible();
         visibility = !visibility;
 

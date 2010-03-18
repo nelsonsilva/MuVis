@@ -23,13 +23,13 @@ package muvis.view.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.main.filters.TreemapFilterManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Music player Controller - Controller for playing the filtered tracks by the user
@@ -41,32 +41,32 @@ public class MusicPlayerFilterController implements MusicPlayerControllerInterfa
     private int position;
     private MusicLibraryDatabaseManager dbManager;
     private ArrayList<Integer> tracksToPlay;
-    private Environment workspace;
     private boolean isPlaying,  updateTracksToPlay;
-    private MuVisAudioPlayer audioPlayer;
-    private TreemapFilterManager filterManager;
+
+    @Autowired private MuVisAudioPlayer audioPlayer;
+    @Autowired private TreemapFilterManager filterManager;
     private boolean enabled;
     private boolean playNext;
 
     public MusicPlayerFilterController() {
         trackPlaying = null;
         position = 0;
-        workspace = Environment.getEnvironmentInstance();
-        dbManager = workspace.getDatabaseManager();
-        workspace.getAudioPlayer().registerObserver(this);
         isPlaying = false;
         tracksToPlay = new ArrayList<Integer>();
         updateTracksToPlay = true;
-        audioPlayer = workspace.getAudioPlayer();
         playNext = true;
 
     }
 
+    @Autowired
+    public void setAudioPlayer(MuVisAudioPlayer audioPlayer) {
+        this.audioPlayer = audioPlayer;
+         audioPlayer.registerObserver(this);
+    }
+
     private void needTrackUpdate() throws BasicPlayerException {
-        if (filterManager == null) {
-            filterManager = workspace.getTreemapFilterManager();
-            filterManager.registerObserver(this);
-        }
+        filterManager.registerObserver(this);
+        
         if (!isPlaying && updateTracksToPlay) {
             setTracksToPlay();
             updateTracksToPlay = false;

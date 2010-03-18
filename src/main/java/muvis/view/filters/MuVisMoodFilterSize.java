@@ -21,10 +21,11 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
+import muvis.database.MusicLibraryDatabaseManager;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -37,6 +38,7 @@ import net.bouthier.treemapSwing.TMNode;
 public class MuVisMoodFilterSize
 	implements TMComputeSize {
 
+    @Autowired private MusicLibraryDatabaseManager dbManager;
     /**
      * Test if this TMComputeSize could be used
      * with the kind of TMNode passed in parameter.
@@ -76,7 +78,7 @@ public class MuVisMoodFilterSize
 
             String mood = fNode.getMood();
 
-            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithMood(mood);
+            return dbManager.getTracksWithMood(mood);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

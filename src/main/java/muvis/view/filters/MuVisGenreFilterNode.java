@@ -21,17 +21,17 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Ricardo
  */
 public class MuVisGenreFilterNode extends MuVisFilterNode implements Observer {
-
+    
     public static String validGenres[] = {
         "African", "Blues", "Classical", "Disco", 
         "Electro", "Funk", "Gospel", "Hip-Hop", "Jazz",
@@ -63,7 +63,7 @@ public class MuVisGenreFilterNode extends MuVisFilterNode implements Observer {
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
+        dbManager.registerObserver(this);
     }
 
     @Override

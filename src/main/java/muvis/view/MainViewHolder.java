@@ -20,6 +20,7 @@
  */
 package muvis.view;
 
+import muvis.view.filters.*;
 import muvis.view.table.ListViewTableView;
 import com.vlsolutions.swing.docking.DockKey;
 import com.vlsolutions.swing.docking.Dockable;
@@ -43,7 +44,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.BeatTableFilter;
 import muvis.filters.DurationTableFilter;
@@ -54,33 +54,17 @@ import muvis.filters.TextTableFilter;
 import muvis.filters.YearTableFilter;
 import muvis.util.Observable;
 import muvis.util.Observer;
-import muvis.view.filters.MuVisBeatFilterDraw;
-import muvis.view.filters.MuVisBeatFilterNode;
-import muvis.view.filters.MuVisBeatFilterSize;
-import muvis.view.filters.MuVisDurationFilterDraw;
-import muvis.view.filters.MuVisDurationFilterNode;
-import muvis.view.filters.MuVisDurationFilterSize;
-import muvis.view.filters.MuVisFilterAction;
-import muvis.view.filters.MuVisFilterDraw;
-import muvis.view.filters.MuVisGenreFilterDraw;
-import muvis.view.filters.MuVisGenreFilterNode;
-import muvis.view.filters.MuVisGenreFilterSize;
-import muvis.view.filters.MuVisMoodFilterDraw;
-import muvis.view.filters.MuVisMoodFilterNode;
-import muvis.view.filters.MuVisMoodFilterSize;
-import muvis.view.filters.MuVisYearFilterDraw;
-import muvis.view.filters.MuVisYearFilterNode;
-import muvis.view.filters.MuVisYearFilterSize;
 import muvis.view.main.MuVisComputeAlbumSize;
 import muvis.view.main.MuVisComputeEqualSize;
 import muvis.view.main.MuVisComputeTrackSize;
 import muvis.view.main.TMAlgorithmAscOrder;
 import muvis.view.main.TMAlgorithmDescOrder;
-import muvis.view.filters.TMAlgorithmAscOrderFilter;
 import muvis.view.main.filters.TreemapFilterManager;
 import net.bouthier.treemapSwing.TMAlgorithmSquarified;
 import net.bouthier.treemapSwing.TMView;
 import net.bouthier.treemapSwing.TreeMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Panel that holds the filter visualization and the main visualization
@@ -92,68 +76,48 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
     private JPanel currentPanel;
     private String currentPanelStr;
     private Hashtable<String, JPanel> mainViewPanels;
-    private TableFilterManager tableFilterManager;
-    private TreemapFilterManager treemapFilterManager;
+    @Autowired private TableFilterManager tableFilterManager;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private TreemapFilterManager treemapFilterManager;
     private ScheduledExecutorService scheduler;
 
     /*
      * Table Filter elements
      */
-    private DurationTableFilter durationFilter;
-    private TextTableFilter textTableFilter;
-    private YearTableFilter yearTableFilter;
-    private GenreTableFilter genreTableFilter;
-    private MoodTableFilter moodTableFilter;
-    private BeatTableFilter beatTableFilter;
 
     /*
      * Duration Filter Elements
      */
-    private MuVisDurationFilterNode durationFilterRoot;
-    private TreeMap durationFilterTreeMap;
-    private MuVisDurationFilterSize durationFilterSize;
-    private MuVisFilterDraw durationFilterDraw;
+    @Autowired
+    @Qualifier("durationFilterView")
     private TMView durationFilterView;
-    private MuVisFilterAction durationAction;
     /*
      * Year Filter Elements
      */
-    MuVisYearFilterNode yearFilterRoot;
-    TreeMap yearFilterTreeMap;
-    MuVisYearFilterSize yearFilterSize;
-    MuVisFilterDraw yearFilterDraw;
-    TMView yearFilterView;
-    MuVisFilterAction yearAction;
+    @Autowired
+    @Qualifier("yearFilterView")
+    private TMView yearFilterView;
 
     /*
      * Genre Filter Elements
      */
-    MuVisGenreFilterNode genreFilterRoot;
-    TreeMap genreFilterTreeMap;
-    MuVisGenreFilterSize genreFilterSize;
-    MuVisFilterDraw genreFilterDraw;
-    TMView genreFilterView;
-    MuVisFilterAction genreAction;
+    @Autowired
+    @Qualifier("genreFilterView")
+    private TMView genreFilterView;
 
     /*
      * Mood Filter Elements
      */
-    MuVisMoodFilterNode moodFilterRoot;
-    TreeMap moodFilterTreeMap;
-    MuVisMoodFilterSize moodFilterSize;
-    MuVisFilterDraw moodFilterDraw;
-    TMView moodFilterView;
-    MuVisFilterAction moodAction;
+    @Autowired
+    @Qualifier("moodFilterView")
+    private TMView moodFilterView;
 
     /*
      * Beat Filter Elements
      */
-    MuVisBeatFilterNode beatFilterRoot;
-    TreeMap beatFilterTreeMap;
-    MuVisBeatFilterSize beatFilterSize;
-    MuVisFilterDraw beatFilterDraw;
-    TMView beatFilterView;
-    MuVisFilterAction beatAction;
+    @Autowired
+    @Qualifier("beatFilterView")
+    private TMView beatFilterView;
 
     /*
      * TreeMap features
@@ -200,77 +164,28 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
     }
 
     private void createDurationFilterView() {
-        durationFilterRoot = new MuVisDurationFilterNode();
-        durationFilterTreeMap = new TreeMap(durationFilterRoot);
-        durationFilterSize = new MuVisDurationFilterSize();
-        durationFilterDraw = new MuVisDurationFilterDraw();//new MuVisFilterDraw();
-        durationFilterView = durationFilterTreeMap.getView(durationFilterSize, durationFilterDraw);
-        durationAction = new MuVisFilterAction(durationFilterView);
-        durationFilterView.setAction(durationAction);
-        durationFilterView.addAlgorithm(new TMAlgorithmAscOrderFilter(), "durationOrdered");
-        durationFilterView.setAlgorithm("durationOrdered");
-
         durationTreemapFilterPanel.add(durationFilterView, "DurationFilterView");
         durationFilterView.setEnabled(true);
     }
 
     private void createYearFilterView() {
-        yearFilterRoot = new MuVisYearFilterNode();
-        yearFilterTreeMap = new TreeMap(yearFilterRoot);
-        yearFilterSize = new MuVisYearFilterSize();
-        yearFilterDraw = new MuVisYearFilterDraw();//new MuVisFilterDraw();
-        yearFilterView = yearFilterTreeMap.getView(yearFilterSize, yearFilterDraw);
-        yearAction = new MuVisFilterAction(yearFilterView);
-        yearFilterView.setAction(yearAction);
-        //yearFilterView.setAlgorithm(TMView.SQUARIFIED);
-        yearFilterView.addAlgorithm(new TMAlgorithmAscOrderFilter(), "yearOrdered");
-        yearFilterView.setAlgorithm("yearOrdered");
-
         yearTreemapFilterPanel.add(yearFilterView, "YearFilterView");
         yearFilterView.setEnabled(true);
     }
 
     private void createGenreFilterView() {
-        genreFilterRoot = new MuVisGenreFilterNode();
-        genreFilterTreeMap = new TreeMap(genreFilterRoot);
-        genreFilterSize = new MuVisGenreFilterSize();
-        genreFilterDraw = new MuVisGenreFilterDraw();//new MuVisFilterDraw();
-        genreFilterView = genreFilterTreeMap.getView(genreFilterSize, genreFilterDraw);
-        genreAction = new MuVisFilterAction(genreFilterView);
-        genreFilterView.setAction(genreAction);
-        //genreFilterView.setAlgorithm(TMView.SQUARIFIED);
-        genreFilterView.addAlgorithm(new TMAlgorithmAscOrderFilter(), "genreOrdered");
-        genreFilterView.setAlgorithm("genreOrdered");
 
         genreTreemapFilterPanel.add(genreFilterView, "GenreFilterView");
         genreFilterView.setEnabled(true);
     }
 
     private void createMoodFilterView() {
-        moodFilterRoot = new MuVisMoodFilterNode();
-        moodFilterTreeMap = new TreeMap(moodFilterRoot);
-        moodFilterSize = new MuVisMoodFilterSize();
-        moodFilterDraw = new MuVisMoodFilterDraw();//new MuVisFilterDraw();
-        moodFilterView = moodFilterTreeMap.getView(moodFilterSize, moodFilterDraw);
-        moodAction = new MuVisFilterAction(moodFilterView);
-        moodFilterView.setAction(moodAction);
-        moodFilterView.addAlgorithm(new TMAlgorithmAscOrderFilter(), "moodOrdered");
-        moodFilterView.setAlgorithm("moodOrdered");
 
         moodTreemapFilterPanel.add(moodFilterView, "MoodFilterView");
         moodFilterView.setEnabled(true);
     }
 
     private void createBeatFilterView() {
-        beatFilterRoot = new MuVisBeatFilterNode();
-        beatFilterTreeMap = new TreeMap(beatFilterRoot);
-        beatFilterSize = new MuVisBeatFilterSize();
-        beatFilterDraw = new MuVisBeatFilterDraw(); //new MuVisFilterDraw();
-        beatFilterView = beatFilterTreeMap.getView(beatFilterSize, beatFilterDraw);
-        beatAction = new MuVisFilterAction(beatFilterView);
-        beatFilterView.setAction(beatAction);
-        beatFilterView.addAlgorithm(new TMAlgorithmAscOrderFilter(), "beatOrdered");
-        beatFilterView.setAlgorithm("beatOrdered");
 
         beatTreemapFilterPanel.add(beatFilterView, "BeatFilterView");
         beatFilterView.setEnabled(true);
@@ -283,17 +198,22 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         createGenreFilterView();
         createMoodFilterView();
         createBeatFilterView();
-        durationFilter = new DurationTableFilter();
-        textTableFilter = new TextTableFilter();
-        yearTableFilter = new YearTableFilter();
-        genreTableFilter = new GenreTableFilter();
-        beatTableFilter = new BeatTableFilter();
-        moodTableFilter = new MoodTableFilter();
+        MuVisFilterAction durationAction=(MuVisFilterAction) durationFilterView.getAction();
+        MuVisFilterAction yearAction=(MuVisFilterAction) yearFilterView.getAction();
+        MuVisFilterAction genreAction=(MuVisFilterAction) genreFilterView.getAction();
+        MuVisFilterAction beatAction=(MuVisFilterAction) beatFilterView.getAction();
+        MuVisFilterAction moodAction=(MuVisFilterAction) moodFilterView.getAction();
+        DurationTableFilter durationFilter = new DurationTableFilter();
+        TextTableFilter textTableFilter = new TextTableFilter();
+        YearTableFilter yearTableFilter = new YearTableFilter();
+        GenreTableFilter genreTableFilter = new GenreTableFilter();
+        BeatTableFilter beatTableFilter = new BeatTableFilter();
+        MoodTableFilter moodTableFilter = new MoodTableFilter();
 
         if (currentPanel instanceof ListViewTableView) {
 
             tableFilterManager = new TableFilterManager(((ListViewTableView) currentPanel).getSorter());
-            Environment.getEnvironmentInstance().setTableFilterManager(tableFilterManager);
+            //Environment.getEnvironmentInstance().setTableFilterManager(tableFilterManager);
 
             tableFilterManager.addTableFilter(durationFilter);
             tableFilterManager.addTableFilter(textTableFilter);
@@ -308,7 +228,6 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
             moodAction.registerObserver(tableFilterManager);
         }
 
-        treemapFilterManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
 
         durationAction.registerObserver(treemapFilterManager);
         yearAction.registerObserver(treemapFilterManager);
@@ -330,7 +249,16 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         updateDisplayInfo();
     }
 
-    public MainViewHolder(JFrame parent) {
+    private JFrame parent;
+
+    public void setParent(JFrame parent){
+        this.parent=parent;
+        parent.addComponentListener(this);
+    }
+    
+    @Override
+    protected void initComponents() {
+        super.initComponents();
         key = new DockKey("Main");
         mainViewPanels = new Hashtable<String, JPanel>();
 
@@ -350,33 +278,6 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        parent.addComponentListener(this);
-
-        // Get a handle, starting now, with a 10 second delay
-        class UpdateInfoDisplay implements Runnable, Observer {
-
-            boolean update = false;
-
-            @Override
-            public void run() {
-                if (update) {
-                    update = false;
-                    updateDisplayInfo();
-                }
-            }
-
-            @Override
-            public void update(Observable obs, Object arg) {
-                if (obs instanceof MusicLibraryDatabaseManager) {
-                    update = true;
-                }
-            }
-        }
-
-        UpdateInfoDisplay updateTable = new UpdateInfoDisplay();
-        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(updateTable);
-
-        scheduler.scheduleAtFixedRate(updateTable, 10, 45, TimeUnit.SECONDS);
 
         resetFiltersButton.addActionListener(new ActionListener() {
 
@@ -397,6 +298,33 @@ public class MainViewHolder extends MainViewHolderUI implements Dockable, Action
         });
     }
 
+    public void init() {
+         initComponents();
+          // Get a handle, starting now, with a 10 second delay
+        class UpdateInfoDisplay implements Runnable, Observer {
+
+            boolean update = false;
+
+            @Override
+            public void run() {
+                if (update) {
+                    update = false;
+                    updateDisplayInfo();
+                }
+            }
+
+            @Override
+            public void update(Observable obs, Object arg) {
+                if (obs instanceof MusicLibraryDatabaseManager) {
+                    update = true;
+                }
+            }
+        }
+        UpdateInfoDisplay updateTable = new UpdateInfoDisplay();
+        dbManager.registerObserver(updateTable);
+
+        scheduler.scheduleAtFixedRate(updateTable, 10, 45, TimeUnit.SECONDS);
+    }
     @Override
     public DockKey getDockKey() {
         return key;

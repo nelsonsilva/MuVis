@@ -42,6 +42,10 @@ public class TableFilterManager implements Observer {
         this.sorter = sorter;
     }
 
+    public TableFilterManager() {
+        // TODO - TableFilterManager
+    }
+
     public void addTableFilter(TableFilter filter) {
         filters.add(filter);
     }

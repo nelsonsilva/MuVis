@@ -21,12 +21,12 @@
 package muvis.view.controllers;
 
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.audio.playlist.Playlist;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class implements a controller for the MuVis music player interface for
@@ -37,20 +37,17 @@ public class MusicPlayerPlaylistController implements MusicPlayerControllerInter
 
     private boolean isPlaying;
     private boolean enabled;
-    private Playlist playlist;
-    private MuVisAudioPlayer player;
+    @Autowired private Playlist playlist;
+    @Autowired private MuVisAudioPlayer player;
 
     public MusicPlayerPlaylistController() {
         isPlaying = false;
         enabled = false;
-        Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
-        playlist = Environment.getEnvironmentInstance().getAudioPlaylist();
-        player = Environment.getEnvironmentInstance().getAudioPlayer();
     }
 
     @Override
     public AudioMetadata getTrackPlayingMetadata() {
-        return Environment.getEnvironmentInstance().getAudioPlaylist().getCursor().getAudioMetaData();
+        return playlist.getCursor().getAudioMetaData();
     }
 
     @Override
@@ -95,7 +92,7 @@ public class MusicPlayerPlaylistController implements MusicPlayerControllerInter
 
     @Override
     public void setPlayerVolume(int value) throws BasicPlayerException {
-        Environment.getEnvironmentInstance().getAudioPlayer().setVolume(value);
+        player.setVolume(value);
     }
 
     @Override

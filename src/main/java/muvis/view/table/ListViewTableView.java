@@ -28,6 +28,7 @@ import javax.swing.table.TableRowSorter;
 import muvis.Messages;
 import muvis.view.View;
 import muvis.view.controllers.ListViewTableViewController;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Simple list visualization of the library.
@@ -38,12 +39,20 @@ public class ListViewTableView extends ListViewTableUI implements View {
 
     private TableRowSorter<TracksTableModel> sorter;
     private ListViewTableViewController controller;
-    private TracksTableModel model;
+    @Autowired private TracksTableModel model;
 
-    public ListViewTableView(final JFrame parent) {
-        
+    public void setController(ListViewTableViewController controller) {
+        this.controller = controller;
+    }
+
+    public void setModel(TracksTableModel model) {
+        this.model = model;
+    }
+
+    @Override
+    public void init() {
+        super.init();
         controller = new ListViewTableViewController();
-        model = new TracksTableModel();
 
         tracksTableView.setModel(model);
         tracksTableView.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

@@ -31,7 +31,8 @@ import muvis.util.Observable;
 public class CompositeFilter extends FilterDecorator {
 
     public CompositeFilter(TreemapFilter filter){
-        super(filter);
+        super();
+        setParentFilter(filter);
     }
 
     @Override

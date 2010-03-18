@@ -26,22 +26,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import muvis.Environment;
 import muvis.database.EmptyStatement;
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.view.filters.MuVisFilterNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Filter Decorator
  * @author Ricardo
  */
 public class FilterDecorator extends TreemapFilter implements Cloneable {
-
+    @Autowired
+    private MusicLibraryDatabaseManager dbManager;
     protected TreemapFilter parentFilter;
     protected Hashtable<String, MuVisFilterNode> selectedNodes;
 
-    public FilterDecorator(TreemapFilter filter) {
-        parentFilter = filter;
+    public FilterDecorator() {
         selectedNodes = new Hashtable<String, MuVisFilterNode>();
     }
 
@@ -62,7 +63,7 @@ public class FilterDecorator extends TreemapFilter implements Cloneable {
             Statement st = new EmptyStatement();
             ResultSet rs = null;
 
-            rs = Environment.getEnvironmentInstance().getDatabaseManager().query(filterQuery, st);
+            rs = dbManager.query(filterQuery, st);
 
             if (rs.next()) {
                 int tracksTotal = rs.getInt(1);
@@ -90,7 +91,7 @@ public class FilterDecorator extends TreemapFilter implements Cloneable {
             Statement st = new EmptyStatement();
             ResultSet rs = null;
 
-            rs = Environment.getEnvironmentInstance().getDatabaseManager().query(filterQuery, st);
+            rs = dbManager.query(filterQuery, st);
 
             if (rs.next()) {
                 int albunsTotal = rs.getInt(1);
@@ -118,7 +119,7 @@ public class FilterDecorator extends TreemapFilter implements Cloneable {
             Statement st = new EmptyStatement();
             ResultSet rs = null;
 
-            rs = Environment.getEnvironmentInstance().getDatabaseManager().query(filterQuery, st);
+            rs = dbManager.query(filterQuery, st);
             ArrayList<Integer> filteredTracks = new ArrayList(getCountFilteredTracks(artistName));
 
             while (rs.next()) {
@@ -147,7 +148,7 @@ public class FilterDecorator extends TreemapFilter implements Cloneable {
             Statement st = new EmptyStatement();
             ResultSet rs = null;
 
-            rs = Environment.getEnvironmentInstance().getDatabaseManager().query(filterQuery, st);
+            rs = dbManager.query(filterQuery, st);
             ArrayList<String> filteredTracks = new ArrayList(getCountFilteredAlbuns(artistName));
 
             while (rs.next()) {

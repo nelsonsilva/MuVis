@@ -32,11 +32,12 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreeSelectionModel;
-import muvis.Environment;
 import muvis.audio.AudioMetadataExtractor;
 import muvis.audio.MP3AudioMetadataExtractor;
+import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.exceptions.CannotRetrieveMP3TagException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Filesystem explorer implementation - Allows users to access to their files
@@ -45,6 +46,8 @@ import muvis.exceptions.CannotRetrieveMP3TagException;
  */
 public class DirectoryListTreeView extends DirectoryListViewTreeUI implements Dockable {
 
+    @Autowired
+    private BasePlaylist playlist;
     private DockKey key;
 
     public DirectoryListTreeView() {
@@ -76,7 +79,7 @@ public class DirectoryListTreeView extends DirectoryListViewTreeUI implements Do
                     String pathFile = treeDirectoryList.getSelectionPath().getLastPathComponent().toString();
                     AudioMetadataExtractor extractor = new MP3AudioMetadataExtractor();
                     PlaylistItem item = new PlaylistItem("", pathFile, extractor.getAudioMetadata(pathFile));
-                    Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(item);
+                    playlist.appendItem(item);
                 } catch (CannotRetrieveMP3TagException ex) {
                     ex.printStackTrace();
                 }

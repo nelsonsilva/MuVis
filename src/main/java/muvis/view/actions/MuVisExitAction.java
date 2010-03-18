@@ -26,18 +26,21 @@ import java.io.IOException;
 import muvis.Elements;
 import muvis.Environment;
 import muvis.view.MuVisAppView;
+import muvis.view.ViewManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Generic action for exiting the MuVis application
  * @author Ricardo
  */
 public class MuVisExitAction implements ActionListener {
-
+    @Autowired private Environment environment;
+    @Autowired private ViewManager viewManager;
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            Environment.getEnvironmentInstance().saveWorkspace();
-            MuVisAppView view = (MuVisAppView)Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUVIS_APP_VIEW);
+            environment.saveWorkspace();
+            MuVisAppView view = (MuVisAppView)viewManager.getView(Elements.MUVIS_APP_VIEW);
             view.saveDocking();
         } catch (IOException ex) {
             ex.printStackTrace();

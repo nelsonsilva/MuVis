@@ -28,8 +28,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import muvis.database.MusicLibraryDatabaseManager;
 import net.bouthier.treemapSwing.TMNode;
 import net.bouthier.treemapSwing.TMUpdater;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The MuVisTreemapNode implements a Node encapsulating the hierarchy
@@ -38,6 +41,7 @@ import net.bouthier.treemapSwing.TMUpdater;
  */
 public abstract class MuVisFilterNode implements TMNode {
 
+    protected static MusicLibraryDatabaseManager dbManager;
     protected boolean isLeaf = false;
     protected String nodeName = null;       //the artist this node represents
     protected MuVisFilterNode parent   = null; // the parent
@@ -46,6 +50,10 @@ public abstract class MuVisFilterNode implements TMNode {
     protected boolean selected = false;
     private int order;
 
+    @Autowired
+    public void setMusicLibraryDatabaseManager(MusicLibraryDatabaseManager manager){
+      dbManager=manager;
+    }
     /* --- Constructor --- */
 
     /**
@@ -63,6 +71,11 @@ public abstract class MuVisFilterNode implements TMNode {
         nodeName = filterName;
         order = 0;
 
+
+
+    }
+
+    public void init(){
         JFrame frame = new JFrame("Initializing");
         JPanel pane = new JPanel(new BorderLayout());
         frame.setContentPane(pane);
@@ -91,7 +104,7 @@ public abstract class MuVisFilterNode implements TMNode {
         /*CheckingThread cheackingThread = new CheckingThread();
         cheackingThread.start();*/
 
-        frame.dispose();
+        frame.dispose(); 
     }
 
     /**

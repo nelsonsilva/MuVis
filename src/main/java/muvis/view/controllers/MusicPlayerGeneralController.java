@@ -23,15 +23,17 @@ package muvis.view.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
+import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.main.filters.TreemapFilterManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Music Player Generic Controller - Plays the filtered tracks and next the
@@ -42,34 +44,34 @@ public class MusicPlayerGeneralController implements MusicPlayerControllerInterf
 
     private AudioMetadata trackPlaying;
     private int position;
-    private MusicLibraryDatabaseManager dbManager;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private BasePlaylist playlist;
     private ArrayList<Integer> tracksToPlay;
-    private Environment workspace;
     private boolean isPlaying,  updateTracksToPlay;
+
     private MuVisAudioPlayer audioPlayer;
-    private TreemapFilterManager filterManager;
+    @Autowired private TreemapFilterManager filterManager;
     private boolean enabled;
     private boolean playNext;
 
     public MusicPlayerGeneralController() {
         trackPlaying = null;
         position = 0;
-        workspace = Environment.getEnvironmentInstance();
-        dbManager = workspace.getDatabaseManager();
-        workspace.getAudioPlayer().registerObserver(this);
         isPlaying = false;
         tracksToPlay = new ArrayList<Integer>();
         updateTracksToPlay = true;
-        audioPlayer = workspace.getAudioPlayer();
         playNext = true;
+    }
 
+    @Autowired
+    public void setAudioPlayer(MuVisAudioPlayer audioPlayer) {
+        this.audioPlayer = audioPlayer;
+        audioPlayer.registerObserver(this);
     }
 
     private void needTrackUpdate() throws BasicPlayerException {
-        if (filterManager == null) {
-            filterManager = workspace.getTreemapFilterManager();
-            filterManager.registerObserver(this);
-        }
+        filterManager.registerObserver(this);
+
         if (!isPlaying && updateTracksToPlay) {
             setTracksToPlay();
             updateTracksToPlay = false;
@@ -86,7 +88,7 @@ public class MusicPlayerGeneralController implements MusicPlayerControllerInterf
         tracksToPlay = new ArrayList<Integer>(filteredTracks);
 
         //adding the tracks in the playlist
-        for (PlaylistItem item : workspace.getAudioPlaylist().getAllItems()){
+        for (PlaylistItem item : playlist.getAllItems()){
             int id = dbManager.getTrackId(item.getFullName());
             tracksToPlay.add(id);
         }

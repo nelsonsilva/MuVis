@@ -31,8 +31,7 @@ public class TreemapTextFilter extends FilterDecorator {
 
     private String textField;
 
-    public TreemapTextFilter(TreemapFilter filter) {
-        super(filter);
+    public TreemapTextFilter() {
         textField = "";
     }
 

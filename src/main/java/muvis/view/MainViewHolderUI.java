@@ -35,9 +35,7 @@ public class MainViewHolderUI extends javax.swing.JPanel {
 
     /** Creates new form ListViewTableUI */
     public MainViewHolderUI() {
-        initComponents();
-
-        resetFiltersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png")));
+     
     }
 
     /** This method is called from within the constructor to
@@ -47,7 +45,7 @@ public class MainViewHolderUI extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    protected void initComponents() {
 
         filtersButtonGroup = new javax.swing.ButtonGroup();
         featuresListSplitPane = new javax.swing.JSplitPane();
@@ -409,6 +407,7 @@ public class MainViewHolderUI extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(featuresListSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
         );
+        resetFiltersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png")));
     }// </editor-fold>//GEN-END:initComponents
 
 

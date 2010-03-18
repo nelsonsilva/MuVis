@@ -22,11 +22,13 @@ package muvis.view.filters;
 
 import java.awt.Color;
 import java.awt.Paint;
-import muvis.Environment;
+
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Util;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
 import net.bouthier.treemapSwing.TMNodeAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -34,6 +36,7 @@ import net.bouthier.treemapSwing.TMNodeAdapter;
  */
 public class MuVisDurationFilterDraw extends MuVisFilterDraw {
 
+    @Autowired private MusicLibraryDatabaseManager dbManager;
     /**
      * Returns the tooltip of the node.
      * The nodeAdapter should return an instance of TMFileNode.
@@ -64,7 +67,7 @@ public class MuVisDurationFilterDraw extends MuVisFilterDraw {
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             } else {*/
 
-                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
+                int value = dbManager.getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
                 tooltip = "<html>" + name + "<p>Tracks available: " + value;
             //}
 
@@ -86,7 +89,7 @@ public class MuVisDurationFilterDraw extends MuVisFilterDraw {
             if (fNode.isSelected())
                 return new Color(250, 192, 144);
             else {
-                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
+                int value = dbManager.getTracksBetweenTimeRange(fNode.getMinValue(), fNode.getMaxValue());
                 return Util.getColor(value);
             }
         } else {

@@ -33,7 +33,8 @@ public class TreemapSimilarityFilter extends FilterDecorator {
     private ArrayList<Integer> trackIds;
 
     public TreemapSimilarityFilter(TreemapFilter filter, ArrayList<Integer> trackIds) {
-        super(filter);
+        super();
+        setParentFilter(filter);
         this.trackIds = trackIds;
     }
 

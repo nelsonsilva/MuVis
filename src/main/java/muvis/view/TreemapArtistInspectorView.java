@@ -23,6 +23,9 @@ package muvis.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+
+import muvis.audio.AudioSnippetPlayerManager;
+import muvis.filters.TableFilterManager;
 import muvis.view.table.ColorCellRenderer;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -59,7 +62,6 @@ import jdbm.helper.Tuple;
 import jdbm.helper.TupleBrowser;
 import muvis.Elements;
 import muvis.NBTreeManager;
-import muvis.Environment;
 import muvis.Messages;
 import muvis.audio.AudioMetadata;
 import muvis.database.MusicLibraryDatabaseManager;
@@ -75,40 +77,61 @@ import muvis.view.table.JTableMouseAdapter;
 import nbtree.NBPoint;
 import nbtree.NBTree;
 import nbtree.exceptions.NBTreeException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Ricardo
  */
 public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI implements ActionListener, Observer {
-
-    private ArtistInspectorTracksTableModel model;
-    private TreemapFilterManager filterManager;
+    @Autowired
+    TreemapFilterManager filterManager;
+    @Autowired
     private MusicLibraryDatabaseManager dbManager;
-    private ExecutorService threadPool;
+    @Autowired
+    private AudioSnippetPlayerManager snippetManager;
+    @Autowired
+    private NBTreeManager nbtreeManager;
+    @Autowired
+    private TableFilterManager tableFilterManager;
+    @Autowired
+    private TreemapFilterManager treemapFilterManager;
+    @Autowired
+    private ViewManager viewManager;
+
     private ListViewTableViewController controller;
+    
+    
+    private ExecutorService threadPool;
+
     private ArrayList<String> artistAlbums;
     private Hashtable<Integer, ArrayList<String>> pagedAlbuns;
     private int albumsPage;
     private TableRowSorter<ArtistInspectorTracksTableModel> sorter;
     private ArrayList<String> selectedAlbumsToFilter;
 
-    public TreemapArtistInspectorView(final JFrame parent) {
-        filterManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
-        filterManager.registerObserver(this);
-        artistAlbums = new ArrayList<String>();
+    public void setController(ListViewTableViewController controller) {
+        this.controller = controller;
+    }
+
+   
+    public TreemapArtistInspectorView() {
+       artistAlbums = new ArrayList<String>();
         pagedAlbuns = new Hashtable<Integer, ArrayList<String>>();
         albumsPage = 1;
-        selectedAlbumsToFilter = new ArrayList<String>();
+        selectedAlbumsToFilter = new ArrayList<String>(); 
+    }
+
+
+    
+    public void init(final JFrame parent) {
+        filterManager.registerObserver(this);
+
 
         threadPool = Executors.newFixedThreadPool(1);
-        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-
-        controller = new ListViewTableViewController();
 
         tracksTableArtistInspector.getTableHeader().setReorderingAllowed(false);
 
-        model = new ArtistInspectorTracksTableModel(new ArrayList<Integer>());
         tracksTableArtistInspector.setModel(model);
         tracksTableArtistInspector.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         tracksTableArtistInspector.setRowSelectionAllowed(true);
@@ -271,17 +294,17 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                             ArrayList<Integer> ids = new ArrayList<Integer>(selectedAlbumsToFilter.size());
                             for (String albumN : selectedAlbumsToFilter) {
                                 String []albumProperties = albumN.split("\n");
-                                int id = Environment.getEnvironmentInstance().getDatabaseManager().getAlbumId(artistNameLabel.getText(), /*albumN*/ albumProperties[0]);
-                                List trackIds = Environment.getEnvironmentInstance().getDatabaseManager().getAlbumTracksIds(id);
+                                int id = dbManager.getAlbumId(artistNameLabel.getText(), /*albumN*/ albumProperties[0]);
+                                List trackIds = dbManager.getAlbumTracksIds(id);
                                 ids.addAll(trackIds);
                             }
-                            Environment.getEnvironmentInstance().getSnippetManager().previewAlbums(ids);
+                            snippetManager.previewAlbums(ids);
                         } else {
                             String []albumProperties = album.split("\n");
-                            int id = Environment.getEnvironmentInstance().getDatabaseManager().getAlbumId(artistNameLabel.getText(), /*album*/ albumProperties[0]);
-                            List trackIds = Environment.getEnvironmentInstance().getDatabaseManager().getAlbumTracksIds(id);
+                            int id = dbManager.getAlbumId(artistNameLabel.getText(), /*album*/ albumProperties[0]);
+                            List trackIds = dbManager.getAlbumTracksIds(id);
                             ArrayList<Integer> ids = new ArrayList<Integer>(trackIds);
-                            Environment.getEnvironmentInstance().getSnippetManager().previewAlbums(ids);
+                            snippetManager.previewAlbums(ids);
                         }
                     }
                 });
@@ -299,7 +322,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                                 int numSimilarElements = similarityDialog.getNumberSimilarElements();
                                 similarityDialog.dispose();
-                                NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
+
                                 NBTree albumsNBTree = nbtreeManager.getNBTree("albumsNBTree");
 
 
@@ -324,8 +347,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                             }
 
                                             TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
-                                            Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                            Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
+                                            filterManager.addTreemapFilter(filter);
+                                            filterManager.filter();
 
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
@@ -351,8 +374,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         }
 
                                         TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
-                                        Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                        Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
+                                        filterManager.addTreemapFilter(filter);
+                                        filterManager.filter();
 
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -367,8 +390,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
 
                         SimilarityTableFilter filterS = new SimilarityTableFilter(tracks);
-                        Environment.getEnvironmentInstance().getTableFilterManager().addTableFilter(filterS);
-                        Environment.getEnvironmentInstance().getTableFilterManager().filter();
+                        tableFilterManager.addTableFilter(filterS);
+                        tableFilterManager.filter();
 
                         closeView();
                     }
@@ -388,7 +411,6 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
 
                                 int numSimilarElements = similarityDialog.getNumberSimilarElements();
                                 similarityDialog.dispose();
-                                NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
                                 NBTree albumsNBTree = nbtreeManager.getNBTree("albumsNBTree");
 
 
@@ -414,8 +436,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                             }
 
                                             TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
-                                            Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                            Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
+                                            treemapFilterManager.addTreemapFilter(filter);
+                                            treemapFilterManager.filter();
 
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
@@ -442,8 +464,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                                         }
 
                                         TreemapSimilarityFilter filter = new TreemapSimilarityFilter(new NoFilter(), tracks);
-                                        Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filter);
-                                        Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
+                                        treemapFilterManager.addTreemapFilter(filter);
+                                        treemapFilterManager.filter();
 
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -457,8 +479,8 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                         similarityDialog.setVisible(true);
 
                         SimilarityTableFilter filterS = new SimilarityTableFilter(tracks);
-                        Environment.getEnvironmentInstance().getTableFilterManager().addTableFilter(filterS);
-                        Environment.getEnvironmentInstance().getTableFilterManager().filter();
+                        tableFilterManager.addTableFilter(filterS);
+                        tableFilterManager.filter();
 
                         closeView();
                     }
@@ -534,7 +556,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
         }
 
         ArrayList<Integer> trackIds = new ArrayList<Integer>(tracks);
-        model = new ArtistInspectorTracksTableModel(trackIds);
+        model.setRecords(trackIds);
         tracksTableArtistInspector.setModel(model);
         sorter = new TableRowSorter<ArtistInspectorTracksTableModel>(model);
         tracksTableArtistInspector.setRowSorter(sorter);
@@ -677,7 +699,6 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
             }
             filterAlbumsDisplayed();
 
-            TreemapFilterManager fManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
             String label = "Viewing ";
             if (albumsPage > 0){
                 label += albumsPage * 4 + 1;
@@ -685,7 +706,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
                 label += 1;
             }
             label += " - " + (albumsPage * 4 + pagedAlbuns.get(albumsPage).size()) + "/";
-            label += artistAlbums.size() +" Albums, with " + fManager.getCountFilteredTracks(artistNameLabel.getText());
+            label += artistAlbums.size() +" Albums, with " + treemapFilterManager.getCountFilteredTracks(artistNameLabel.getText());
             label += " tracks";
             albumsInfoLabel.setText(label);
         }
@@ -737,7 +758,7 @@ public class TreemapArtistInspectorView extends TreemapArtistInspectorViewUI imp
         selectedAlbumsToFilter.clear();
         albumsPage = 0;
 
-        MainViewHolder mainViewHolder = (MainViewHolder) Environment.getEnvironmentInstance().getViewManager().getView("mainView");
+        MainViewHolder mainViewHolder = (MainViewHolder) viewManager.getView("mainView");
         mainViewHolder.setView(Elements.TREEMAP_VIEW);
     }
 }

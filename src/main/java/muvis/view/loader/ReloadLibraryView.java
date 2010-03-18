@@ -32,33 +32,46 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
 import muvis.Environment;
 import muvis.Messages;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.util.Util;
 import muvis.view.controllers.ReloadLibraryController;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Reloading library controller
  * @author Ricardo
  */
 public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListener {
-
+    @Autowired
+    private Environment environment;
     private JFileChooser browseSystemFile;
+
     private JFrame parent;
-    private DefaultListModel libraryListModel;
     public boolean mustloadLibrary;
+
+    private DefaultListModel model;
     private ReloadLibraryController controller;
+
     private ArrayList<String> previousFolders;
     private JFrame newFrame;
 
-    public ReloadLibraryView(JFrame parent, ReloadLibraryController controller) {
+    public void setController(ReloadLibraryController controller) {
+        this.controller = controller;
+    }
+
+    public void setModel(DefaultListModel model) {
+        this.model = model;
+    }
+
+    public void init() {
 
         newFrame = new JFrame("Please select your library folders");
         newFrame.add(this);
-        this.controller = controller;
-        libraryListModel = new DefaultListModel();
-        libraryFoldersList.setModel(libraryListModel);
+
+        libraryFoldersList.setModel(model);
 
         removeLibraryFolderButton.addActionListener(this);
         browseFilesystemButton.addActionListener(this);
@@ -78,6 +91,10 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
         newFrame.setVisible(true);
     }
 
+    public void setParent(JFrame parent){
+        this.parent=parent;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == browseFilesystemButton) {
@@ -88,7 +105,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
                     browseSystemFile.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                     browseSystemFile.setDialogTitle(Messages.JFILE_CHOOSER_SELECT_LIBRARY);
                     browseSystemFile.setAcceptAllFileFilterUsed(false);
-                    int returned = browseSystemFile.showOpenDialog(parent);
+                    int returned = browseSystemFile.showOpenDialog(parent); 
                     if (returned == JFileChooser.APPROVE_OPTION) {
 
                         File file = browseSystemFile.getSelectedFile();
@@ -109,12 +126,12 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
 
             for (int i = 0; i < indices.length; i++) {
 
-                Object playlistItemToRemove = libraryListModel.getElementAt(indices[i]);
+                Object playlistItemToRemove = model.getElementAt(indices[i]);
 
                 //marking the tracks for removal
                 itemsToRemove.add(playlistItemToRemove);
 
-                int size = libraryListModel.getSize();
+                int size = model.getSize();
 
                 if (size == 0) {
                     removeLibraryFolderButton.setEnabled(false);
@@ -123,7 +140,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
                         loadLibraryButton.setEnabled(true);
                     }
                 } else { //Select an index.
-                    if (indices[i] == libraryListModel.getSize()) {
+                    if (indices[i] == model.getSize()) {
                         //removed item in last position
                         indices[i]--;
                     }
@@ -135,20 +152,20 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
              * Removing the items from the playlist
              */
             for (Object item : itemsToRemove) {
-                libraryListModel.removeElement(item);
+                model.removeElement(item);
                 if (previousFolders.contains(item.toString()) && !shouldLoad){
                     shouldLoad = true;
                 }
             }
 
-            if (libraryListModel.getSize() == 0) {
+            if (model.getSize() == 0) {
                 removeLibraryFolderButton.setEnabled(false);
                 mustloadLibrary = false;
             } else {
                 mustloadLibrary = true;
             }
 
-            List<Object> tempFolders = Arrays.asList(libraryListModel.toArray());
+            List<Object> tempFolders = Arrays.asList(model.toArray());
 
             if (shouldLoad){
                 loadLibraryButton.setEnabled(true);
@@ -158,7 +175,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
 
         } else if (event.getSource() == loadLibraryButton) {//Loading library
             if (mustloadLibrary) {
-                Object[] folders = libraryListModel.toArray();
+                Object[] folders = model.toArray();
                 try {
                     controller.loadProcessLibrary(folders);
                     controller.saveLibraryFolders(folders);
@@ -174,7 +191,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
             newFrame.dispose();
 
             try {
-                Environment.getEnvironmentInstance().loadWorkspace();
+                environment.loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");
@@ -191,7 +208,7 @@ public class ReloadLibraryView extends LoadLibraryViewUI implements ActionListen
             //add after the selected item
             index++;
         }
-        libraryListModel.insertElementAt(folder, index);
+        model.insertElementAt(folder, index);
         
         //Select the new item and make it visible.
         libraryFoldersList.setSelectedIndex(index);

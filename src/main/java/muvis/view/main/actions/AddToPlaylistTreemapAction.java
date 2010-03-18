@@ -26,13 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import javax.swing.JMenuItem;
-import muvis.Environment;
 import muvis.Messages;
 import muvis.audio.AudioMetadata;
+import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.view.main.MuVisTreemapNode;
 import muvis.view.main.filters.TreemapFilterManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Action for adding tracks, albums or artists to the current playlist.
@@ -40,6 +41,10 @@ import muvis.view.main.filters.TreemapFilterManager;
  */
 public class AddToPlaylistTreemapAction implements ActionListener {
 
+    @Autowired MusicLibraryDatabaseManager dbManager;
+    @Autowired TreemapFilterManager filterManager;
+    @Autowired
+    BasePlaylist playlist;
     protected ArrayList<MuVisTreemapNode> selectedNodes;
     protected MuVisTreemapNode nodeUnder;
 
@@ -62,8 +67,7 @@ public class AddToPlaylistTreemapAction implements ActionListener {
                     @Override
                     public void run() {
                         //add artist to playlist
-                        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-                        TreemapFilterManager filterManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
+
 
                         List artistTracks = new ArrayList();
                         if (!selectedNodes.contains(nodeUnder)) {
@@ -79,7 +83,7 @@ public class AddToPlaylistTreemapAction implements ActionListener {
                             String track = dbManager.getFilename(trackId);
                             AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
                             PlaylistItem pliItem = new PlaylistItem(track, Messages.EMPTY_STRING, metadata);
-                            Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
+                            playlist.appendItem(pliItem);
                         }
                         selectedNodes.remove(nodeUnder);
                     }

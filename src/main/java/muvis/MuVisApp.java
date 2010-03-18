@@ -26,23 +26,36 @@ import javax.swing.JFrame;
 import muvis.view.MuVisAppView;
 import muvis.view.controllers.LoadLibraryController;
 import muvis.view.loader.LoadLibraryView;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * This is the entry point of the application.
  * @author Ricardo
  */
 public class MuVisApp extends JFrame implements Runnable {
+    public static JFrame rootFrame;
 
+    @Autowired private Environment environment;
+    
+    @Autowired
+    private LoadLibraryView loadLibraryView;
+
+    @Autowired
+    private MuVisAppView muVisAppView;
+    
     private void processLibrary() {
-        Environment environment = Environment.getEnvironmentInstance();
+     
 
         if (!environment.configFileExists()) {
             environment.initConfigFile();
 
-            JFrame frame = new JFrame();
-            environment.setRootFrame(frame);
-            LoadLibraryController controller = new LoadLibraryController();
-            new LoadLibraryView(controller);
+            rootFrame = new JFrame();
+            loadLibraryView.setParent(this);
+            
+            this.setVisible(true);
         } else {//library already loaded
 
             try {
@@ -53,14 +66,15 @@ public class MuVisApp extends JFrame implements Runnable {
                 System.out.println("Continuing without the loaded configuration");
             }
 
-            MuVisAppView frameTest = new MuVisAppView();
-            frameTest.setSize(1280, 770);
-            frameTest.setResizable(true);
-            frameTest.validate();
-            frameTest.setVisible(true);
-            frameTest.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-            environment.setRootFrame(frameTest);
+
+            muVisAppView.setSize(1280, 770);
+            muVisAppView.setResizable(true);
+            muVisAppView.validate();
+            muVisAppView.setVisible(true);
+            muVisAppView.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            rootFrame=muVisAppView;
         }
+
     }
 
     public MuVisApp() {}
@@ -68,5 +82,13 @@ public class MuVisApp extends JFrame implements Runnable {
     @Override
     public void run() {
         processLibrary();
+    }
+
+    public static JFrame getRootFrame() {
+        return rootFrame;
+    }
+
+    public static void setRootFrame(MuVisAppView rootFrame) {
+        MuVisApp.rootFrame = rootFrame;
     }
 }

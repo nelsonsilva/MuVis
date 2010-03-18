@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+    <!--bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="dataSource"/>
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+          <property name="showSql" value="false"/>
+          <property name="generateDdl" value="true"/>
+          <property name="databasePlatform" value="org.hibernate.dialect.DerbyDialect"/>
+        </bean>
+      </property>
+    </bean>
+
+     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+    <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="url" value="jdbc:derby:derbydb;create=true"/>
+    </bean>
+
+  <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="entityManagerFactory"/>
+      <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+     <aop:config>
+      <aop:pointcut id="serviceMethods" expression="execution(* pt.inevo.*.service.*.*(..))"/>
+      <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
+    </aop:config>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+      <tx:attributes>
+        <tx:method name="*" propagation="REQUIRED"/>
+      </tx:attributes>
+    </tx:advice-->
+
+    <context:annotation-config />
+    <bean id="configuration" class="org.apache.commons.configuration.PropertiesConfiguration">
+        <constructor-arg index="0" value="main.properties"/>
+    </bean>
+
+    <bean id="environment" class="muvis.Environment" init-method="init"/>
+
+
+
+
+    <bean id="treemapFilterManager" class="muvis.view.main.filters.TreemapFilterManager">
+        <constructor-arg>
+            <bean class="muvis.view.main.MuVisTreemapNode" init-method="init" scope="prototype"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="audioPlayer" class="muvis.audio.MuVisAudioPlayer"/>
+    <bean id="snippetManager" class="muvis.audio.AudioSnippetPlayerManager"/>
+    <!-- MuVisAudioPlayer snippetPlayer -->
+    <bean id="userPlaylist" class="muvis.audio.playlist.BasePlaylist"/>
+    <!--bean id="configFile" class="Properties"/-->
+
+    
+    <bean id="viewManager" class="muvis.view.ViewManager">
+        <property name="views">
+            <map>
+                <entry key="${Elements.MUSIC_PLAYER_VIEW}" value-ref="musicPlayerView"/>
+                <entry key="${Elements.FILE_SYSTEM_VIEW}" value-ref="filesystemView"/>
+                <entry key="${Elements.PLAYLIST_VIEW}" value-ref="playlistView"/>
+                <entry key="${Elements.LIST_VIEW}" value-ref="tracksViewTable"/>
+                <entry key="${Elements.TREEMAP_VIEW}" value-ref="treemapView"/>
+                <entry key="${Elements.MAIN_VIEW}" value-ref="mainView"/>
+                <entry key="${Elements.MUVIS_APP_VIEW}" value-ref="muvisAppView"/>
+            </map>
+    </property>
+    </bean>
+
+    <bean id="nbtreesManager" class="muvis.NBTreeManager"/>
+    <bean id="databaseManager" class="muvis.database.MusicLibraryDatabaseManager" init-method="connectAndInit" />
+
+    <bean id="desk" class="com.vlsolutions.swing.docking.DockingDesktop"/>
+    <bean id="tableFilterManager" class="muvis.filters.TableFilterManager"/>
+    <bean id="similarityManager" class="muvis.similarity.SimilarityManager" />
+    <bean id="audioMetadataExtractor" class="muvis.audio.MP3AudioMetadataExtractor" />
+    <bean id="mp3AudioSnippetExtractor" class="muvis.audio.MP3AudioSnippetExtractor" />
+
+    <bean id="playlistController" class="muvis.view.controllers.PlaylistController"/>
+
+    <!-- PROCESSORS -->
+    <bean id="contentProcessor" class="muvis.analyser.processor.ContentProcessor" scope="prototype" init-method="init"/>
+    <bean id="contentUnprocessor" class="muvis.analyser.processor.ContentUnprocessor" scope="prototype" init-method="init"/>
+    
+    <!-- LOADER -->
+    <bean id="reloadLibraryView" class="muvis.view.loader.ReloadLibraryView" init-method="init">
+        <property name="controller">
+            <bean class="muvis.view.controllers.ReloadLibraryController"/>
+        </property>
+         <property name="model">
+            <bean class="javax.swing.DefaultListModel"/>
+        </property>
+    </bean>
+    
+    <!-- VIEWS -->
+
+
+
+    <bean id="treemapArtistInspectorView" class="muvis.view.TreemapArtistInspectorView" init-method="init">
+        <property name="controller">
+            <bean class="muvis.view.controllers.ListViewTableViewController"/>
+        </property>
+         <property name="model">
+            <bean class="muvis.view.ArtistInspectorTracksTableModel"/>
+        </property>
+    </bean>
+
+    <bean id="muvisAppView" class="muvis.view.MuVisAppView" init-method="init"/>
+
+    <bean id="loadLibraryView" class="muvis.view.loader.LoadLibraryView">
+        <property name="controller">
+            <bean class="muvis.view.controllers.LoadLibraryController"/>
+        </property>
+        <property name="parent" ref="app"/>
+    </bean>
+
+    <bean id="musicPlayerView" class="muvis.view.MusicControllerView" init-method="init">
+        <property name="playlistModeController">
+            <bean class="muvis.view.controllers.MusicPlayerPlaylistController"/>
+        </property>
+        <property name="filteredTracksModeController">
+            <bean class="muvis.view.controllers.MusicPlayerFilterController"/>
+        </property>
+        <property name="allTracksModeController">
+            <bean class="muvis.view.controllers.MusicPlayerGeneralController"/>
+        </property>
+        <property name="individualTrackModeController">
+            <bean class="muvis.view.controllers.MusicPlayerIndividualTrackController"/>
+        </property>
+    </bean>
+    <bean id="filesystemView" class="muvis.view.DirectoryListTreeView"/>
+
+    <bean id="tracksTableModel" class="muvis.view.table.TracksTableModel" init-method="init"/>
+    <bean id="tracksViewTable" class="muvis.view.table.ListViewTableView"  init-method="init">
+        <property name="controller">
+            <bean class="muvis.view.controllers.ListViewTableViewController"/>
+        </property>
+        <property name="model" ref="tracksTableModel"/>
+    </bean>
+
+    <bean id="managePlaylistView" class="muvis.view.ManagePlaylistView" init-method="init">
+        <property name="model">
+            <bean class="muvis.view.ManagePlaylistTableModel"/>
+        </property>
+    </bean>
+
+    <bean id="playlistView" class="muvis.view.PlaylistView" init-method="init">
+        <property name="controller">
+            <bean class="muvis.view.controllers.PlaylistController"/>
+        </property>
+        <property name="model">
+            <bean class="javax.swing.DefaultListModel"/>
+        </property>
+        <property name="managePlaylistView" ref="managePlaylistView"/>
+    </bean>
+
+
+    <bean id="tmViewFactory" class="muvis.view.filters.TMViewFactory" />
+
+    <!-- TreeMap Filters -->
+    <bean id="noFilter"  class="muvis.view.main.filters.NoFilter"/>
+
+    <bean id="treemapView" class="muvis.view.TreemapView" scope="prototype" init-method="init">
+        <property name="filters">
+            <list>
+                <bean id="treemapDurationFilter"  class="muvis.view.main.filters.TreemapDurationFilter">
+                    <property name="parentFilter" ref="noFilter"/>
+                </bean>
+                <bean id="treemapYearFilter"  class="muvis.view.main.filters.TreemapYearFilter">
+                    <property name="parentFilter" ref="noFilter"/>
+                </bean>
+                <bean id="treemapGenreFilter"  class="muvis.view.main.filters.TreemapGenreFilter">
+                    <property name="parentFilter" ref="noFilter"/>
+                </bean>
+                <bean id="treemapBeatFilter"  class="muvis.view.main.filters.TreemapBeatFilter">
+                    <property name="parentFilter" ref="noFilter"/>
+                </bean>
+                <bean id="treemapMoodFilter"  class="muvis.view.main.filters.TreemapMoodFilter">
+                    <property name="parentFilter" ref="noFilter"/>
+                </bean>
+                <bean id="treemapTextFilter"  class="muvis.view.main.filters.TreemapTextFilter">
+                    <property name="parentFilter" ref="noFilter"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="durationFilterView" factory-bean="tmViewFactory" factory-method="createView">
+        <constructor-arg><bean class="muvis.view.filters.MuVisDurationFilterNode" init-method="init"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisDurationFilterSize"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisDurationFilterDraw"/></constructor-arg>
+        <constructor-arg>
+            <bean class="muvis.view.filters.TMAlgorithmAscOrderFilter">
+                <property name="name" value="durationOrdered"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+    <bean id="yearFilterView" factory-bean="tmViewFactory" factory-method="createView">
+        <constructor-arg><bean class="muvis.view.filters.MuVisYearFilterNode" init-method="init"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisYearFilterSize"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisYearFilterDraw"/></constructor-arg>
+        <constructor-arg>
+            <bean class="muvis.view.filters.TMAlgorithmAscOrderFilter">
+                <property name="name" value="yearOrdered"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+    <bean id="genreFilterView" factory-bean="tmViewFactory" factory-method="createView">
+        <constructor-arg><bean class="muvis.view.filters.MuVisGenreFilterNode" init-method="init"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisGenreFilterSize"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisGenreFilterDraw"/></constructor-arg>
+        <constructor-arg>
+            <bean class="muvis.view.filters.TMAlgorithmAscOrderFilter">
+                <property name="name" value="genreOrdered"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+    <bean id="moodFilterView" factory-bean="tmViewFactory" factory-method="createView">
+        <constructor-arg><bean class="muvis.view.filters.MuVisMoodFilterNode" init-method="init"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisMoodFilterSize"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisMoodFilterDraw"/></constructor-arg>
+        <constructor-arg>
+            <bean class="muvis.view.filters.TMAlgorithmAscOrderFilter">
+                <property name="name" value="moodOrdered"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+    <bean id="beatFilterView" factory-bean="tmViewFactory" factory-method="createView">
+        <constructor-arg><bean class="muvis.view.filters.MuVisBeatFilterNode"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisBeatFilterSize"/></constructor-arg>
+        <constructor-arg><bean class="muvis.view.filters.MuVisBeatFilterDraw"/></constructor-arg>
+        <constructor-arg>
+            <bean class="muvis.view.filters.TMAlgorithmAscOrderFilter">
+                <property name="name" value="beatOrdered"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="mainView" class="muvis.view.MainViewHolder" init-method="init"/>
+
+    <bean id="app" class="muvis.MuVisApp" />
+</beans>

@@ -25,6 +25,8 @@
  */
 package muvis.view;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  *
  * @author Ricardo Dias
@@ -33,12 +35,17 @@ public class ManagePlaylistViewUI extends javax.swing.JDialog {
 
     protected ManagePlaylistTableModel model;
 
-    /** Creates new form ManagePlaylistUI */
-    public ManagePlaylistViewUI(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();        
 
-        model = new ManagePlaylistTableModel();
+    public void setModel(ManagePlaylistTableModel model){
+        this.model=model;
+    }
+    /** Creates new form ManagePlaylistUI */
+    public ManagePlaylistViewUI( boolean modal) {
+        super((java.awt.Frame)null,modal);
+    }
+
+    public void init() {
+        initComponents();
 
         playlistListViewTable.setModel(model);
         playlistListViewTable.getRowSorter().addRowSorterListener(model);

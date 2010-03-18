@@ -21,10 +21,11 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
+import muvis.database.MusicLibraryDatabaseManager;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -36,6 +37,8 @@ import net.bouthier.treemapSwing.TMNode;
  */
 public class MuVisGenreFilterSize
 	implements TMComputeSize {
+
+    @Autowired private MusicLibraryDatabaseManager dbManager;
 
     /**
      * Test if this TMComputeSize could be used
@@ -76,7 +79,7 @@ public class MuVisGenreFilterSize
 
             String genre = fNode.getGenre();
 
-            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithGenre(genre);
+            return dbManager.getTracksWithGenre(genre);
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }

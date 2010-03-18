@@ -29,11 +29,14 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
 import muvis.Environment;
+import muvis.MuVisApp;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.util.Util;
 import muvis.view.MuVisAppView;
 import muvis.view.controllers.LoadLibraryController;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Interface Controller for loading the library
@@ -41,22 +44,19 @@ import muvis.view.controllers.LoadLibraryController;
  */
 public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener {
 
+    @Autowired private Environment environment;
     private JFileChooser browseSystemFile;
     private DefaultListModel libraryListModel;
     public boolean mustloadLibrary;
     protected JFrame parent;
+
+
+
     private LoadLibraryController controller;
 
-    public LoadLibraryView(LoadLibraryController controller) {
+    public LoadLibraryView() {
 
-        parent = Environment.getEnvironmentInstance().getRootFrame();
-        parent.setTitle("Please select your library folders");
-        parent.add(this);
-        parent.setSize(this.getPreferredSize());
-        parent.validate();
-        parent.setVisible(true);
-        parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //EXIT_ON_CLOSE
-        this.controller = controller;
+
         libraryListModel = new DefaultListModel();
         libraryFoldersList.setModel(libraryListModel);
 
@@ -67,6 +67,23 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
         browseSystemFile = new JFileChooser();
         mustloadLibrary = false;
+    }
+
+    public void setParent(JFrame parent){
+        this.parent=parent;
+        parent.setTitle("Please select your library folders");
+        parent.add(this);
+        parent.setSize(this.getPreferredSize());
+        parent.validate();
+        parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //EXIT_ON_CLOSE 
+    }
+
+    public LoadLibraryController getController() {
+        return controller;
+    }
+
+    public void setController(LoadLibraryController controller) {
+        this.controller = controller;
     }
 
     @Override
@@ -149,7 +166,7 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
                     controller.saveLibraryFolders(folders);
                     controller.loadProcessLibrary(folders);
                 } catch (CantSavePropertiesFileException ex) {
-                    Util.displayErrorMessage(Environment.getEnvironmentInstance().getRootFrame(),
+                    Util.displayErrorMessage(parent,
                             "Error",
                             "Can't save the properties file!");
                     return;
@@ -160,18 +177,18 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
 
                 parent = buildMainView();
             } else {
-                Util.displayInformationMessage(Environment.getEnvironmentInstance().getRootFrame(),
+                Util.displayInformationMessage(parent,
                         "Information",
                         "Please select a folder first");
             }
         } else if (event.getSource() == skipLoadingLibraryButton) {
 
-            Util.displayInformationMessage(Environment.getEnvironmentInstance().getRootFrame(),
-                        "Information",
-                        "Please load your library later!");
+            Util.displayInformationMessage(parent,
+                    "Information",
+                    "Please load your library later!");
             try {
                 //library already loaded
-                Environment.getEnvironmentInstance().loadWorkspace();
+                environment.loadWorkspace();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
                 System.out.println("Continuing without the loaded configuration");
@@ -188,7 +205,7 @@ public class LoadLibraryView extends LoadLibraryViewUI implements ActionListener
         frameTest.validate();
         frameTest.setVisible(true);
         frameTest.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //EXIT_ON_CLOSE
-        Environment.getEnvironmentInstance().setRootFrame(frameTest);
+        //MuVisApp.setRootFrame(frameTest);
 
         return frameTest;
     }

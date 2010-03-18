@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import muvis.NBTreeManager;
-import muvis.Environment;
 import muvis.analyser.loader.Loader;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.MP3AudioFile;
@@ -37,24 +36,27 @@ import muvis.util.Observer;
 import nbtree.NBPoint;
 import nbtree.NBTree;
 import nbtree.exceptions.NBTreeException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ContentUnprocessor implements Observer, Observable {
 
     private ArrayList<Observer> observers;
     private ExecutorService threadPool;
-    private MusicLibraryDatabaseManager dbManager;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private NBTreeManager nbtreeManager;
     private NBTree tracksNBTree,  albumsTree,  artistsTree;
     protected File[] filesToProcess;
 
     public ContentUnprocessor() {
         observers = new ArrayList<Observer>();
         threadPool = Executors.newFixedThreadPool(1);
-        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        albumsTree = nbtreeManager.getNBTree("albumsNBTree");
-        artistsTree = nbtreeManager.getNBTree("artistsNBTree");
     }
 
+    public void init() {
+       albumsTree = nbtreeManager.getNBTree("albumsNBTree");
+        artistsTree = nbtreeManager.getNBTree("artistsNBTree"); 
+    }
+    
     class TrackLibraryRemoverThread extends Thread {
 
         @Override

@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.table.AbstractTableModel;
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.database.TableRecord;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class that holds the Model for the list visualization of the library.
@@ -37,20 +37,22 @@ import muvis.util.Observer;
  */
 public class ArtistInspectorTracksTableModel extends AbstractTableModel implements Observer {
 
+    @Autowired private MusicLibraryDatabaseManager dbManager;
     private String[] columnNames = new String[]{"Nr.", "Track name", "Artist",
         "Album", "Duration", "Genre"/*, "Year", "Beat", "Mood"*/};
-    private MusicLibraryDatabaseManager dbManager;
     private Hashtable<Integer, TableRecord> records;
 
-    public ArtistInspectorTracksTableModel(ArrayList<Integer> trackIds) {
-        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-        records = new Hashtable<Integer, TableRecord>(trackIds.size());
+    public ArtistInspectorTracksTableModel() {
+        setRecords(new ArrayList<Integer>());
+    }
+
+    public void setRecords(ArrayList<Integer> trackIds){
+      records = new Hashtable<Integer, TableRecord>(trackIds.size());
         //loading all the tracks to this table
         for (Integer id : trackIds) {
             TableRecord rec = dbManager.getTrackRow(id);
             records.put(id, rec);
-        }
-
+        }  
     }
 
     @Override

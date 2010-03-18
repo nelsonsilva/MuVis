@@ -21,6 +21,8 @@
 
 package muvis.view;
 
+import muvis.Environment;
+import muvis.audio.playlist.BasePlaylist;
 import muvis.view.table.ListViewTableView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +53,6 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.Messages;
 import muvis.audio.AudioMetadata;
 import muvis.audio.playlist.PlaylistItem;
@@ -64,28 +65,39 @@ import muvis.view.controllers.ReloadLibraryController;
 import muvis.view.loader.ReloadLibraryView;
 import muvis.view.main.filters.TreemapFilterManager;
 import muvis.view.tray.MuVisTrayView;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.SAXException;
 
 public class MuVisAppView extends JFrame {
 
     private static final long serialVersionUID = -8910566176114738718L;
-    //Views
-    private MusicControllerView musicPlayerView;
-    private DirectoryListTreeView filesystemView;
-    private PlaylistView playlistView;
-    private ListViewTableView tracksViewTable;
-    private TreemapView treemapView;
-    private MainViewHolder mainView;
+    @Autowired TreemapFilterManager filterManager;
+    @Autowired MusicLibraryDatabaseManager dbManager;
 
+    @Autowired private Environment environment;
+    @Autowired private ViewManager viewManager;
+    @Autowired private DockingDesktop desk;
+    @Autowired private BasePlaylist playlist;
+    //Views
+    @Autowired private MusicControllerView musicPlayerView;
+    @Autowired private DirectoryListTreeView filesystemView;
+    @Autowired private PlaylistView playlistView;
+    @Autowired private ListViewTableView tracksViewTable;
+    @Autowired private TreemapView treemapView;
+    @Autowired private MainViewHolder mainView;
+
+    @Autowired private TreemapArtistInspectorView artistInspectorView;
+
+    @Autowired private ReloadLibraryView reloadLibrary;
     //Controllers
-    private PlaylistControllerInterface playlistController;
+    @Autowired private PlaylistControllerInterface playlistController;
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenuItem menuItem;
     private JFrame frame;
     private ExecutorService threadPool;
 
-    public MuVisAppView() {
+    public void init() {
 
         this.frame = this;
         this.setTitle(Messages.MUVIS_QUOTE);
@@ -93,34 +105,16 @@ public class MuVisAppView extends JFrame {
         threadPool = Executors.newFixedThreadPool(1);
         new MuVisTrayView();
 
-        //init controllers
-        playlistController = new PlaylistController();
 
         //init views
-        musicPlayerView = new MusicControllerView(this);
-        filesystemView = new DirectoryListTreeView();
-        playlistView = new PlaylistView(this, playlistController);
-        tracksViewTable = new ListViewTableView(this);
-        treemapView = new TreemapView(this);
-        mainView = new MainViewHolder(this);
+        treemapView.setParent(this);
         mainView.addView(Elements.LIST_VIEW, tracksViewTable);
         mainView.addView(Elements.TREEMAP_VIEW, treemapView);
         mainView.setView(Elements.LIST_VIEW);
         mainView.initializeFilters();
 
-        ViewManager viewManager = Environment.getEnvironmentInstance().getViewManager();
-        viewManager.addView(Elements.MUSIC_PLAYER_VIEW, musicPlayerView);
-        viewManager.addView(Elements.FILE_SYSTEM_VIEW, filesystemView);
-        viewManager.addView(Elements.PLAYLIST_VIEW, playlistView);
-        viewManager.addView(Elements.LIST_VIEW, tracksViewTable);
-        viewManager.addView(Elements.TREEMAP_VIEW, treemapView);
-        viewManager.addView(Elements.MAIN_VIEW, mainView);
-        viewManager.addView(Elements.MUVIS_APP_VIEW, this);
-        TreemapArtistInspectorView artistInspectorView = new TreemapArtistInspectorView(frame);
-        viewManager.addView(Elements.ARTIST_INSPECTOR_VIEW, artistInspectorView);
+        artistInspectorView.init(this);
         mainView.addView(Elements.ARTIST_INSPECTOR_VIEW, artistInspectorView);
-
-        final DockingDesktop desk = Environment.getEnvironmentInstance().getDesk();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().add(desk); // desk becomes the only one component
@@ -169,7 +163,7 @@ public class MuVisAppView extends JFrame {
                         System.out.println("Couldn't save the desk disposition!");
                     }
                     //saving the state of the application
-                    Environment.getEnvironmentInstance().saveWorkspace();
+                    environment.saveWorkspace();
                     //Exiting the application
                     System.exit(0);
                 } catch (FileNotFoundException ex) {
@@ -270,8 +264,6 @@ public class MuVisAppView extends JFrame {
 
                             @Override
                             public void run() {
-                                TreemapFilterManager filterManager = Environment.getEnvironmentInstance().getTreemapFilterManager();
-                                MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
                                 List availableTracks = filterManager.getFilteredTracks();
                                 List tracks = new ArrayList();
@@ -291,7 +283,7 @@ public class MuVisAppView extends JFrame {
                                     String track = dbManager.getFilename(trackId);
                                     AudioMetadata metadata = dbManager.getTrackMetadata(trackId);
                                     PlaylistItem pliItem = new PlaylistItem(track, "", metadata);
-                                    Environment.getEnvironmentInstance().getAudioPlaylist().appendItem(pliItem);
+                                    playlist.appendItem(pliItem);
                                 }
                             }
                         });
@@ -321,7 +313,7 @@ public class MuVisAppView extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ReloadLibraryView reloadLibrary = new ReloadLibraryView(frame, new ReloadLibraryController());
+                reloadLibrary.setParent(frame);
                 reloadLibrary.setVisible(true);
             }
         });
@@ -386,7 +378,7 @@ public class MuVisAppView extends JFrame {
      * @throws java.io.IOException
      */
     public void saveDocking() throws IOException {
-        saveDocking(Environment.getEnvironmentInstance().getDataFolderPath() + "desk.xml");
+        saveDocking(environment.getDataFolderPath() + "desk.xml");
     }
 
     /**
@@ -397,7 +389,6 @@ public class MuVisAppView extends JFrame {
     public void saveDocking(String filename) throws IOException {
         try {
             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
-            DockingDesktop desk = Environment.getEnvironmentInstance().getDesk();
             desk.writeXML(out);
             out.close(); // stream isn't closed in case you'd like to save something else after
             System.out.println("File saved!");
@@ -414,7 +405,7 @@ public class MuVisAppView extends JFrame {
      * @throws java.io.IOException
      */
     public void loadDocking() throws FileNotFoundException, IOException {
-        loadDocking(Environment.getEnvironmentInstance().getDataFolderPath() + "desk.xml");
+        loadDocking(environment.getDataFolderPath() + "desk.xml");
     }
 
     /**
@@ -426,7 +417,6 @@ public class MuVisAppView extends JFrame {
     public void loadDocking(String filename) throws FileNotFoundException, IOException {
         try {
             // first : declare the dockables to the desktop (they will be in the "closed" dockable state).
-            DockingDesktop desk = Environment.getEnvironmentInstance().getDesk();
             desk.registerDockable(mainView);
             desk.registerDockable(musicPlayerView);
             desk.registerDockable(filesystemView);
@@ -446,5 +436,5 @@ public class MuVisAppView extends JFrame {
         }
     }
 
-    
+
 }

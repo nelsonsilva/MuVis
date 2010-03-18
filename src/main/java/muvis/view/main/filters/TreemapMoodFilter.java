@@ -31,9 +31,6 @@ import muvis.view.filters.MuVisMoodFilterNode;
  */
 public class TreemapMoodFilter extends FilterDecorator {
 
-    public TreemapMoodFilter(TreemapFilter filter) {
-        super(filter);
-    }
 
     @Override
     protected String getQuery(String artistName) {

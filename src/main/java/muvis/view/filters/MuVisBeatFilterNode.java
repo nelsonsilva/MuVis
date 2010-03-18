@@ -21,11 +21,11 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -57,7 +57,7 @@ public class MuVisBeatFilterNode extends MuVisFilterNode implements Observer {
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
+        dbManager.registerObserver(this);
     }
 
     @Override

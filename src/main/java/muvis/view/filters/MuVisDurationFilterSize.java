@@ -21,10 +21,11 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
+import muvis.database.MusicLibraryDatabaseManager;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -36,6 +37,9 @@ import net.bouthier.treemapSwing.TMNode;
  */
 public class MuVisDurationFilterSize
 	implements TMComputeSize {
+
+    @Autowired
+    MusicLibraryDatabaseManager dbManager;
 
     /**
      * Test if this TMComputeSize could be used
@@ -77,7 +81,7 @@ public class MuVisDurationFilterSize
             int max = fNode.getMaxValue();
             int min = fNode.getMinValue();
 
-            return Environment.getEnvironmentInstance().getDatabaseManager().getTracksBetweenTimeRange(min, max);
+            return dbManager.getTracksBetweenTimeRange(min, max);
 
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);

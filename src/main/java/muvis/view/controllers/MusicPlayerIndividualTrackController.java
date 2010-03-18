@@ -7,11 +7,12 @@ package muvis.view.controllers;
 
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -19,16 +20,21 @@ import muvis.util.Observer;
  */
 public class MusicPlayerIndividualTrackController implements MusicPlayerControllerInterface, Observer {
 
+    private MuVisAudioPlayer player;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
     private int trackId;
     private boolean isPlaying;
     private boolean enabled;
-    private MuVisAudioPlayer player;
 
     public MusicPlayerIndividualTrackController(){
         isPlaying = false;
         enabled = false;
-        player = Environment.getEnvironmentInstance().getAudioPlayer();
-        Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
+    }
+
+    @Autowired 
+    public void setPlayer(MuVisAudioPlayer player) {
+        this.player = player;
+         player.registerObserver(this);
     }
 
     public void setTrackId(int trackId){
@@ -37,7 +43,7 @@ public class MusicPlayerIndividualTrackController implements MusicPlayerControll
 
     @Override
     public AudioMetadata getTrackPlayingMetadata() {
-        return Environment.getEnvironmentInstance().getDatabaseManager().getTrackMetadata(trackId);
+        return dbManager.getTrackMetadata(trackId);
     }
 
     @Override
@@ -57,7 +63,7 @@ public class MusicPlayerIndividualTrackController implements MusicPlayerControll
             if (player.isPlaying()){
                 player.stop();
             }
-            player.play(Environment.getEnvironmentInstance().getDatabaseManager().getFilename(trackId));
+            player.play(dbManager.getFilename(trackId));
             isPlaying = true;
         } catch (BasicPlayerException ex) {
             ex.printStackTrace();
@@ -76,7 +82,7 @@ public class MusicPlayerIndividualTrackController implements MusicPlayerControll
 
     @Override
     public void setPlayerVolume(int value) throws BasicPlayerException {
-        Environment.getEnvironmentInstance().getAudioPlayer().setVolume(value);
+        player.setVolume(value);
     }
 
     @Override

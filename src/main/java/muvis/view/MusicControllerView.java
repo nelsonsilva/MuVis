@@ -24,15 +24,16 @@ import com.vlsolutions.swing.docking.DockKey;
 import com.vlsolutions.swing.docking.Dockable;
 import com.vlsolutions.swing.docking.DockingConstants;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
-import muvis.Environment;
 import muvis.audio.AudioMetadata;
 import muvis.audio.MuVisAudioPlayer;
+import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.Playlist;
 import muvis.util.JImagePanel;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.util.Util;
 import muvis.view.controllers.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -56,6 +57,24 @@ import java.util.logging.Logger;
  */
 public class MusicControllerView extends MusicControllerViewUI
         implements Dockable, ActionListener, ChangeListener, Observer {
+
+    private MuVisAudioPlayer player;
+    private BasePlaylist playlist;
+
+    @Autowired
+    public void setPlayer(MuVisAudioPlayer player) {
+        this.player = player;
+        player.registerObserver(this);
+        //setting the volume
+        volumeSlider.setValue((int) player.getVolume());
+    }
+
+    @Autowired
+    public void setPlaylist(BasePlaylist playlist) {
+        this.playlist = playlist;
+        playlist.registerObserver(this);
+    }
+
 
     /**
      * @return the playingType
@@ -122,13 +141,25 @@ public class MusicControllerView extends MusicControllerViewUI
     private int timelineSliderValue = 0;
     private PlayingType playingType;
 
-    public MusicControllerView(JFrame parent) {
+    public void setPlaylistModeController(MusicPlayerControllerInterface playlistModeController) {
+        this.playlistModeController = playlistModeController;
+    }
 
-        //initializing fields
-        this.playlistModeController = new MusicPlayerPlaylistController();
-        this.filteredTracksModeController = new MusicPlayerFilterController();
-        this.allTracksModeController = new MusicPlayerGeneralController();
-        this.individualTrackModeController = new MusicPlayerIndividualTrackController();
+    public void setFilteredTracksModeController(MusicPlayerControllerInterface filteredTracksModeController) {
+        this.filteredTracksModeController = filteredTracksModeController;
+    }
+
+    public void setAllTracksModeController(MusicPlayerControllerInterface allTracksModeController) {
+        this.allTracksModeController = allTracksModeController;
+    }
+
+    public void setIndividualTrackModeController(MusicPlayerControllerInterface individualTrackModeController) {
+        this.individualTrackModeController = individualTrackModeController;
+    }
+
+    public void init() {
+
+
         this.activeController = playlistModeController;
         activeController.setEnable(true);
 
@@ -204,8 +235,6 @@ public class MusicControllerView extends MusicControllerViewUI
         });
 
         //register objects and listeners
-        Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
-        Environment.getEnvironmentInstance().getAudioPlaylist().registerObserver(this);
         playTrackButton.addActionListener(this);
         previousTrackButton.addActionListener(this);
         nextTrackButton.addActionListener(this);
@@ -228,7 +257,7 @@ public class MusicControllerView extends MusicControllerViewUI
             public void mouseReleased(MouseEvent e) {
                 try {
                     timelineSliderValue = musicTimelineSlider.getValue();
-                    Environment.getEnvironmentInstance().getAudioPlayer().seek(timelineSliderValue);
+                    player.seek(timelineSliderValue);
                     musicTimelineTimer.restart();
                 } catch (BasicPlayerException ex) {
                     ex.printStackTrace();
@@ -244,8 +273,6 @@ public class MusicControllerView extends MusicControllerViewUI
             }
         });
 
-        //setting the volume
-        volumeSlider.setValue((int) Environment.getEnvironmentInstance().getAudioPlayer().getVolume());
 
         //Setting the properties for the timelineslider timer
         int delay = 1000; //milliseconds
@@ -368,7 +395,7 @@ public class MusicControllerView extends MusicControllerViewUI
      */
     @Override
     public void update(Observable obs, Object arg) {
-        MuVisAudioPlayer player = Environment.getEnvironmentInstance().getAudioPlayer();
+
         if (obs instanceof MuVisAudioPlayer) {
             if (MuVisAudioPlayer.Event.RESUMED.equals(arg) && player.isPlaying()) {
                 //start the timer

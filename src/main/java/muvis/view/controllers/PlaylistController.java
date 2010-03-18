@@ -22,10 +22,12 @@
 package muvis.view.controllers;
 
 import java.util.ArrayList;
-import muvis.Environment;
+
+import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.Playlist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class implements the Controller Interface.
@@ -35,7 +37,7 @@ import muvis.util.Util;
  * @author Ricardo
  */
 public class PlaylistController implements PlaylistControllerInterface {
-
+    @Autowired private BasePlaylist playlist;
     /**
      * Loading a playlist in the model
      * @param playlistname the playlist name
@@ -43,9 +45,8 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public void loadPlaylist(String playlistname, String currentDirectory){
-        Environment workspace = Environment.getEnvironmentInstance();
-        workspace.getAudioPlaylist().removeAllItems();
-        workspace.getAudioPlaylist().load(playlistname, currentDirectory + Util.getOSEscapeSequence());
+        playlist.removeAllItems();
+        playlist.load(playlistname, currentDirectory + Util.getOSEscapeSequence());
     }
 
     /**
@@ -55,8 +56,7 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public boolean savePlaylist(String playlistName, String currentDirectory){
-        Environment workspace = Environment.getEnvironmentInstance();
-        return workspace.getAudioPlaylist().save(playlistName, currentDirectory + Util.getOSEscapeSequence());
+        return playlist.save(playlistName, currentDirectory + Util.getOSEscapeSequence());
     }
 
     /**
@@ -65,13 +65,11 @@ public class PlaylistController implements PlaylistControllerInterface {
      */
     @Override
     public void removeTrackFromPlaylist(PlaylistItem item){
-        Environment workspace = Environment.getEnvironmentInstance();
-        workspace.getAudioPlaylist().removeItem(item);
+        playlist.removeItem(item);
     }
 
     @Override
     public void removeTracksFromPlaylist(ArrayList<PlaylistItem> items) {
-        Playlist playlist = Environment.getEnvironmentInstance().getAudioPlaylist();
         playlist.removeItems(items);
     }
 }

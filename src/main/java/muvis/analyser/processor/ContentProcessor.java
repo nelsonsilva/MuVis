@@ -39,7 +39,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import muvis.Elements;
 import muvis.NBTreeManager;
-import muvis.Environment;
 import muvis.Messages;
 import muvis.analyser.loader.Loader;
 import muvis.audio.AudioMetadata;
@@ -56,34 +55,39 @@ import muvis.view.loader.LoadingLibraryViewUI;
 import nbtree.NBPoint;
 import nbtree.NBTree;
 import nbtree.exceptions.NBTreeException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ContentProcessor implements Observer, Observable {
-
+    @Autowired
+    PropertiesConfiguration configuration;
     private ArrayList<Observer> observers;
     private ExecutorService threadPool;
     private int nextFileToProcess = -1;
-    private MusicLibraryDatabaseManager dbManager;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private NBTreeManager nbtreeManager;
     private NBTree tracksNBTree, albumsTree, artistsTree;
     private File[] filesToProcess;
     private LoadingLibraryViewUI loadingLibraryUI;
     private boolean libraryLoadingFinished;
     private State processorState;
 
+    
     enum State{
         RUN, PAUSE, STOP
     }
 
     public ContentProcessor() {
         observers = new ArrayList<Observer>();
-        threadPool = Executors.newFixedThreadPool(5);
-        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        tracksNBTree = nbtreeManager.getNBTree(Elements.TRACKS_NBTREE);
-        albumsTree = nbtreeManager.getNBTree(Elements.ALBUMS_NBTREE);
-        artistsTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
+        threadPool = Executors.newFixedThreadPool(5);       
         libraryLoadingFinished = false;
     }
 
+    public void init(){
+       tracksNBTree = nbtreeManager.getNBTree(Elements.TRACKS_NBTREE);
+        albumsTree = nbtreeManager.getNBTree(Elements.ALBUMS_NBTREE);
+        artistsTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
+    }
     /**
      * Thread that extracts the main track tags
      */
@@ -175,6 +179,8 @@ public class ContentProcessor implements Observer, Observable {
      */
     class ContentProcessorTrackThread extends Thread {
 
+        @Autowired private MP3AudioSnippetExtractor mp3AudioSnippetExtractor;
+
         final private Object lock;
         private int id, numTries = 0, numFilesProcessed = 0;
         private int fileToProc = -1;
@@ -234,7 +240,7 @@ public class ContentProcessor implements Observer, Observable {
 
                     if (numTries == 0) {
                         try {
-                            snippet = MP3AudioSnippetExtractor.extractAudioSnippet(file.getAbsolutePath());
+                            snippet = mp3AudioSnippetExtractor.extractAudioSnippet(file.getAbsolutePath());
                             ByteArrayInputStream inputStream = new ByteArrayInputStream(snippet);
 
                             thread = new FluctuationPatternExtractionThread(inputStream);
@@ -478,7 +484,7 @@ public class ContentProcessor implements Observer, Observable {
                 public void run() {
 
                     processorState = ContentProcessor.State.RUN;
-                    int threadNum = Integer.parseInt(Environment.getEnvironmentInstance().getProperty("loader.threads_tags_extraction").toString());
+                    int threadNum = configuration.getInt("loader.threads_tags_extraction");
 
                     threads = new ArrayList<Thread>(threadNum);
 
@@ -510,7 +516,7 @@ public class ContentProcessor implements Observer, Observable {
 
                     //dispose this threads
                     threads.clear();
-                    threadNum = Integer.parseInt(Environment.getEnvironmentInstance().getProperty("loader.threads_content_extraction").toString());
+                    threadNum = configuration.getInt("loader.threads_content_extraction");
                     threadPool = Executors.newFixedThreadPool(threadNum);
 
                     loadingLibraryUI.processingStageLabel.setText(Messages.LOAD_LIBRARY_CONTENT_TRACKS_EXTRACTION);

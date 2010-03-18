@@ -35,9 +35,17 @@ import java.util.ArrayList;
  * @author Ricardo
  */
 public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
+    protected ArtistInspectorTracksTableModel model;
 
+     public void setModel(ArtistInspectorTracksTableModel model) {
+        this.model = model;
+    }
     /** Creates new form TreemapArtistInspectorViewUI */
     public TreemapArtistInspectorViewUI() {
+
+    }
+
+    public void init() {
         initComponents();
 
         seeAllArtistsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/others/back-arrow.png")));
@@ -51,9 +59,9 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         albumButton1.setIcon(icon);
         albumButton2.setIcon(icon);
         albumButton3.setIcon(icon);
-        albumButton4.setIcon(icon);
+        albumButton4.setIcon(icon); 
     }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -370,7 +378,7 @@ public class TreemapArtistInspectorViewUI extends javax.swing.JPanel {
         );
 
         tracksTableArtistInspector.setAutoCreateRowSorter(true);
-        tracksTableArtistInspector.setModel(new ArtistInspectorTracksTableModel( new ArrayList<Integer>()));
+        //tracksTableArtistInspector.setModel(new ArtistInspectorTracksTableModel( new ArrayList<Integer>()));
         jScrollPane1.setViewportView(tracksTableArtistInspector);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

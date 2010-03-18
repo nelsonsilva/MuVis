@@ -32,10 +32,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import muvis.Elements;
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import net.bouthier.treemapSwing.TMNode;
 import net.bouthier.treemapSwing.TMUpdater;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The MuVisTreemapNode implements a Node encapsulating the hierarchy
@@ -44,6 +44,7 @@ import net.bouthier.treemapSwing.TMUpdater;
  */
 public class MuVisTreemapNode implements TMNode {
 
+    @Autowired protected MusicLibraryDatabaseManager dbManager;
     protected boolean isLeaf = false;
     protected String artistName = null;       //the artist this node represents
     protected MuVisTreemapNode parent   = null; // the parent
@@ -64,6 +65,10 @@ public class MuVisTreemapNode implements TMNode {
      */
     public MuVisTreemapNode() {
         children = new Hashtable();
+    }
+
+    public void init(){
+
         artistName = "Main";
 
         JFrame frame = new JFrame("Initializing");
@@ -90,9 +95,8 @@ public class MuVisTreemapNode implements TMNode {
 
         pane.remove(paneStatus);
 
-        frame.dispose();
+        frame.dispose(); 
     }
-
     /**
      * Constructor.
      *
@@ -122,8 +126,6 @@ public class MuVisTreemapNode implements TMNode {
      */
     protected void buildTree(ProgressStatus status) {
         if (!isLeaf()) {
-
-            MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
             ArrayList<String> artistNames = dbManager.getAllArtistNamesAscOrder();
             MuVisTreemapNode others = new MuVisTreemapNode(Elements.OTHERS_NODE, parent, status, true);

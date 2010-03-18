@@ -21,12 +21,12 @@
 
 package muvis.view.filters;
 
-import muvis.Environment;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.main.filters.NoFilter;
 import muvis.view.main.filters.TreemapFilterManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -37,6 +37,12 @@ public class MuVisDurationFilterNode extends MuVisFilterNode implements Observer
     protected int minValue = 0;
     protected int maxValue = 0;
 
+    public static TreemapFilterManager treemapFilterManager;
+
+    @Autowired
+    public void setTreemapFilterManager(TreemapFilterManager manager){
+      MuVisDurationFilterNode.treemapFilterManager=manager;
+    }
         /**
      * @return the value
      */
@@ -73,8 +79,8 @@ public class MuVisDurationFilterNode extends MuVisFilterNode implements Observer
     					 MuVisFilterNode  	parent,
     					 ProgressStatus status) {
         super(filterName, parent, status);
-        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
-        Environment.getEnvironmentInstance().getTreemapFilterManager().registerObserver(this);
+        dbManager.registerObserver(this);
+        treemapFilterManager.registerObserver(this);
         super.isLeaf = true;
 
     }

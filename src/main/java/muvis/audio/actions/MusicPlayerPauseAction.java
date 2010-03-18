@@ -23,13 +23,16 @@ package muvis.audio.actions;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javazoom.jl.player.Player;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.Messages;
 import muvis.audio.MuVisAudioPlayer;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.MusicControllerView;
+import muvis.view.ViewManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -37,19 +40,25 @@ import muvis.view.MusicControllerView;
  */
 public class MusicPlayerPauseAction implements ActionListener, Observer {
 
+    @Autowired private ViewManager viewManager;
+
     protected MusicControllerView controller;
     protected MenuItem item;
 
     public MusicPlayerPauseAction(MenuItem item) {
-
-        Environment.getEnvironmentInstance().getAudioPlayer().registerObserver(this);
         this.item = item;
+    }
+
+    @Autowired 
+    public void setPlayer(MuVisAudioPlayer player){
+        MuVisAudioPlayer player1 = player;
+         player.registerObserver(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (controller == null) {
-            controller = (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+            controller = (MusicControllerView) viewManager.getView(Elements.MUSIC_PLAYER_VIEW);
         }
         controller.playTrack();
     }

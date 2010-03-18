@@ -35,11 +35,11 @@ import javax.swing.event.RowSorterListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import muvis.Environment;
 import muvis.audio.playlist.BasePlaylist;
 import muvis.audio.playlist.Playlist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * View of the Manage Playlist operation
@@ -51,11 +51,19 @@ public class ManagePlaylistView extends ManagePlaylistViewUI implements ActionLi
     private JFileChooser loadPlaylistChooser,  savePlaylistChooser;
     private JFrame parent;
 
-    public ManagePlaylistView(JFrame parent) {
-        super(parent, true);
-        this.parent = parent;
-        setLocationRelativeTo(parent);
 
+    public void setParent(JFrame parent){
+        this.parent=parent;
+        setLocationRelativeTo(parent);
+    }
+
+    public ManagePlaylistView() {
+        super(true);
+    }
+
+    @Override
+    public void init(){
+        super.init();
         playlistListViewTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         playlistListViewTable.setDefaultRenderer(Object.class, new ColorCellRenderer());
 
@@ -155,19 +163,23 @@ public class ManagePlaylistView extends ManagePlaylistViewUI implements ActionLi
  */
 class ManagePlaylistTableModel extends DefaultTableModel implements RowSorterListener {
 
+    private BasePlaylist playlist;
     private String[] columnNames = new String[]{"Nr.", "Track name", "Artist",
-        "Album", "Duration", "Genre"};
+            "Album", "Duration", "Genre"};
     private Playlist managePlaylist,  originalPlaylist;
 
     public ManagePlaylistTableModel() {
-        originalPlaylist = Environment.getEnvironmentInstance().getAudioPlaylist();
+
+    }
+
+    @Autowired 
+    public void setPlayList(BasePlaylist playlist){
         managePlaylist = new BasePlaylist();
 
-        for (PlaylistItem item : originalPlaylist.getAllItems()) {
+        for (PlaylistItem item : playlist.getAllItems()) {
             managePlaylist.appendItem(item);
         }
     }
-
     @Override
     public int getColumnCount() {
         return columnNames.length;

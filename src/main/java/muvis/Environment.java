@@ -20,33 +20,18 @@
 */
 package muvis;
 
-import com.vlsolutions.swing.docking.DockingDesktop;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.SQLException;
+import muvis.exceptions.CantSavePropertiesFileException;
+import muvis.util.Util;
+import nbtree.NBTree;
+import nbtree.exceptions.NBTreeException;
+import org.apache.commons.configuration.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.swing.JFrame;
-import muvis.audio.AudioSnippetPlayerManager;
-import muvis.audio.MuVisAudioPlayer;
-import muvis.audio.playlist.BasePlaylist;
-import muvis.audio.playlist.Playlist;
-import muvis.database.MusicLibraryDatabaseManager;
-import muvis.exceptions.CantSavePropertiesFileException;
-import muvis.filters.TableFilterManager;
-import muvis.util.Util;
-import muvis.view.ViewManager;
-import muvis.view.main.filters.TreemapFilterManager;
-import nbtree.NBTree;
-import nbtree.exceptions.NBTreeException;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationFactory;
 
 /**
  * This Singleton class holds the main elements of MuVis application
@@ -62,117 +47,31 @@ import org.apache.commons.configuration.ConfigurationFactory;
  */
 public class Environment {
 
-    //Fields necessary for the MuVisApp
-    private static MuVisAudioPlayer audioPlayer;
-    private static AudioSnippetPlayerManager snippetManager;
-    private static Playlist userPlaylist;
-    private static Properties configFile;
-    private static ViewManager viewManager;
-    private static NBTreeManager nbtreesManager;
-    private static MusicLibraryDatabaseManager databaseManager;
-    private static DockingDesktop desk;
-    private static TableFilterManager tableFilterManager;
-    private static TreemapFilterManager treemapFilterManager;
-    private static JFrame rootFrame;
-    private static Configuration configuration;
-    /**
-     * The only instance of Workspace
-     */
-    private static Environment environment = new Environment();
+    @Autowired private Configuration configuration;
+    @Autowired private NBTreeManager nbtreesManager;
+    
+    private Properties configFile;
 
-    /**
-     * @return the treemapFilterManager
-     */
-    public TreemapFilterManager getTreemapFilterManager() {
-        return treemapFilterManager;
-    }
-
-    /**
-     * @param aTreemapFilterManager the treemapFilterManager to set
-     */
-    public void setTreemapFilterManager(TreemapFilterManager aTreemapFilterManager) {
-        treemapFilterManager = aTreemapFilterManager;
-    }
-
-    /**
-     * @return the tableFilterManager
-     */
-    public TableFilterManager getTableFilterManager() {
-        return tableFilterManager;
-    }
-
-    /**
-     * @param aTableFilterManager the tableFilterManager to set
-     */
-    public void setTableFilterManager(TableFilterManager aTableFilterManager) {
-        tableFilterManager = aTableFilterManager;
-    }
-
-    /**
-     * @return the snippetManager
-     */
-    public AudioSnippetPlayerManager getSnippetManager() {
-        return snippetManager;
-    }
-
-    /**
-     * @return the desk
-     */
-    public DockingDesktop getDesk() {
-        return desk;
-    }
-
-    /**
-     * @param aDesk the desk to set
-     */
-    public void setDesk(DockingDesktop aDesk) {
-        desk = aDesk;
-    }
-
-    /**
-     * @return the nbtreesManager
-     */
-    public NBTreeManager getNbtreesManager() {
-        return nbtreesManager;
-    }
-
-    /**
-     * @return the databaseManager
-     */
-    public synchronized MusicLibraryDatabaseManager getDatabaseManager() {
-        if (databaseManager == null){
-            databaseManager = new MusicLibraryDatabaseManager();
-            try {
-                databaseManager.connect();
-                databaseManager.initDatabase();
-            } catch (SQLException ex) {
-                System.out.println("Cannot init the database!" + ex.toString());
-            }
-        }
-        return databaseManager;
-    }
-
-    /**
-     * @return the viewManager
-     */
-    public ViewManager getViewManager() {
-        return viewManager;
-    }
-
-    /**
-     * @param aViewManager the viewManager to set
-     */
-    public void setViewManager(ViewManager aViewManager) {
-        viewManager = aViewManager;
-    }
-
-    /**
+   /**
      * @return the configFile
      */
     public Properties getConfigFile() {
         return configFile;
     }
 
+
+    public Object getProperty(String s) {
+        return configuration.getProperty(s);
+    }
+
+    public int getInt(String s) {
+        return configuration.getInt(s);
+    }
+
+    public String getString(String s) {
+        return configuration.getString(s);
+    }
+    
     /**
      * @param aConfigFile the configFile to set
      */
@@ -180,44 +79,14 @@ public class Environment {
         configFile = aConfigFile;
     }
 
-    /**
-     * @return the root frame of the MuVis application
-     */
-    public JFrame getRootFrame(){
-        return rootFrame;
-    }
-
-    /**
-     * Must be careful with this method
-     * @param frame the new root Frame
-     */
-    public void setRootFrame(JFrame frame){
-        rootFrame = frame;
-    }
-
-    private Environment() {
-
-        //Loading the main configuration
-        ConfigurationFactory factory = new ConfigurationFactory("config.xml");
-        try {
-            configuration = factory.getConfiguration();
-        } catch (ConfigurationException ex) {
-            System.out.println("Couldn't not load the configuration file! Possible reason: " + ex.toString());
-        }
-        
-        initializeDataFolders();
-        
-        //initialize all the elements in the workspace
-        audioPlayer = new MuVisAudioPlayer();
-        snippetManager = new AudioSnippetPlayerManager(audioPlayer);
-        userPlaylist = new BasePlaylist();
-        configFile = new Properties();
-        viewManager = new ViewManager();
-        desk = new DockingDesktop();
+    public Environment() {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new MemoryCollector(), 300, 300, TimeUnit.SECONDS);
+    }
 
-        nbtreesManager = new NBTreeManager();
+    public void init() {
+        initializeDataFolders();
+        configFile=new Properties();
         try {
             String dataFolder = configuration.getString("muvis.data_folder");
             String nbtreeMainFolder = configuration.getString("muvis.nbtree_folder");
@@ -232,8 +101,8 @@ public class Environment {
         }
 
         initConfigFile();
-    }
 
+    }
     //initializes the data folder, or creates it if necessary
     private void initializeDataFolders() {
 
@@ -259,39 +128,7 @@ public class Environment {
         //nothing to do here
     }
 
-    /**
-     * This method returns the only instance of Workspace
-     * @return workspace The only instance of Workspace
-     */
-    public static Environment getEnvironmentInstance() {
-        return environment;
-    }
 
-    /**
-     * This method returns the MuVisAudioPlayer instance
-     * @return audioPlayer the only audioplayer for this application
-     */
-    public MuVisAudioPlayer getAudioPlayer() {
-        return audioPlayer;
-    }
-
-    /**
-     * Gets an element in the configuration file
-     * @param property
-     * @return
-     */
-    public Object getProperty(String property){
-        return configuration.getProperty(property);
-    }
-
-    /**
-     * This method returns the playlist built by the user, so we can add tracks,
-     * get track being played, etc.
-     * @return userPlaylist The playlist built by the user
-     */
-    public Playlist getAudioPlaylist() {
-        return userPlaylist;
-    }
 
     public String getDataFolderPath(){
         String dataFolder = configuration.getString("muvis.data_folder") + Util.getOSEscapeSequence();

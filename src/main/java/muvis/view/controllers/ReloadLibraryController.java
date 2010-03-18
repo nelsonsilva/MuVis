@@ -28,19 +28,26 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import muvis.Environment;
 import muvis.analyser.DataAnalyser;
 import muvis.analyser.processor.ContentProcessor;
 import muvis.analyser.processor.ContentUnprocessor;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.util.Observer;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Controller for reloading the MuVis Library
  * @author Ricardo
  */
-public class ReloadLibraryController implements ControllerInterface {
+public class ReloadLibraryController implements ControllerInterface, ApplicationContextAware {
 
+    @Autowired
+    PropertiesConfiguration configuration;
     private ArrayList<Observer> observers = new ArrayList<Observer>();
 
     public void registerLibraryExtractionObserver(Observer obs) {
@@ -54,32 +61,34 @@ public class ReloadLibraryController implements ControllerInterface {
      */
     public void saveLibraryFolders(Object[] folders) throws CantSavePropertiesFileException {
 
-        Properties configFile = Environment.getEnvironmentInstance().getConfigFile();
-        if (!configFile.containsKey("folders_number")) {
+        if (!configuration.containsKey("folders_number")) {
         }
-        configFile.setProperty("folders_number", String.valueOf(folders.length));
+        configuration.setProperty("folders_number", String.valueOf(folders.length));
 
         int i = 0;
 
         for (Object folder : folders) {
-            configFile.setProperty("library_folder" + i, folder.toString());
+            configuration.setProperty("library_folder" + i, folder.toString());
             i++;
         }
-        Environment.getEnvironmentInstance().saveConfigFile();
+        try {
+            configuration.save();
+        } catch (ConfigurationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public ArrayList<String> getLibraryFolders() {
 
         ArrayList<String> folders = new ArrayList<String>();
-        Properties configFile = Environment.getEnvironmentInstance().getConfigFile();
 
         int countFolders = 0;
-        if (configFile.containsKey("folders_number")) {
-            countFolders = Integer.parseInt(configFile.getProperty("folders_number"));
+        if (configuration.containsKey("folders_number")) {
+            countFolders = configuration.getInt("folders_number");
         }
 
         for (int i = 0; i < countFolders; i++) {
-            String folder = configFile.getProperty("library_folder" + i);
+            String folder = configuration.getString("library_folder" + i);
             folders.add(folder);
         }
 
@@ -138,7 +147,7 @@ public class ReloadLibraryController implements ControllerInterface {
                             @Override
                             public void run() {
                                 DataAnalyser postAnalyser = new DataAnalyser(removePaths);
-                                Observer contentObserver = new ContentUnprocessor();
+                                Observer contentObserver = (Observer) context.getBean("contentUnprocessor");
                                 postAnalyser.registerObserver(contentObserver);
                                 postAnalyser.start();
                             }
@@ -169,7 +178,7 @@ public class ReloadLibraryController implements ControllerInterface {
                             public void run() {
 
                                 DataAnalyser postAnalyser = new DataAnalyser(newPaths);
-                                Observer contentObserver = new ContentProcessor();
+                                Observer contentObserver = (Observer) context.getBean("contentProcessor");
                                 postAnalyser.registerObserver(contentObserver);
 
                                 for (Observer e : observers) {
@@ -182,5 +191,11 @@ public class ReloadLibraryController implements ControllerInterface {
 
             }
         });
+    }
+
+    private ApplicationContext context;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context=applicationContext;
     }
 }

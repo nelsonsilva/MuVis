@@ -32,6 +32,10 @@ public class ViewManager {
 
     private HashMap<String, Object> views;
 
+    public void setViews(HashMap<String, Object> views){
+        this.views=views;
+    }
+    
     public ViewManager(){
         views = new HashMap<String, Object>();
     }

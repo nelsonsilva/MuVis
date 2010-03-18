@@ -23,10 +23,11 @@ package muvis.view.main;
 
 import java.util.Enumeration;
 import muvis.Elements;
-import muvis.Environment;
+import muvis.view.main.filters.TreemapFilterManager;
 import net.bouthier.treemapSwing.TMComputeSize;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Computes the size of each node based on the number of tracks of each artist
@@ -36,7 +37,8 @@ import net.bouthier.treemapSwing.TMNode;
  */
 public class MuVisComputeTrackSize
 	implements TMComputeSize {
-
+    @Autowired
+    TreemapFilterManager treemapFilterManager;
     /**
      * Test if this TMComputeSize could be used
      * with the kind of TMNode passed in parameter.
@@ -66,12 +68,12 @@ public class MuVisComputeTrackSize
                 int num = 0;
                 for(Enumeration children = fNode.children(); children.hasMoreElements(); num++){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    value += Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
+                    value += treemapFilterManager.getCountFilteredTracks(n.getName());
                 }
                 num /= 2;
                 return ((num != 0)? (value/num) : 0);
             }
-            return Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
+            return treemapFilterManager.getCountFilteredTracks(fNode.getName());
 
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);

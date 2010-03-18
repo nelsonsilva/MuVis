@@ -25,13 +25,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
-import muvis.Environment;
 import muvis.Messages;
+import muvis.MuVisApp;
 import muvis.filters.SimilarityTableFilter;
+import muvis.filters.TableFilterManager;
 import muvis.similarity.SimilarityManager;
 import muvis.view.SimilarElementsView;
 import muvis.view.main.filters.NoFilter;
+import muvis.view.main.filters.TreemapFilterManager;
 import muvis.view.main.filters.TreemapSimilarityFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Find similar Elements (tracks, albums, artists) common action
@@ -39,6 +42,10 @@ import muvis.view.main.filters.TreemapSimilarityFilter;
  */
 public class FindSimilarElementsTableAction implements ActionListener {
 
+    @Autowired private SimilarityManager similarityManager;
+    @Autowired private TreemapFilterManager treemapFilterManager;
+    @Autowired private TableFilterManager tableFilterManager;
+    
     protected JTable tracksTable;
 
     public FindSimilarElementsTableAction(JTable tracksTable) {
@@ -56,7 +63,7 @@ public class FindSimilarElementsTableAction implements ActionListener {
 
             if (item.getText().contains(Messages.TRACK_NAME_LABEL)) { //searching for similar tracks
 
-                final SimilarElementsView similarityDialog = new SimilarElementsView(Environment.getEnvironmentInstance().getRootFrame(), Messages.FIND_SIMILAR_TRACKS_LABEL);
+                final SimilarElementsView similarityDialog = new SimilarElementsView(MuVisApp.getRootFrame(), Messages.FIND_SIMILAR_TRACKS_LABEL);
                 ActionListener filter = new ActionListener() {
 
                     @Override
@@ -64,7 +71,7 @@ public class FindSimilarElementsTableAction implements ActionListener {
                     public void actionPerformed(ActionEvent e) {
 
                         int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                        tracks.addAll(SimilarityManager.getSimilarTracks(trackIds, numSimilarElements, SimilarityManager.SimilarityMode.SIMILAR));
+                        tracks.addAll(similarityManager.getSimilarTracks(trackIds, numSimilarElements, SimilarityManager.SimilarityMode.SIMILAR));
                     }
                 };
 
@@ -72,7 +79,7 @@ public class FindSimilarElementsTableAction implements ActionListener {
                 similarityDialog.setVisible(true);
             } else if (item.getText().contains(Messages.ALBUM_NAME_LABEL)) { //searching for similar albums
 
-                final SimilarElementsView similarityDialog = new SimilarElementsView(Environment.getEnvironmentInstance().getRootFrame(), Messages.FIND_SIMILAR_ALBUMS_LABEL);
+                final SimilarElementsView similarityDialog = new SimilarElementsView(MuVisApp.getRootFrame(), Messages.FIND_SIMILAR_ALBUMS_LABEL);
 
                 ActionListener filter = new ActionListener() {
 
@@ -81,7 +88,7 @@ public class FindSimilarElementsTableAction implements ActionListener {
                     public void actionPerformed(ActionEvent e) {
 
                         int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                        tracks.addAll(SimilarityManager.getSimilarAlbums(trackIds, numSimilarElements, SimilarityManager.SimilarityMode.SIMILAR));
+                        tracks.addAll(similarityManager.getSimilarAlbums(trackIds, numSimilarElements, SimilarityManager.SimilarityMode.SIMILAR));
                     }
                 };
 
@@ -90,7 +97,7 @@ public class FindSimilarElementsTableAction implements ActionListener {
 
             } else if (item.getText().contains(Messages.ARTIST_NAME_LABEL)) { //searching for similar artists
 
-                final SimilarElementsView similarityDialog = new SimilarElementsView(Environment.getEnvironmentInstance().getRootFrame(), Messages.FIND_SIMILAR_ARTISTS_LABEL);
+                final SimilarElementsView similarityDialog = new SimilarElementsView(MuVisApp.getRootFrame(), Messages.FIND_SIMILAR_ARTISTS_LABEL);
 
                 ActionListener filter = new ActionListener() {
 
@@ -99,7 +106,7 @@ public class FindSimilarElementsTableAction implements ActionListener {
                     public void actionPerformed(ActionEvent e) {
 
                         int numSimilarElements = similarityDialog.getNumberSimilarElements();
-                        tracks.addAll(SimilarityManager.getSimilarArtists(trackIds, numSimilarElements, SimilarityManager.SimilarityMode.SIMILAR));
+                        tracks.addAll(similarityManager.getSimilarArtists(trackIds, numSimilarElements, SimilarityManager.SimilarityMode.SIMILAR));
                     }
                 };
 
@@ -108,12 +115,12 @@ public class FindSimilarElementsTableAction implements ActionListener {
             }
 
             TreemapSimilarityFilter similarityFilter = new TreemapSimilarityFilter(new NoFilter(), tracks);
-            Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(similarityFilter);
-            Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
+            treemapFilterManager.addTreemapFilter(similarityFilter);
+            treemapFilterManager.filter();
 
             SimilarityTableFilter tableFilter = new SimilarityTableFilter(tracks);
-            Environment.getEnvironmentInstance().getTableFilterManager().addTableFilter(tableFilter);
-            Environment.getEnvironmentInstance().getTableFilterManager().filter();
+            tableFilterManager.addTableFilter(tableFilter);
+            tableFilterManager.filter();
         }
     }
 }

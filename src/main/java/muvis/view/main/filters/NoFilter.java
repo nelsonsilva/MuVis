@@ -22,8 +22,10 @@
 package muvis.view.main.filters;
 
 import java.util.List;
-import muvis.Environment;
+
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Observable;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Neutral filter for composition purposes
@@ -31,24 +33,26 @@ import muvis.util.Observable;
  */
 public class NoFilter extends TreemapFilter {
 
+    @Autowired
+    MusicLibraryDatabaseManager dbManager;
     @Override
     public int getCountFilteredTracks(String artistName) {
-        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistTracks(artistName).size();
+        return dbManager.getArtistTracks(artistName).size();
     }
 
     @Override
     public int getCountFilteredAlbuns(String artistName) {
-        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistAlbums(artistName).size();
+        return dbManager.getArtistAlbums(artistName).size();
     }
 
     @Override
     public List getFilteredTracks(String artistName) {
-        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistTracks(artistName);
+        return dbManager.getArtistTracks(artistName);
     }
 
     @Override
     public List getFilteredAlbuns(String artistName) {
-        return Environment.getEnvironmentInstance().getDatabaseManager().getArtistAlbums(artistName);
+        return dbManager.getArtistAlbums(artistName);
     }
 
     @Override

@@ -31,9 +31,6 @@ import muvis.view.filters.MuVisYearFilterNode;
  */
 public class TreemapYearFilter extends FilterDecorator {
 
-    public TreemapYearFilter(TreemapFilter filter) {
-        super(filter);
-    }
 
     @Override
     protected String getQuery(String artistName) {

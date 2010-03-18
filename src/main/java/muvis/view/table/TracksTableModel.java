@@ -24,12 +24,12 @@ import java.util.Hashtable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.swing.table.AbstractTableModel;
-import muvis.Environment;
 import muvis.Messages;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.database.TableRecord;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -50,13 +50,13 @@ public class TracksTableModel extends AbstractTableModel {
         Messages.COL_TRACK_BEAT_LABEL,
         Messages.COL_TRACK_MOOD_LABEL };
 
+    @Autowired
     protected MusicLibraryDatabaseManager dbManager;
     protected Hashtable<Integer, TableRecord> records;
     protected ScheduledExecutorService scheduler;
     protected boolean fasterMode = true;
 
-    public TracksTableModel() {
-        dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
+    public void init() {
         int numTracks = dbManager.getCountTracks();
         if (numTracks < 0) {
             numTracks = 0;
@@ -146,7 +146,7 @@ class UpdateTable implements Runnable, Observer {
 
     public UpdateTable(TracksTableModel model) {
         this.model = model;
-        Environment.getEnvironmentInstance().getDatabaseManager().registerObserver(this);
+        model.dbManager.registerObserver(this);
     }
 
     @Override

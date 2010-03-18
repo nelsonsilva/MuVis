@@ -26,6 +26,7 @@ import java.util.List;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.view.main.MuVisTreemapNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Treemap Filter Manager - Class that implements a manager for filtering in
@@ -45,6 +46,10 @@ public class TreemapFilterManager extends TreemapFilter implements Observer, Obs
         observers = new ArrayList<Observer>();
         root = treemapRoot;
         needComposition = true;
+    }
+
+    public MuVisTreemapNode getRoot() {
+        return root;
     }
 
     public void addTreemapFilter(TreemapFilter filter) {
@@ -80,7 +85,9 @@ public class TreemapFilterManager extends TreemapFilter implements Observer, Obs
             }
         }
 
-        value = filter.getCountFilteredAlbuns("");
+        if (filter != null) {
+            value = filter.getCountFilteredAlbuns("");
+        }
 
         if (!filters.isEmpty()) {
             filter = filters.get(0);
@@ -118,7 +125,9 @@ public class TreemapFilterManager extends TreemapFilter implements Observer, Obs
             }
         }
 
-        value = filter.getCountFilteredTracks("");
+        if (filter != null) {
+            value = filter.getCountFilteredTracks("");
+        }
 
         if (!filters.isEmpty()) {
             filter = filters.get(0);
@@ -156,7 +165,9 @@ public class TreemapFilterManager extends TreemapFilter implements Observer, Obs
             }
         }
 
-        filteredTracks = filter.getFilteredTracks("");
+        if (filter != null) {
+            filteredTracks = filter.getFilteredTracks("");
+        }
 
         if (!filters.isEmpty()) {
             filter = filters.get(0);
@@ -172,7 +183,7 @@ public class TreemapFilterManager extends TreemapFilter implements Observer, Obs
         filters.remove(filter);
         composeFilters();
     }
-    
+
     private void updateChildrenNodes(){
         for (Enumeration e = root.children(); e.hasMoreElements();) {
             MuVisTreemapNode n = (MuVisTreemapNode) e.nextElement();
@@ -250,7 +261,7 @@ public class TreemapFilterManager extends TreemapFilter implements Observer, Obs
     public synchronized List getFilteredTracks(String artistName) {
         if (needComposition) {
             composeFilters();
-        } 
+        }
         return filterRoot.getFilteredTracks(artistName);
     }
 

@@ -21,24 +21,19 @@
 package muvis.view;
 
 import javax.swing.JFrame;
-import muvis.Environment;
 import muvis.view.main.MuVisComputeTrackSize;
 import muvis.view.main.MuVisNodeDraw;
 import muvis.view.main.MuVisTreemapNode;
 import muvis.view.main.MuVisTreemapVisualizationAction;
 import muvis.view.main.TMAlgorithmAscOrder;
 import muvis.view.main.TMAlgorithmDescOrder;
-import muvis.view.main.filters.TreemapFilterManager;
-import muvis.view.main.filters.NoFilter;
-import muvis.view.main.filters.TreemapBeatFilter;
-import muvis.view.main.filters.TreemapDurationFilter;
-import muvis.view.main.filters.TreemapGenreFilter;
-import muvis.view.main.filters.TreemapMoodFilter;
-import muvis.view.main.filters.TreemapTextFilter;
-import muvis.view.main.filters.TreemapYearFilter;
+import muvis.view.main.filters.*;
 import net.bouthier.treemapSwing.TMAlgorithmSquarified;
 import net.bouthier.treemapSwing.TMView;
 import net.bouthier.treemapSwing.TreeMap;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 
 /**
  * Class that holds the main visualization the treemap visualization
@@ -47,34 +42,23 @@ import net.bouthier.treemapSwing.TreeMap;
 public class TreemapView extends TreemapViewUI implements View {
 
     private JFrame parent;
-    private MuVisTreemapNode root = null; // the root of the tree
     private TreeMap treeMap = null; // the treemap builded
     private TMView currentView = null;
 
-    public TreemapView(JFrame parent) {
-        this.parent = parent;
+    @Autowired private TreemapFilterManager filterManager;
 
-        root = new MuVisTreemapNode();
-        TreemapFilterManager filterManager = new TreemapFilterManager(root);
-        Environment.getEnvironmentInstance().setTreemapFilterManager(filterManager);
+    public void setFilters(ArrayList<TreemapFilter> filters){
+        for(TreemapFilter filter:filters){
+            filterManager.addTreemapFilter(filter);
+        }
+    }
+    public void setParent(JFrame p){
+        this.parent=p;
+    }
+    
+    public void init() {
 
-        //treemap filters
-        TreemapDurationFilter treemapDurationFilter =
-                new TreemapDurationFilter(new NoFilter());
-        TreemapYearFilter treemapYearFilter = new TreemapYearFilter(new NoFilter());
-        TreemapGenreFilter treemapGenreFilter = new TreemapGenreFilter(new NoFilter());
-        TreemapBeatFilter treemapBeatFilter = new TreemapBeatFilter(new NoFilter());
-        TreemapMoodFilter treemapMoodFilter = new TreemapMoodFilter(new NoFilter());
-        TreemapTextFilter treemapTextFilter = new TreemapTextFilter(new NoFilter());
-
-        filterManager.addTreemapFilter(treemapDurationFilter);
-        filterManager.addTreemapFilter(treemapYearFilter);
-        filterManager.addTreemapFilter(treemapGenreFilter);
-        filterManager.addTreemapFilter(treemapBeatFilter);
-        filterManager.addTreemapFilter(treemapMoodFilter);
-        filterManager.addTreemapFilter(treemapTextFilter);
-
-        treeMap = new TreeMap(root);
+        treeMap = new TreeMap(filterManager.getRoot());
         TMView view = buildNewView();
         currentView = view;
 

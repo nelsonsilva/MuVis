@@ -35,6 +35,16 @@ import net.bouthier.treemapSwing.*;
 public class TMAlgorithmAscOrderFilter
 	extends TMAlgorithm {
 
+    private String name;
+    
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String s){
+        name=s;
+    }
     /**
      * Draws the children of a node, by setting their drawing area first,
      * dependant of the algorithm used.

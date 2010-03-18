@@ -24,9 +24,12 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.exceptions.CannotRetrieveMP3TagException;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.ByteArrayOutputStream;
-import muvis.Environment;
 
 /**
  * Class that generates a snippet of an mp3 file.
@@ -35,11 +38,13 @@ import muvis.Environment;
  */
 public class MP3AudioSnippetExtractor {
 
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+
     //private AudioMetadataExtractor for retrieving the bitrate of a music
-    private static AudioMetadataExtractor extractor = new MP3AudioMetadataExtractor();
+    @Autowired private AudioMetadataExtractor extractor = new MP3AudioMetadataExtractor();
 
     //converts the bitrate for a useful represent in calculus
-    private static int getBitrate(String originalBitrate) {
+    private int getBitrate(String originalBitrate) {
         int bitrate = 0;
 
         String bitrateStr = "";
@@ -55,10 +60,10 @@ public class MP3AudioSnippetExtractor {
         return bitrate;
     }
 
-    public static byte[] extractAudioSnippet(String filename) {
+    public byte[] extractAudioSnippet(String filename) {
 
         try {
-            AudioMetadata metadata = Environment.getEnvironmentInstance().getDatabaseManager().getTrackMetadata(filename);
+            AudioMetadata metadata = dbManager.getTrackMetadata(filename);
             if (metadata == null) {
                 metadata = extractor.getAudioMetadata(filename);
             }

@@ -26,11 +26,12 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.view.MainViewHolder;
 import muvis.view.TreemapArtistInspectorView;
+import muvis.view.ViewManager;
 import net.bouthier.treemapSwing.TMAction;
 import net.bouthier.treemapSwing.TMView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Treemap UI interaction handler.
@@ -39,6 +40,8 @@ import net.bouthier.treemapSwing.TMView;
  */
 public class MuVisTreemapVisualizationAction extends TMAction {
 
+    @Autowired
+    ViewManager viewManager;
     private MainViewHolder mainViewHolder;
     private TreemapArtistInspectorView artistInspector;
     private ArrayList<MuVisTreemapNode> selectedNodes;
@@ -64,7 +67,7 @@ public class MuVisTreemapVisualizationAction extends TMAction {
             MuVisTreemapNode fNode = (MuVisTreemapNode) node;
             if (e.getClickCount() == 2) {
                 if (artistInspector == null) {
-                    mainViewHolder = (MainViewHolder) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MAIN_VIEW);
+                    mainViewHolder = (MainViewHolder) viewManager.getView(Elements.MAIN_VIEW);
                     artistInspector = (TreemapArtistInspectorView) mainViewHolder.getView(Elements.ARTIST_INSPECTOR_VIEW);
                 }
 

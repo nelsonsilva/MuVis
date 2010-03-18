@@ -28,10 +28,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import muvis.Environment;
+
 import muvis.audio.AudioMetadata;
 import muvis.util.Observable;
 import muvis.util.Observer;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class that holds the flow of information with the database
@@ -43,6 +45,9 @@ public class MusicLibraryDatabaseManager implements Observable {
 
     private ArrayList<Observer> observers;
     static Connection conn;
+
+    @Autowired
+    PropertiesConfiguration configuration;
 
     /**
      * Creates a new MusicLibraryDatabaseManager, that can be used for updating the music
@@ -64,13 +69,20 @@ public class MusicLibraryDatabaseManager implements Observable {
 
     public void connect() {
         try {
-            String dataFolderPath = Environment.getEnvironmentInstance().getDataFolderPath();
-            conn = DriverManager.getConnection("jdbc:hsqldb:file:" + dataFolderPath + "db/muvisdb", "sa", "");
+            conn = DriverManager.getConnection("jdbc:hsqldb:file:" + configuration.getProperty("muvis.data_folder") + "db/muvisdb", "sa", "");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public void connectAndInit() {
+        try {
+            connect();
+            initDatabase();
+        } catch (SQLException ex) {
+            System.out.println("Cannot init the database!" + ex.toString());
+        }
+    }
     /**
      * shutdowns the connection with the database
      * @throws SQLException
@@ -255,10 +267,10 @@ public class MusicLibraryDatabaseManager implements Observable {
         try {
 
             String query = "SELECT TOP 1 P.artist_name FROM " +
-                            "(SELECT artist_name, COUNT(DISTINCT id) as CountTracks " +
-                            "FROM information_tracks_table " +
-                            "GROUP BY artist_name) as P " +
-                            "ORDER BY P.CountTracks DESC ";
+                    "(SELECT artist_name, COUNT(DISTINCT id) as CountTracks " +
+                    "FROM information_tracks_table " +
+                    "GROUP BY artist_name) as P " +
+                    "ORDER BY P.CountTracks DESC ";
 
             PreparedStatement st = conn.prepareStatement(query);
             rs = st.executeQuery();
@@ -366,8 +378,8 @@ public class MusicLibraryDatabaseManager implements Observable {
             int artistId = getArtistId(artist);
 
             String query = "SELECT COUNT(id) " +
-                            "FROM tracks_table " +
-                            "WHERE artist_id=? ";
+                    "FROM tracks_table " +
+                    "WHERE artist_id=? ";
 
             PreparedStatement st = conn.prepareCall(query);
             st.setInt(1, artistId);

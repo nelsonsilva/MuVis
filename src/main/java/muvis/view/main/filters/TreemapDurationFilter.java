@@ -31,8 +31,8 @@ import muvis.view.filters.MuVisFilterNode;
  */
 public class TreemapDurationFilter extends FilterDecorator {
 
-    public TreemapDurationFilter(TreemapFilter filter) {
-        super(filter);
+    public TreemapDurationFilter() {
+        super();
     }
 
     @Override

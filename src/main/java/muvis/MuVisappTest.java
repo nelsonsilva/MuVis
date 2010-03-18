@@ -20,6 +20,9 @@
 */
 package muvis;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -41,14 +44,15 @@ public class MuVisappTest {
 
                 @Override
                 public void run() {
+
                     // This was not working on Linux - JFrame.setDefaultLookAndFeelDecorated(true);
                     try {
                         UIManager.setLookAndFeel(
                                 UIManager.getSystemLookAndFeelClassName());
                     } catch (Exception ignored) {
                     }
-
-                    MuVisApp app = new MuVisApp();
+                       ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+                    MuVisApp app = (MuVisApp) context.getBean("app");
                     app.run();
                 }
             });

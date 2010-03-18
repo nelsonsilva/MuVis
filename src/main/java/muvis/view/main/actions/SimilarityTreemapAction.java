@@ -24,16 +24,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JMenuItem;
-import muvis.Environment;
 import muvis.Messages;
+import muvis.MuVisApp;
 import muvis.database.MusicLibraryDatabaseManager;
 import muvis.filters.SimilarityTableFilter;
+import muvis.filters.TableFilterManager;
 import muvis.similarity.SimilarityManager;
 import muvis.similarity.SimilarityManager.SimilarityMode;
 import muvis.view.SimilarElementsView;
 import muvis.view.main.MuVisTreemapNode;
 import muvis.view.main.filters.NoFilter;
+import muvis.view.main.filters.TreemapFilterManager;
 import muvis.view.main.filters.TreemapSimilarityFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Generic action for similarity action on the treemap.
@@ -41,7 +44,11 @@ import muvis.view.main.filters.TreemapSimilarityFilter;
  * @author Ricardo
  */
 public abstract class SimilarityTreemapAction implements ActionListener {
-
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private SimilarityManager similarityManager;
+    @Autowired private TreemapFilterManager treemapFilterManager;
+    @Autowired private TableFilterManager tableFilterManager;
+    
     protected ArrayList<MuVisTreemapNode> selectedNodes;
     protected MuVisTreemapNode nodeUnder;
     protected SimilarityMode similarityMode;
@@ -60,7 +67,7 @@ public abstract class SimilarityTreemapAction implements ActionListener {
 
         if (e.getSource() instanceof JMenuItem) {
 
-            final SimilarElementsView similarityDialog = new SimilarElementsView(Environment.getEnvironmentInstance().getRootFrame(), Messages.FIND_SIMILAR_ARTISTS_LABEL);
+            final SimilarElementsView similarityDialog = new SimilarElementsView(MuVisApp.getRootFrame(), Messages.FIND_SIMILAR_ARTISTS_LABEL);
 
             final ArrayList<Integer> tracks = new ArrayList<Integer>();
 
@@ -69,7 +76,6 @@ public abstract class SimilarityTreemapAction implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
                     int numSimilarElements = similarityDialog.getNumberSimilarElements();
                     similarityDialog.dispose();
 
@@ -89,15 +95,15 @@ public abstract class SimilarityTreemapAction implements ActionListener {
                         }
                     }
 
-                    tracks.addAll(SimilarityManager.getSimilarArtists(artistNames, numSimilarElements, similarityMode));
+                    tracks.addAll(similarityManager.getSimilarArtists(artistNames, numSimilarElements, similarityMode));
 
                     TreemapSimilarityFilter filterTreemap = new TreemapSimilarityFilter(new NoFilter(), tracks);
-                    Environment.getEnvironmentInstance().getTreemapFilterManager().addTreemapFilter(filterTreemap);
-                    Environment.getEnvironmentInstance().getTreemapFilterManager().filter();
+                    treemapFilterManager.addTreemapFilter(filterTreemap);
+                    treemapFilterManager.filter();
 
                     SimilarityTableFilter filterTable = new SimilarityTableFilter(tracks);
-                    Environment.getEnvironmentInstance().getTableFilterManager().addTableFilter(filterTable);
-                    Environment.getEnvironmentInstance().getTableFilterManager().filter();
+                    tableFilterManager.addTableFilter(filterTable);
+                    tableFilterManager.filter();
 
                     selectedNodes.remove(nodeUnder);
                 }

@@ -23,19 +23,20 @@ package muvis.audio.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.view.MusicControllerView;
+import muvis.view.ViewManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Ricardo
  */
 public class MusicPlayerPlayPrevTrackAction implements ActionListener {
-
+    @Autowired ViewManager viewManager;
     @Override
     public void actionPerformed(ActionEvent e) {
         MusicControllerView controller =
-                (MusicControllerView) Environment.getEnvironmentInstance().getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                (MusicControllerView) viewManager.getView(Elements.MUSIC_PLAYER_VIEW);
         controller.playNextTrack();
     }
 }

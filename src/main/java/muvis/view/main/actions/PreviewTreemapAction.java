@@ -24,14 +24,18 @@ package muvis.view.main.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import muvis.Environment;
+
+import muvis.audio.AudioSnippetPlayerManager;
 import muvis.view.main.MuVisTreemapNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Entity responsible for playing previews of select artists in the treemap
  * @author Ricardo
  */
 public class PreviewTreemapAction implements ActionListener {
+    @Autowired
+    AudioSnippetPlayerManager snippetManager;
 
     protected ArrayList<MuVisTreemapNode> selectedNodes;
     protected MuVisTreemapNode nodeUnder;
@@ -55,7 +59,7 @@ public class PreviewTreemapAction implements ActionListener {
         for (MuVisTreemapNode sNode : selectedNodes) {
             artistsToPreview.add(sNode.getName());
         }
-        Environment.getEnvironmentInstance().getSnippetManager().previewArtists(artistsToPreview, true);
+        snippetManager.previewArtists(artistsToPreview, true);
         selectedNodes.remove(nodeUnder);
     }
 }

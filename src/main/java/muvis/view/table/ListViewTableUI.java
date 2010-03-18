@@ -27,14 +27,16 @@
 
 package muvis.view.table;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  *
  * @author Ricardo
  */
 public class ListViewTableUI extends javax.swing.JPanel {
-
+    @Autowired private TracksTableModel tracksTableModel;
     /** Creates new form ListViewTableUI */
-    public ListViewTableUI() {
+    public void init() {
         initComponents();
         tracksTableView.setAutoCreateRowSorter(true);
     }
@@ -54,7 +56,7 @@ public class ListViewTableUI extends javax.swing.JPanel {
         setLayout(new java.awt.CardLayout());
 
         tracksTableView.setAutoCreateRowSorter(true);
-        tracksTableView.setModel( new TracksTableModel());
+        tracksTableView.setModel(tracksTableModel);
         tracksTableView.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tracksTableView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tracksTableView.getTableHeader().setReorderingAllowed(false);

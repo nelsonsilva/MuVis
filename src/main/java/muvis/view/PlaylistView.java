@@ -41,13 +41,13 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.audio.playlist.Playlist;
 import muvis.audio.playlist.PlaylistItem;
 import muvis.util.Observable;
 import muvis.util.Observer;
 import muvis.util.Util;
 import muvis.view.controllers.PlaylistControllerInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class is the Interface View for the Playlist
@@ -57,11 +57,16 @@ import muvis.view.controllers.PlaylistControllerInterface;
  */
 public class PlaylistView extends PlaylistViewUI implements Dockable, ActionListener, Observer {
 
+    @Autowired private Playlist playlist;
+    @Autowired private ViewManager viewManager;
+
+    ManagePlaylistView managePlaylist;
+
     //Controller for the interface
-    private PlaylistControllerInterface playlistController;
-    
+    private PlaylistControllerInterface controller;
+
     //Model for the list of tracks
-    private DefaultListModel playlistListModel;
+    private DefaultListModel model;
 
     //DocKey for this panel to be dockable
     private DockKey key;
@@ -72,10 +77,9 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     //Parent JFrame
     private JFrame parent;
 
-    public PlaylistView(JFrame parent, PlaylistControllerInterface controller) {
+    public PlaylistView() {
 
-        playlistController = controller;
-        this.parent = parent;
+
         loadPlaylistChooser = new JFileChooser(new File(""));
         savePlaylistChooser = new JFileChooser(new File(""));
 
@@ -83,10 +87,34 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         savePlaylistButton.addActionListener(this);
         remTrackButton.addActionListener(this);
         managePlaylistButton.addActionListener(this);
-        Environment.getEnvironmentInstance().getAudioPlaylist().registerObserver(this);
 
-        initPlaylistList();
         initDockKey();
+    }
+
+
+    public void init(){
+        playlist.registerObserver(this);
+        initPlaylistList();
+    }
+
+    public void setManagePlaylistView(ManagePlaylistView managePlaylist) {
+        this.managePlaylist = managePlaylist;
+    }
+
+    public PlaylistControllerInterface getController() {
+        return controller;
+    }
+
+    public void setController(PlaylistControllerInterface controller) {
+        this.controller = controller;
+    }
+
+    public DefaultListModel getModel() {
+        return model;
+    }
+
+    public void setModel(DefaultListModel model) {
+        this.model = model;
     }
 
     /**
@@ -103,7 +131,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         } else if (event.getSource() == loadPlaylistButton) {
             loadPlaylistAction();
         } else if (event.getSource() == managePlaylistButton) {
-            ManagePlaylistView managePlaylist = new ManagePlaylistView(parent);
+            managePlaylist.setParent(parent);
             managePlaylist.setVisible(true);
         }
     }
@@ -124,8 +152,8 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
      * Initializes all the properties related to the playlist visualization.
      */
     private void initPlaylistList() {
-        playlistListModel = new DefaultListModel();
-        listTracks.setModel(playlistListModel);
+        model = new DefaultListModel();
+        listTracks.setModel(model);
         listTracks.setCellRenderer(new PlaylistListCellRenderer());
 
         MouseListener mouseListener = new MouseAdapter() {
@@ -133,17 +161,16 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Environment workspace = Environment.getEnvironmentInstance();
 
-                    MusicControllerView musicPlayerControllerView = (MusicControllerView) workspace.getViewManager().getView(Elements.MUSIC_PLAYER_VIEW);
+                    MusicControllerView musicPlayerControllerView = (MusicControllerView) viewManager.getView(Elements.MUSIC_PLAYER_VIEW);
                     musicPlayerControllerView.setPlayingType(MusicControllerView.PlayingType.PLAYLIST_MODE);
 
                     //sets the cursor to the selected track
                     int index = listTracks.locationToIndex(e.getPoint());
-                    PlaylistItem item = (PlaylistItem)playlistListModel.getElementAt(index);
+                    PlaylistItem item = (PlaylistItem) model.getElementAt(index);
 
-                    int itemIndex = workspace.getAudioPlaylist().getIndex(item);
-                    workspace.getAudioPlaylist().updateCursor(itemIndex);
+                    int itemIndex = playlist.getIndex(item);
+                    playlist.updateCursor(itemIndex);
 
                     musicPlayerControllerView.playTrack();
                 }
@@ -166,7 +193,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
                 int returned = loadPlaylistChooser.showOpenDialog(parent);
                 if (returned == JFileChooser.APPROVE_OPTION) {
                     File file = loadPlaylistChooser.getSelectedFile();
-                    playlistController.loadPlaylist(file.getName().toString(), loadPlaylistChooser.getCurrentDirectory().toString());
+                    controller.loadPlaylist(file.getName().toString(), loadPlaylistChooser.getCurrentDirectory().toString());
                     updateListTracksDisplay();
                     remTrackButton.setEnabled(true);
                 }
@@ -182,15 +209,15 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         int[] indices = listTracks.getSelectedIndices();
         ArrayList<PlaylistItem> itemsToRemove = new ArrayList<PlaylistItem>();
         for (int i = 0; i < indices.length; i++) {
-            PlaylistItem playlistItemToRemove = (PlaylistItem) playlistListModel.getElementAt(indices[i]);
+            PlaylistItem playlistItemToRemove = (PlaylistItem) model.getElementAt(indices[i]);
             //marking the tracks for removal
             itemsToRemove.add(playlistItemToRemove);
-            int size = playlistListModel.getSize();
+            int size = model.getSize();
             if (size == 0) {
                 remTrackButton.setEnabled(false);
             } else {
                 //Select an index.
-                if (indices[i] == playlistListModel.getSize()) {
+                if (indices[i] == model.getSize()) {
                     //removed item in last position
                     indices[i]--;
                 }
@@ -199,9 +226,9 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         /*
          * Removing the items from the playlist
          */
-        playlistController.removeTracksFromPlaylist(itemsToRemove);
+        controller.removeTracksFromPlaylist(itemsToRemove);
         for (PlaylistItem it : itemsToRemove){
-            playlistListModel.removeElement(it);
+            model.removeElement(it);
         }
     }
 
@@ -222,14 +249,14 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
                 if (returned == JFileChooser.APPROVE_OPTION) {
                     File file = savePlaylistChooser.getSelectedFile();
                     String playlistName = file.getName();
-                    boolean saved = playlistController.savePlaylist(playlistName, savePlaylistChooser.getCurrentDirectory().toString());
+                    boolean saved = controller.savePlaylist(playlistName, savePlaylistChooser.getCurrentDirectory().toString());
                     if (saved){
                         JOptionPane.showMessageDialog(parent, "Playlist succefuly saved!",
-                            "Save Playlist", JOptionPane.INFORMATION_MESSAGE);
+                                "Save Playlist", JOptionPane.INFORMATION_MESSAGE);
                     }
                     else {
                         JOptionPane.showMessageDialog(parent, "Can't save the playlist!Please try later!",
-                            "Save Playlist", JOptionPane.ERROR_MESSAGE);
+                                "Save Playlist", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -237,11 +264,9 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     }
 
     private void updateListTracksDisplay() {
-        Environment workspace = Environment.getEnvironmentInstance();
-        Playlist playlist = workspace.getAudioPlaylist();
         PlaylistItem prevSelectedItem = (PlaylistItem)listTracks.getSelectedValue();
-        
-        playlistListModel.clear();
+
+        model.clear();
         int index = listTracks.getSelectedIndex(); //get selected index
         int prevSelectedItemIndex = 0;
 
@@ -253,7 +278,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
                 index++;
             }
 
-            playlistListModel.insertElementAt(item, index);
+            model.insertElementAt(item, index);
             //try to select the previous element
             if (prevSelectedItem != null && prevSelectedItem.equals(item)){
                 prevSelectedItemIndex = index;
@@ -272,15 +297,13 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
     }
 
     private void updateListTracksDisplayNewCursor() {
-        Environment workspace = Environment.getEnvironmentInstance();
-        Playlist playlist = workspace.getAudioPlaylist();
 
         PlaylistItem newCursor = playlist.getCursor();
         int index = 0;
 
-        for (; index < playlistListModel.getSize() ; index++) {
+        for (; index < model.getSize() ; index++) {
 
-            if (playlistListModel.get(index).equals(newCursor)){
+            if (model.get(index).equals(newCursor)){
                 break;
             }
         }
@@ -310,7 +333,7 @@ public class PlaylistView extends PlaylistViewUI implements Dockable, ActionList
         if (obs instanceof Playlist){
             Playlist playlist = (Playlist)obs;
             if (Playlist.Event.NEW_CURSOR.equals(arg) || Playlist.Event.PLAYLIST_UPDATED.equals(arg)){
-                
+
                 updateListTracksDisplayNewCursor();
             }
             else if (Playlist.Event.PLAYLIST_RESIZED.equals(arg)){

@@ -23,11 +23,16 @@ package muvis.view.controllers;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.Executors;
-import muvis.Environment;
+
 import muvis.analyser.DataAnalyser;
 import muvis.analyser.processor.ContentProcessor;
 import muvis.exceptions.CantSavePropertiesFileException;
 import muvis.util.Observer;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 /**
  * Controller responsible for loading the library specified by the user
@@ -35,6 +40,9 @@ import muvis.util.Observer;
  */
 public class LoadLibraryController implements ControllerInterface {
 
+    @Autowired
+    PropertiesConfiguration configuration;
+    
     private ArrayList<Observer> observers = new ArrayList<Observer>();
 
     public void registerLibraryExtractionObserver(Observer obs) {
@@ -48,18 +56,21 @@ public class LoadLibraryController implements ControllerInterface {
      */
     public void saveLibraryFolders(Object[] folders) throws CantSavePropertiesFileException {
 
-        Properties configFile = Environment.getEnvironmentInstance().getConfigFile();
-        if (!configFile.containsKey("folders_number")) {
+        if (!configuration.containsKey("folders_number")) {
         }
-        configFile.setProperty("folders_number", String.valueOf(folders.length));
+        configuration.setProperty("folders_number", String.valueOf(folders.length));
 
         int i = 0;
 
         for (Object folder : folders) {
-            configFile.setProperty("library_folder" + i, folder.toString());
+            configuration.setProperty("library_folder" + i, folder.toString());
             i++;
         }
-        Environment.getEnvironmentInstance().saveConfigFile();
+        try {
+            configuration.save();
+        } catch (ConfigurationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     /**

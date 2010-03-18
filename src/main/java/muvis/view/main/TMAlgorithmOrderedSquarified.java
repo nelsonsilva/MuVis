@@ -24,12 +24,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Enumeration;
 import java.util.Vector;
-import muvis.Environment;
+
+import muvis.NBTreeManager;
 import muvis.database.MusicLibraryDatabaseManager;
 import nbtree.NBTree;
 import net.bouthier.treemapSwing.TMAlgorithm;
 import net.bouthier.treemapSwing.TMNodeModel;
 import net.bouthier.treemapSwing.TMNodeModelComposite;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The TMAlgorithmOrderedSquarified class implements a squarified treemap drawing
@@ -37,6 +39,9 @@ import net.bouthier.treemapSwing.TMNodeModelComposite;
  */
 public class TMAlgorithmOrderedSquarified
         extends TMAlgorithm {
+
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private NBTreeManager nbtreeManager;
 
     /**
      * Draws the children of a node, by setting their drawing area first,
@@ -55,8 +60,7 @@ public class TMAlgorithmOrderedSquarified
         float pSize = node.getSize();
         Rectangle pArea = node.getArea();
 
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-        NBTree nbtree = Environment.getEnvironmentInstance().getNbtreesManager().getNBTree("artistsNBTree");
+        NBTree nbtree = nbtreeManager.getNBTree("artistsNBTree");
 
         int x = pArea.x;
         int y = pArea.y;
@@ -305,8 +309,8 @@ public class TMAlgorithmOrderedSquarified
 
         Vector newSortedVector = new Vector();
         TMNodeModel child;
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
-        NBTree nbtree = Environment.getEnvironmentInstance().getNbtreesManager().getNBTree("artistsNBTree");
+
+        NBTree nbtree = nbtreeManager.getNBTree("artistsNBTree");
 
         for (Object obj : sortedVector) {
             child = (TMNodeModel) obj;

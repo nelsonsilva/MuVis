@@ -26,12 +26,12 @@ import jdbm.btree.BTree;
 import jdbm.helper.Tuple;
 import jdbm.helper.TupleBrowser;
 import muvis.Elements;
-import muvis.Environment;
 import muvis.NBTreeManager;
 import muvis.database.MusicLibraryDatabaseManager;
 import nbtree.NBPoint;
 import nbtree.NBTree;
 import nbtree.exceptions.NBTreeException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class that handles the similarity between tracks, albums and artists
@@ -39,16 +39,17 @@ import nbtree.exceptions.NBTreeException;
  */
 public class SimilarityManager {
 
+    @Autowired private NBTreeManager nbtreeManager;
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    
     public enum SimilarityMode {
 
         SIMILAR, NON_SIMILAR
     }
 
-    public static ArrayList<Integer> getSimilarTracks(int[] trackIds, int numberSimilarTracks, SimilarityMode mode) {
+    public ArrayList<Integer> getSimilarTracks(int[] trackIds, int numberSimilarTracks, SimilarityMode mode) {
 
         ArrayList<Integer> tracks = new ArrayList();
-        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         for (int i = 0; i < trackIds.length; i++) {
             try {
@@ -85,11 +86,9 @@ public class SimilarityManager {
         return tracks;
     }
 
-    public static ArrayList<Integer> getSimilarAlbums(int[] trackIds, int numberSimilarAlbums, SimilarityMode mode) {
+    public ArrayList<Integer> getSimilarAlbums(int[] trackIds, int numberSimilarAlbums, SimilarityMode mode) {
 
         ArrayList<Integer> tracks = new ArrayList();
-        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         NBTree albumsNBTree = nbtreeManager.getNBTree(Elements.ALBUMS_NBTREE);
         for (int i = 0; i < trackIds.length; i++) {
@@ -126,11 +125,9 @@ public class SimilarityManager {
         return tracks;
     }
 
-    public static ArrayList<Integer> getSimilarArtists(int[] trackIds, int numberSimilarArtists, SimilarityMode mode) {
+    public ArrayList<Integer> getSimilarArtists(int[] trackIds, int numberSimilarArtists, SimilarityMode mode) {
 
         ArrayList<Integer> tracks = new ArrayList();
-        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         NBTree artistNBTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
         for (int i = 0; i < trackIds.length; i++) {
@@ -168,11 +165,9 @@ public class SimilarityManager {
         return tracks;
     }
 
-    public static ArrayList<Integer> getSimilarArtists(ArrayList<String> artistsName, int numSimilarArtists, SimilarityMode similarityMode) {
+    public ArrayList<Integer> getSimilarArtists(ArrayList<String> artistsName, int numSimilarArtists, SimilarityMode similarityMode) {
 
         ArrayList<Integer> tracks = new ArrayList();
-        NBTreeManager nbtreeManager = Environment.getEnvironmentInstance().getNbtreesManager();
-        MusicLibraryDatabaseManager dbManager = Environment.getEnvironmentInstance().getDatabaseManager();
 
         NBTree artistNBTree = nbtreeManager.getNBTree(Elements.ARTISTS_NBTREE);
         for (String artistName : artistsName){

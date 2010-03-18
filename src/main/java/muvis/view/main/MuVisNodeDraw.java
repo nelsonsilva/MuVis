@@ -30,15 +30,20 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.util.Enumeration;
 import muvis.Elements;
-import muvis.Environment;
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Util;
+import muvis.view.main.filters.TreemapFilterManager;
 import net.bouthier.treemapSwing.TMComputeDraw;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
 import net.bouthier.treemapSwing.TMNodeAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MuVisNodeDraw
 	implements TMComputeDraw {
+
+    @Autowired private MusicLibraryDatabaseManager dbManager;
+    @Autowired private TreemapFilterManager treemapFilterManager;
 
     /**
      * Test if this TMComputeDraw could be used
@@ -80,7 +85,7 @@ public class MuVisNodeDraw
                 return new Color(122, 122, 122);
             }
 
-            return Util.getGenreColor(Environment.getEnvironmentInstance().getDatabaseManager().getArtistGenre(fNode.getName()));
+            return Util.getGenreColor(dbManager.getArtistGenre(fNode.getName()));
         } else {
             throw new TMExceptionBadTMNodeKind(this, node);
         }
@@ -114,20 +119,20 @@ public class MuVisNodeDraw
 
                 for(Enumeration children = fNode.children(); children.hasMoreElements();){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    numTracks += Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredTracks(n.getName());
+                    numTracks += treemapFilterManager.getCountFilteredTracks(n.getName());
                 }
 
                 for(Enumeration children = fNode.children(); children.hasMoreElements(); ){
                     MuVisTreemapNode n = (MuVisTreemapNode)children.nextElement();
-                    numAlbums += Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredAlbuns(n.getName());
+                    numAlbums += treemapFilterManager.getCountFilteredAlbuns(n.getName());
                 }
 
             }
             else {
 
-                numAlbums = Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredAlbuns(fNode.getName());
+                numAlbums = treemapFilterManager.getCountFilteredAlbuns(fNode.getName());
 
-                numTracks = Environment.getEnvironmentInstance().getTreemapFilterManager().getCountFilteredTracks(fNode.getName());
+                numTracks = treemapFilterManager.getCountFilteredTracks(fNode.getName());
             }
 
             tooltip += "<p>" + numAlbums + " albums with " + numTracks + " tracks";

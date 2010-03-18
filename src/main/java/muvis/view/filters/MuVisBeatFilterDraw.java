@@ -23,17 +23,21 @@ package muvis.view.filters;
 
 import java.awt.Color;
 import java.awt.Paint;
-import muvis.Environment;
+
+import muvis.database.MusicLibraryDatabaseManager;
 import muvis.util.Util;
 import net.bouthier.treemapSwing.TMExceptionBadTMNodeKind;
 import net.bouthier.treemapSwing.TMNode;
 import net.bouthier.treemapSwing.TMNodeAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Ricardo
  */
 public class MuVisBeatFilterDraw extends MuVisFilterDraw {
+
+    @Autowired private MusicLibraryDatabaseManager dbManager;
 
     /**
      * Returns the tooltip of the node.
@@ -56,7 +60,7 @@ public class MuVisBeatFilterDraw extends MuVisFilterDraw {
 
             String tooltip = "";
 
-            int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithBeat(fNode.getBeat());
+            int value = dbManager.getTracksWithBeat(fNode.getBeat());
             tooltip = "<html>" + name + "<p>Tracks available: " + value;
 
             return tooltip;
@@ -77,7 +81,7 @@ public class MuVisBeatFilterDraw extends MuVisFilterDraw {
             if (fNode.isSelected()) {
                 return new Color(250, 192, 144);
             } else {
-                int value = Environment.getEnvironmentInstance().getDatabaseManager().getTracksWithBeat(fNode.getBeat());
+                int value = dbManager.getTracksWithBeat(fNode.getBeat());
                 return Util.getColor(value);
             }
         } else {

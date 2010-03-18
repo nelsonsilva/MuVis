@@ -25,8 +25,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
-import muvis.Environment;
 import muvis.Messages;
+import muvis.audio.AudioSnippetPlayerManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -34,6 +35,7 @@ import muvis.Messages;
  */
 public class PreviewElementTableAction implements ActionListener {
 
+    @Autowired private AudioSnippetPlayerManager snippetManager;
     protected JTable tracksTable;
 
     public PreviewElementTableAction(JTable tracksTable) {
@@ -50,7 +52,7 @@ public class PreviewElementTableAction implements ActionListener {
                 if (tracksTable.getSelectedRowCount() <= 1) {
                     int row = tracksTable.getRowSorter().convertRowIndexToModel(tracksTable.getSelectedRow());
                     int trackId = (Integer) tracksTable.getModel().getValueAt(row, 0);
-                    Environment.getEnvironmentInstance().getSnippetManager().previewTrack(trackId);
+                    snippetManager.previewTrack(trackId);
                 } else {
                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTable.getSelectedRowCount());
                     for (int row : tracksTable.getSelectedRows()) {
@@ -58,7 +60,7 @@ public class PreviewElementTableAction implements ActionListener {
                         int id = (Integer) tracksTable.getModel().getValueAt(rowModel, 0);
                         trackIds.add(id);
                     }
-                    Environment.getEnvironmentInstance().getSnippetManager().previewTracks(trackIds);
+                    snippetManager.previewTracks(trackIds);
                 }
 
             } else if (item.getText().contains(Messages.ALBUM_NAME_LABEL)) {
@@ -66,7 +68,7 @@ public class PreviewElementTableAction implements ActionListener {
                 if (tracksTable.getSelectedRowCount() <= 1) {
                     int row = tracksTable.getRowSorter().convertRowIndexToModel(tracksTable.getSelectedRow());
                     int trackId = (Integer) tracksTable.getModel().getValueAt(row, 0);
-                    Environment.getEnvironmentInstance().getSnippetManager().previewAlbum(trackId);
+                    snippetManager.previewAlbum(trackId);
                 } else {
                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTable.getSelectedRowCount());
                     for (int row : tracksTable.getSelectedRows()) {
@@ -74,7 +76,7 @@ public class PreviewElementTableAction implements ActionListener {
                         int id = (Integer) tracksTable.getModel().getValueAt(rowModel, 0);
                         trackIds.add(id);
                     }
-                    Environment.getEnvironmentInstance().getSnippetManager().previewAlbums(trackIds);
+                    snippetManager.previewAlbums(trackIds);
                 }
 
             } else if (item.getText().contains(Messages.ARTIST_NAME_LABEL)) {
@@ -82,7 +84,7 @@ public class PreviewElementTableAction implements ActionListener {
                 if (tracksTable.getSelectedRowCount() <= 1) {
                     int row = tracksTable.getRowSorter().convertRowIndexToModel(tracksTable.getSelectedRow());
                     int trackId = (Integer) tracksTable.getModel().getValueAt(row, 0);
-                    Environment.getEnvironmentInstance().getSnippetManager().previewArtist(trackId);
+                    snippetManager.previewArtist(trackId);
                 } else {
                     ArrayList<Integer> trackIds = new ArrayList<Integer>(tracksTable.getSelectedRowCount());
                     for (int row : tracksTable.getSelectedRows()) {
@@ -90,7 +92,7 @@ public class PreviewElementTableAction implements ActionListener {
                         int id = (Integer) tracksTable.getModel().getValueAt(rowModel, 0);
                         trackIds.add(id);
                     }
-                    Environment.getEnvironmentInstance().getSnippetManager().previewArtists(trackIds);
+                    snippetManager.previewArtists(trackIds);
                 }
 
             }

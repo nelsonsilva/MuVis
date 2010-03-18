@@ -23,9 +23,12 @@ package muvis.view.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import muvis.Environment;
 import muvis.Messages;
+import muvis.MuVisApp;
 import muvis.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Action for displaying information about the MuVis Application
@@ -33,12 +36,15 @@ import muvis.util.Util;
  * @author Ricardo
  */
 public class AboutMuVisAction implements ActionListener {
-
+    @Autowired
+    private Environment environment;
+    @Autowired
+    private MuVisApp app;
     @Override
     public void actionPerformed(ActionEvent e) {
-        String appVersion = Environment.getEnvironmentInstance().getProperty("muvis.app_version").toString();
-        String appVersionYear = Environment.getEnvironmentInstance().getProperty("muvis.app_version_year").toString();
+        String appVersion = environment.getString("muvis.app_version");
+        String appVersionYear = environment.getString("muvis.app_version_year");
         String message = Messages.MUVIS_QUOTE + "\nv" + appVersion + " @ " + appVersionYear + "\n Created by Ricardo Dias";
-        Util.displayInformationMessage(Environment.getEnvironmentInstance().getRootFrame(), Messages.MUVIS_ABOUT_LABEL, message);
+        Util.displayInformationMessage(app.getRootFrame(), Messages.MUVIS_ABOUT_LABEL, message);
     }
 }
